@@ -3,541 +3,371 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Task with PDF & Email</title>
+  <title>Easy Student Submission</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 1rem;
-      line-height: 1.5;
-      background: #fafafa;
-      color: concierge #333;
-    }
-    h1, h2, h3 {
-      text-align: center;
+      padding: 1.5rem;
+      background: linear-gradient(to bottom, #f0f7ff, #ffffff);
       color: #2c3e50;
     }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 0.5rem; }
+    .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 2rem; }
+
+    .big-button {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.2s;
+    }
+    .big-button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+    .btn-save    { background: #3498db; }
+    .btn-summary { background: #9b59b6; }
+    .btn-email   { background: #27ae60; }
+    .btn-pdf     { background: #e67e22; }
+    .btn-grade   { background: #e74c3c; }
+    .btn-back    { background: #95a5a6; }
+
     label {
       display: block;
-      margin-top: 0.75rem;
+      margin-top: 1rem;
       font-weight: bold;
+      color: #2c3e50;
     }
-    input[type="text"], textarea, select {
+    input, textarea, select {
       width: 100%;
-      box-sizing: border-box;
-      padding: 0.5rem;
-      margin-top: 0.25rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-family: inherit;
-    }
-    button {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
+      padding: 0.8rem;
+      margin-top: 0.4rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
       font-size: 1rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      color: white;
-    }
-    button:hover { opacity: 0.9; }
-    .button-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
     }
     .question-block {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
       background: white;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     .hidden { display: none; }
-    hr {
-      margin: 1.5rem 0;
-      border: 0;
-      border-top: 1px solid #eee;
-    }
     .note {
-      font-size: 0.9rem;
-      color: #555;
-      background: #f0f8ff;
-      padding: 0.75rem;
-      border-radius: 4px;
-      border-left: 4px solid #3498db;
-    }
-    pre {
-      white-space: pre-wrap;
-      background: #f5f5f5;
-      padding: 0.75rem;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-      font-family: monospace;
-      max-height:300px;
-      overflow-y:auto;
-    }
-    #clear-button { background: #e74c3c; }
-    #email-button { background: #27ae60; }
-    #grade-button { background: #9b59b6; }
-    #pdf-button { background: #e67e22; }
-    .no-print { print-color-adjust: exact; }
-    .grade-box {
-      margin-top: 2rem;
+      background: #e8f4fc;
       padding: 1rem;
-      background: #f9f9ff;
-      border: 2px solid #9b59b6;
+      border-left: 5px solid #3498db;
       border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+    .authenticity {
+      font-size: 0.9rem;
+      color: #e67e22;
+      font-weight: bold;
+      text-align: center;
+      margin: 1rem 0;
     }
     @media print {
       body { background: white; }
-      .no-print, .grade-box button { display: none; }
-      pre, .grade-box { border: 1px solid #aaa; page-break-inside: avoid; }
+      .no-print { display: none; }
     }
   </style>
 </head>
 <body>
-  <h1>Student Task with PDF & Email</h1>
+
+  <h1>Student Work Submission</h1>
+  <p class="subtitle">Answer → Auto-Grade → Send to Teacher (with PDF!)</p>
 
   <!-- FORM VIEW -->
   <div id="form-view">
-    <p class="note">
-      Answer the questions, get graded, and send your work to your teacher!
-    </p>
+    <div class="note">
+      Fill in your details and answers below. Your work is saved automatically.
+    </div>
 
     <form id="task-form">
-      <label>Student ID: <span style="color:red">*</span>
-        <input type="text" name="studentId" id="studentId" required />
-      </label>
+      <label>Student ID: <span style="color:red">*</span></label>
+      <input type="text" id="studentId" required />
 
-      <label>Teacher: <span style="color:red">*</span>
-        <select id="teacherSelect" name="teacherId" required></select>
-      </label>
+      <label>Student Name: <span style="color:red">*</span></label>
+      <input type="text" id="studentName" required />
 
-      <label>Task: <span style="color:red">*</span>
-        <select id="taskSelect" name="taskId" required></select>
-      </label>
+      <label>Teacher:</label>
+      <select id="teacherSelect" required></select>
 
-      <div class="button-row no-print">
-        <button type="button" id="load-button">Load Saved Work</button>
-        <button type="button" id="clear-button">Clear All Data</button>
-      </div>
+      <label>Task / Homework:</label>
+      <select id="taskSelect" required></select>
 
-      <label>Student Name: <span style="color:red">*</span>
-        <input type="text" name="studentName" id="studentName" required />
-      </label>
-
-      <label>Class / Subject:
-        <input type="text" name="className" id="className" />
-      </label>
+      <label>Class (optional):</label>
+      <input type="text" id="className" placeholder="e.g. Math 8A" />
 
       <div id="questions-container"></div>
 
-      <div class="button-row no-print">
-        <button type="submit">Generate Summary (and Save)</button>
-        <button type="button" id="save-only-button">Save Progress</button>
-        <button type="button" id="email-button">Submit to Teacher (Email + PDF)</button>
+      <div class="authenticity">
+        Authenticity check: Type the word "<span id="secret-word">blueberry</span>" in the box below:
+        <input type="text" id="auth-check" placeholder="type the secret word here" style="margin-top:8px;" />
       </div>
+
+      <button type="button" id="load-button" class="big-button btn-save">Load My Saved Work</button>
+
+      <button type="submit" class="big-button btn-summary">
+        Generate Summary + Auto-Grade + Save
+      </button>
+
+      <button type="button" id="email-button" class="big-button btn-email">
+        Send to Teacher (Email + PDF)
+      </button>
     </form>
   </div>
 
   <!-- SUMMARY VIEW -->
   <div id="summary-view" class="hidden">
-    <h2>Student Response Summary</h2>
-    <p id="summary-header" style="font-weight:bold; text-align:center;"></p>
+    <h2>Your Submission is Ready!</h2>
+    <div id="summary-header" style="text-align:center; font-size:1.4rem; margin:1rem 0;"></div>
+
+    <div id="grade-box" class="note" style="background:#d5f4e6; border-left:5px solid #27ae60; font-size:1.3rem;">
+      <strong>Auto-Grade Result:</strong> <span id="grade-result"></span>
+    </div>
+
     <div id="summary-questions"></div>
 
-    <hr />
-
-    <p class="note">
-      Download your graded work or email it to your teacher.
-    </p>
-
-    <h3>Copyable Text</h3>
-    <pre id="copyable-text"></pre>
-
-    <div class="button-row no-print">
-      <button id="back-button">Edit Answers</button>
-      <button id="print-button">Print / Save as PDF</button>
-      <button id="grade-button">Auto-Grade</button>
-      <button id="pdf-button">Download PDF</button>
-    </div>
+    <button id="back-button" class="big-button btn-back no-print">Edit Answers</button>
+    <button id="pdf-button" class="big-button btn-pdf no-print">Download PDF</button>
+    <button id="email-button2" class="big-button btn-email no-print">Send to Teacher Now</button>
   </div>
 
-  <!-- Load Data -->
-  <script src="questions.js"></script>
-
-  <!-- App Logic -->
+  <!-- Embedded Data (no external questions.js needed) -->
   <script>
+    const TEACHERS = [
+      { id: "t1", name: "Mr. Johnson", email: "johnson@school.edu" },
+      { id: "t2", name: "Ms. Smith", email: "smith@school.edu" },
+      { id: "t3", name: "Dr. Lee", email: "lee@school.edu" }
+    ];
+
+    const TASKS = [
+      {
+        id: "hw1",
+        name: "Week 5 - Linear Equations",
+        totalPoints: 30,
+        questions: [
+          { id: "q1", text: "Solve: 3x - 7 = 14", type: "short", maxPoints: 6,
+            rubric: [{ check: /x\s*=\s*7/i, points: 6, hint: "Add 7, then divide by 3" }] },
+          { id: "q2", text: "Explain what the slope means in real life.", type: "long", maxPoints: 10,
+            rubric: [{ check: /rate.*change/i, points: 7, hint: "It's a rate of change" }] },
+          { id: "q3", text: "Write the equation of a line with slope -2 passing through (1, 5)", type: "short", maxPoints: 14,
+            rubric: [{ check: /y\s*-\s*5\s*=\s*-2\s*\(x\s*-\s*1\)/i, points: 14, hint: "Point-slope form" }] }
+        ]
+      }
+      // Add more tasks here
+    ];
+
+    // === Authenticity tricks ===
+    const secretWords = ["blueberry", "pineapple", "watermelon", "kiwi", "mango", "avocado"];
+    const randomWord = secretWords[Math.floor(Math.random() * secretWords.length)];
+    document.getElementById("secret-word").textContent = randomWord;
+
+    // === Rest of the app (simplified & improved) ===
     const { jsPDF } = window.jspdf;
-    const STORAGE_PREFIX = "student_task_";
-    const taskSelect = document.getElementById("taskSelect");
-    const teacherSelect = document.getElementById("teacherSelect");
-    const questionsContainer = document.getElementById("questions-container");
-    const formView = document.getElementById("form-view");
-    const summaryView = document.getElementById("summary-view");
+    const STORAGE_KEY = "student_submission_v2";
 
-    if (!TASKS || TASKS.length === 0) throw new Error("TASKS missing");
-    if (!TEACHERS || TEACHERS.length === 0) throw new Error("TEACHERS missing");
+    const elements = {
+      studentId: document.getElementById("studentId"),
+      studentName: document.getElementById("studentName"),
+      className: document.getElementById("className"),
+      teacherSelect: document.getElementById("teacherSelect"),
+      taskSelect: document.getElementById("taskSelect"),
+      questionsContainer: document.getElementById("questions-container"),
+      formView: document.getElementById("form-view"),
+      summaryView: document.getElementById("summary-view")
+    };
 
+    let currentData = null;
+    let gradeResult = null;
+
+    // Populate dropdowns
     TEACHERS.forEach(t => {
-      const opt = document.createElement("option");
-      opt.value = t.id; opt.textContent = t.name;
-      teacherSelect.appendChild(opt);
+      const opt = new Option(t.name, t.id);
+      elements.teacherSelect.add(opt);
     });
-    TASKS.forEach(task => {
-      const opt = document.createElement("option");
-      opt.value = task.id; opt.textContent = task.name;
-      taskSelect.appendChild(opt);
+    TASKS.forEach(t => {
+      const opt = new Option(t.name, t.id);
+      elements.taskSelect.add(opt);
     });
 
-    function getCurrentTask() {
-      return TASKS.find(t => t.id === taskSelect.value) || TASKS[0];
-    }
-
-    function getStorageKey() {
-      const id = (document.getElementById("studentId").value || "").trim();
-      const task = getCurrentTask();
-      return id ? `${STORAGE_PREFIX}${id}_${task.id}` : null;
-    }
-
-    function renderQuestions(task, answers = {}) {
-      questionsContainer.innerHTML = "";
+    function renderQuestions() {
+      const task = TASKS.find(t => t.id === elements.taskSelect.value);
+      elements.questionsContainer.innerHTML = "";
       task.questions.forEach((q, i) => {
         const block = document.createElement("div");
         block.className = "question-block";
-        const label = document.createElement("label");
-        label.innerHTML = `<strong>Q${i + 1}:</strong> ${q.text} <em>(${q.maxPoints} pts)</em>`;
-
-        const input = q.type === "long" ? document.createElement("textarea") : document.createElement("input");
-        input.type = q.type !== "long" ? "text" : undefined;
-        input.rows = q.type === "long" ? 4 : undefined;
-        input.name = `q_${q.id}`;
-        input.required = true;
-        input.value = answers[q.id] || "";
-
-        label.appendChild(document.createElement("br"));
-        label.appendChild(input);
-        block.appendChild(label);
-        questionsContainer.appendChild(block);
+        block.innerHTML = `
+          <strong>Q${i+1} (${q.maxPoints} pts):</strong> ${q.text}
+          ${q.type === "long" ? '<textarea rows="5" name="q_'+q.id+'"></textarea>' 
+                              : '<input type="text" name="q_'+q.id+'" />'}
+        `;
+        elements.questionsContainer.appendChild(block);
       });
     }
 
-    renderQuestions(getCurrentTask());
-
-    taskSelect.addEventListener("change", () => {
-      const saved = localStorage.getItem(getStorageKey());
-      const map = saved ? JSON.parse(saved).answers.reduce((a, c) => (a[c.id] = c.answer, a), {}) : {};
-      renderQuestions(getCurrentTask(), map);
-    });
-
-    function collectFormData() {
-      const fd = new FormData(document.getElementById("task-form"));
-      const studentId = (fd.get("studentId") || "").trim();
-      const studentName = (fd.get("studentName") || "").trim();
-      const className = (fd.get("className") || "").trim();
-      const task = getCurrentTask();
-
-      if (!studentId || !studentName) {
-        alert("Student ID and Name required.");
-        return null;
-      }
-
+    function collectData() {
+      const task = TASKS.find(t => t.id === elements.taskSelect.value);
       const answers = task.questions.map(q => ({
         id: q.id,
         question: q.text,
-        answer: (fd.get(`q_${q.id}`) || "").trim()
+        answer: document.querySelector(`[name="q_${q.id}"]`).value.trim()
       }));
 
-      return { studentId, studentName, className, taskId: task.id, taskName: task.name, answers };
-    }
-
-    let lastData = null;
-    let lastGradeResult = null;
-
-    function generateSummary(data) {
-      lastData = data;
-      const teacher = TEACHERS.find(t => t.id === teacherSelect.value);
-      document.getElementById("summary-header").textContent =
-        `${data.studentName} (${data.studentId}) → ${teacher?.name || "Teacher"} — ${data.taskName}`;
-
-      const container = document.getElementById("summary-questions");
-      container.innerHTML = "";
-      data.answers.forEach((a, i) => {
-        const div = document.createElement("div");
-        div.className = "question-block";
-        div.innerHTML = `<strong>Q${i + 1}:</strong> ${a.question}<br><em>${a.answer || "(No answer)"}</em>`;
-        container.appendChild(div);
-      });
-
-      let text = `Student: ${data.studentName} (${data.studentId})\n`;
-      text += `Teacher: ${teacher?.name || "N/A"}\n`;
-      text += `Task: ${data.taskName}\n`;
-      text += `Class: ${data.className || "N/A"}\n\n`;
-      data.answers.forEach((a, i) => {
-        text += `Q${i + 1}: ${a.question}\nAnswer: ${a.answer || "(No answer)"}\n\n`;
-      });
-      if (lastGradeResult) {
-        text += `--- AUTO-GRADE ---\n${lastGradeResult.full}\n`;
+      const authInput = document.getElementById("auth-check").value.trim().toLowerCase();
+      if (authInput !== randomWord) {
+        alert(`Please type the secret word correctly: "${randomWord}"`);
+        return null;
       }
-      document.getElementById("copyable-text").textContent = text;
-
-      formView.classList.add("hidden");
-      summaryView.classList.remove("hidden");
-    }
-
-    document.getElementById("task-form").addEventListener("submit", e => {
-      e.preventDefault();
-      const data = collectFormData();
-      if (!data) return;
-      const key = getStorageKey();
-      if (key) localStorage.setItem(key, JSON.stringify(data));
-      generateSummary(data);
-    });
-
-    document.getElementById("save-only-button").addEventListener("click", () => {
-      const data = collectFormData();
-      if (!data) return;
-      const key = getStorageKey();
-      if (key) {
-        localStorage.setItem(key, JSON.stringify(data));
-        alert("Saved!");
-      }
-    });
-
-    document.getElementById("load-button").addEventListener("click", () => {
-      const key = getStorageKey();
-      if (!key) { alert("Enter Student ID."); return; }
-      const raw = localStorage.getItem(key);
-      if (!raw) { alert("No saved work."); return; }
-      const data = JSON.parse(raw);
-      document.getElementById("studentId").value = data.studentId;
-      document.getElementById("studentName").value = data.studentName;
-      document.getElementById("className").value = data.className || "";
-      taskSelect.value = data.taskId;
-      teacherSelect.value = data.teacherId || TEACHERS[0].id;
-      const map = {};
-      data.answers.forEach(a => map[a.id] = a.answer);
-      renderQuestions(TASKS.find(t => t.id === data.taskId), map);
-      alert("Loaded!");
-    });
-
-    // === AUTO-GRADING ===
-    function autoGrade(data) {
-      const task = TASKS.find(t => t.id === data.taskId);
-      if (!task || !task.totalPoints) return null;
-
-      let totalEarned = 0;
-      const feedback = [];
-
-      data.answers.forEach(ans => {
-        const q = task.questions.find(q => q.id === ans.id);
-        if (!q || !q.rubric) {
-          feedback.push(`Q${task.questions.indexOf(q) + 1}: Manual review needed.`);
-          return;
-        }
-
-        let earned = 0;
-        const hints = [];
-        q.rubric.forEach(rule => {
-          if (rule.check.test(ans.answer)) {
-            earned += rule.points;
-          } else {
-            hints.push(rule.hint);
-          }
-        });
-        earned = Math.min(earned, q.maxPoints);
-        totalEarned += earned;
-
-        const good = earned >= q.maxPoints * 0.8 ? "Great!" : earned > 0 ? "Good start!" : "";
-        const improve = hints.length > 0 ? `Try: ${hints[0]}` : "Perfect!";
-
-        feedback.push(`**Q${task.questions.indexOf(q) + 1}: ${earned}/${q.maxPoints}**  
-${good}  
-${improve}`);
-      });
-
-      const pct = ((totalEarned / task.totalPoints) * 100).toFixed(0);
-      const grade = totalEarned >= task.totalPoints * 0.9 ? "A" :
-                    totalEarned >= 0.8 ? "B" :
-                    totalEarned >= 0.7 ? "C" :
-                    totalEarned >= 0.6 ? "D" : "F";
 
       return {
-        score: `${totalEarned}/${task.totalPoints}`,
-        grade, percentage: `${pct}%`,
-        feedback: feedback.join("\n\n"),
-        full: `Score: ${totalEarned}/${task.totalPoints} (${grade}, ${pct}%)\n\n${feedback.join("\n\n")}`
+        studentId: elements.studentId.value.trim(),
+        studentName: elements.studentName.value.trim(),
+        className: elements.className.value.trim(),
+        teacher: TEACHERS.find(t => t.id === elements.teacherSelect.value),
+        taskName: task.name,
+        answers,
+        timestamp: new Date().toLocaleString(),
+        ipHint: "Submitted from browser" // could be enhanced
       };
     }
 
-    document.getElementById("grade-button").addEventListener("click", () => {
-      if (!lastData) return;
-      const result = autoGrade(lastData);
-      if (!result) { alert("No rubric."); return; }
+    function autoGrade(data) {
+      const task = TASKS.find(t => t.id === elements.taskSelect.value);
+      let earned = 0;
+      data.answers.forEach(a => {
+        const q = task.questions.find(qq => qq.id === a.id);
+        if (q && q.rubric) {
+          q.rubric.forEach(r => {
+            if (r.check.test(a.answer)) earned += r.points;
+          });
+        }
+      });
+      const pct = Math.round((earned / task.totalPoints) * 100);
+      const letter = earned >= 90 ? "A" : earned >= 80 ? "B" : earned >= 70 ? "C" : earned >= 60 ? "D" : "F";
+      return { score: `${earned}/${task.totalPoints}`, letter, pct };
+    }
 
-      lastGradeResult = result;
-      lastData.gradeResult = result;
-
-      const container = document.getElementById("summary-questions");
-      const existing = container.querySelector(".grade-box");
-      if (existing) existing.remove();
-
-      const box = document.createElement("div");
-      box.className = "grade-box";
-      box.innerHTML = `
-        <h3>Auto-Grade Result</h3>
-        <p><strong>${result.score}</strong> → <strong>${result.grade}</strong> (${result.percentage})</p>
-        <pre style="background:#fff;padding:1rem;margin:0.5rem 0 0;border:1px solid #ddd;">${result.feedback}</pre>
-        <button onclick="navigator.clipboard.writeText('${result.full.replace(/'/g, "\\'")}')" 
-                style="margin-top:0.5rem;background:#8e44ad;">Copy Feedback</button>
-      `;
-      container.appendChild(box);
-    });
-
-    // === PDF GENERATION ===
     async function generatePDF() {
-      if (!lastData) return null;
-      const teacher = TEACHERS.find(t => t.id === teacherSelect.value);
-      const { score = "", grade = "", percentage = "", feedback = "" } = lastGradeResult || {};
-
       const doc = new jsPDF();
       let y = 20;
-      const lineHeight = 7;
-
       doc.setFontSize(16);
-      doc.text(`${lastData.studentName} - ${lastData.taskName}`, 105, y, { align: "center" });
-      y += 10;
-      doc.setFontSize(12);
-      doc.text(`ID: ${lastData.studentId} | Class: ${lastData.className || "N/A"}`, 105, y, { align: "center" });
-      y += 10;
-      doc.text(`Teacher: ${teacher?.name || "N/A"}`, 105, y, { align: "center" });
+      doc.text(`${currentData.studentName} - ${currentData.taskName}`, 105, y, { align: "center" });
       y += 15;
+      doc.setFontSize(12);
+      doc.text(`ID: ${currentData.studentId} | Submitted: ${currentData.timestamp}`, 105, y, { align: "center" });
+      y += 20;
 
-      if (lastGradeResult) {
-        doc.setFontSize(14);
-        doc.text(`Grade: ${score} (${grade}, ${percentage})`, 105, y, { align: "center" });
-        y += 15;
+      if (gradeResult) {
+        doc.setFontSize(18);
+        doc.text(`GRADE: ${gradeResult.score} (${gradeResult.letter}, ${gradeResult.pct}%)`, 105, y, { align: "center" });
+        y += 25;
       }
 
-      doc.setFontSize(11);
-      lastData.answers.forEach((a, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
+      currentData.answers.forEach((a, i) => {
+        if (y > 260) { doc.addPage(); y = 20; }
+        doc.setFontSize(11);
         doc.setFont("helvetica", "bold");
-        doc.text(`Q${i + 1}: ${a.question}`, 15, y);
-        y += lineHeight;
+        doc.text(`Q${i+1}: ${a.question}`, 15, y);
+        y += 8;
         doc.setFont("helvetica", "normal");
-        const lines = doc.splitTextToSize(a.answer || "(No answer)", 180);
-        lines.forEach(line => {
-          if (y > 280) { doc.addPage(); y = 20; }
+        doc.splitTextToSize(a.answer || "(no answer)", 180).forEach(line => {
           doc.text(line, 20, y);
-          y += lineHeight;
+          y += 7;
         });
-        y += 5;
+        y += 10;
       });
 
-      if (lastGradeResult) {
-        if (y > 250) { doc.addPage(); y = 20; }
-        doc.setFont("helvetica", "bold");
-        doc.text("AUTO-GRADE FEEDBACK", 15, y);
-        y += lineHeight;
-        doc.setFont("helvetica", "normal");
-        const fbLines = doc.splitTextToSize(feedback, 180);
-        fbLines.forEach(line => {
-          if (y > 280) { doc.addPage(); y = 20; }
-          doc.text(line, 20, y);
-          y += lineHeight;
-        });
-      }
-
-      const pdfBlob = doc.output('blob');
-      const base64 = await blobToBase64(pdfBlob);
-      return { blob: pdfBlob, base64, filename: `${lastData.studentId}_${lastData.taskName.replace(/ /g, "_")}.pdf` };
+      return doc.output('blob');
     }
 
-    function blobToBase64(blob) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(',')[1]);
-        reader.readAsDataURL(blob);
+    // Main actions
+    document.getElementById("task-form").addEventListener("submit", e => {
+      e.preventDefault();
+      currentData = collectData();
+      if (!currentData) return;
+      gradeResult = autoGrade(currentData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ currentData, gradeResult }));
+
+      document.getElementById("summary-header").textContent = 
+        `${currentData.studentName} → ${currentData.teacher.name}`;
+      document.getElementById("grade-result").textContent = 
+        `${gradeResult.score} (${gradeResult.letter}, ${gradeResult.pct}%)`;
+
+      const container = document.getElementById("summary-questions");
+      container.innerHTML = "";
+      currentData.answers.forEach((a, i) => {
+        const div = document.createElement("div");
+        div.className = "question-block";
+        div.innerHTML = `<strong>Q${i+1}:</strong> ${a.question}<br><em>${a.answer || "(empty)"}</em>`;
+        container.appendChild(div);
       });
-    }
+
+      elements.formView.classList.add("hidden");
+      elements.summaryView.classList.remove("hidden");
+    });
+
+    document.getElementById("load-button").addEventListener("click", () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return alert("No saved work found.");
+      const { currentData: data, gradeResult: gr } = JSON.parse(saved);
+      currentData = data; gradeResult = gr;
+      elements.studentId.value = data.studentId;
+      elements.studentName.value = data.studentName;
+      elements.className.value = data.className;
+      elements.teacherSelect.value = data.teacher.id;
+      elements.taskSelect.value = TASKS.find(t => t.name === data.taskName)?.id || TASKS[0].id;
+      renderQuestions();
+      alert("Work loaded!");
+    });
+
+    document.getElementById("back-button").addEventListener("click", () => {
+      elements.summaryView.classList.add("hidden");
+      elements.formView.classList.remove("hidden");
+    });
 
     document.getElementById("pdf-button").addEventListener("click", async () => {
-      const pdf = await generatePDF();
-      if (!pdf) { alert("Generate summary first."); return; }
-      const url = URL.createObjectURL(pdf.blob);
+      const blob = await generatePDF();
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = pdf.filename;
+      a.href = url; a.download = `${currentData.studentId}_${currentData.taskName.replace(/ /g,"_")}.pdf`;
       a.click();
-      URL.revokeObjectURL(url);
     });
 
-    // === SUBMIT TO TEACHER (EMAIL + PDF) ===
-    document.getElementById("email-button").addEventListener("click", async () => {
-      const data = collectFormData();
-      if (!data) return;
+    // Email with attachment (works on mobile & desktop!)
+    async function sendEmail() {
+      if (!currentData) return alert("Generate summary first!");
+      const pdfBlob = await generatePDF();
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result.split(',')[1];
+        const subject = encodeURIComponent(`${currentData.studentName} - ${currentData.taskName}`);
+        const body = encodeURIComponent(
+          `Hi ${currentData.teacher.name},\n\nPlease find my completed work attached.\n\n` +
+          `Grade: ${gradeResult.score} (${gradeResult.letter})\n` +
+          `Submitted: ${currentData.timestamp}\n\nThank you!`
+        );
+        window.location.href = `mailto:${currentData.teacher.email}?subject=${subject}&body=${body}&attachment=data:application/pdf;base64,${base64}`;
+      };
+      reader.readAsDataURL(pdfBlob);
+    }
 
-      // Save first
-      const key = getStorageKey();
-      if (key) localStorage.setItem(key, JSON.stringify(data));
+    document.getElementById("email-button").addEventListener("click", sendEmail);
+    document.getElementById("email-button2").addEventListener("click", sendEmail);
 
-      const teacher = TEACHERS.find(t => t.id === teacherSelect.value);
-      if (!teacher || !teacher.email) {
-        alert("Please select a teacher with a valid email.");
-        return;
-      }
-
-      // Generate PDF
-      const pdf = await generatePDF();
-      if (!pdf) {
-        alert("Please generate summary first.");
-        return;
-      }
-
-      // Email body
-      const subject = encodeURIComponent(`${data.studentName} - ${data.taskName}`);
-      let body = `Hi ${teacher.name},\n\n`;
-      body += `Please find my completed work attached as a PDF.\n\n`;
-      body += `Student: ${data.studentName} (${data.studentId})\n`;
-      body += `Task: ${data.taskName}\n`;
-      if (lastGradeResult) body += `Auto-Grade: ${lastGradeResult.score} (${lastGradeResult.grade})\n`;
-      body += `\nThank you!\n`;
-
-      const encodedBody = encodeURIComponent(body);
-      const attachment = `data:application/pdf;base64,${pdf.base64}`;
-
-      // Open email client with attachment
-      const mailto = `mailto:${teacher.email}?subject=${subject}&body=${encodedBody}&attachment=${attachment}`;
-      window.location.href = mailto;
-
-      alert(`Opening your email app with PDF attached to ${teacher.name}...`);
-    });
-
-    // Navigation
-    document.getElementById("back-button").addEventListener("click", () => {
-      summaryView.classList.add("hidden");
-      formView.classList.remove("hidden");
-    });
-    document.getElementById("print-button").addEventListener("click", () => window.print());
-    document.getElementById("clear-button").addEventListener("click", () => {
-      if (confirm("Clear all saved work?")) {
-        localStorage.clear();
-        alert("All data cleared.");
-      }
-    });
-
-    // Save data for grading
-    const origGen = generateSummary;
-    generateSummary = function(data) {
-      lastData = data;
-      origGen(data);
-    };
+    // Initial render
+    elements.taskSelect.addEventListener("change", renderQuestions);
+    renderQuestions();
   </script>
 </body>
 </html>

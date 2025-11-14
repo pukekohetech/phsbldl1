@@ -1,35 +1,35 @@
 // =============================
-//   script.js – Final Secure Version
+//   script.js – Secure Version
 // =============================
 
 const STORAGE_KEY = "TECH_DATA";
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
 let currentAssessment = null;
 
-// XOR encrypt/decrypt answers in localStorage
+// XOR encode/decode (obfuscate localStorage)
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join('');
 
-// Load saved student info
+// Load saved data
 document.getElementById("name").value = data.name || "";
 document.getElementById("id").value = data.id || "";
 if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-// Lock ID if exists
+// Lock ID
 if (data.id) {
   document.getElementById("locked-msg").classList.remove("hidden");
   document.getElementById("locked-id").textContent = data.id;
   document.getElementById("id").readOnly = true;
 }
 
-// Populate teachers
+// Teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
   o.value = t.email; o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
 
-// Populate assessments
+// Assessments
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
@@ -118,17 +118,7 @@ window.submitWork = function() {
   if (data.id && document.getElementById("id").value !== data.id) return alert("ID locked to: " + data.id);
   const { total, results } = gradeIt();
   const pct = Math.round((total / currentAssessment.totalPoints) * 100);
-  finalData = {
-    name, id,
-    teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
-    teacherEmail: data.teacher,
-    assessment: currentAssessment,
-    points: total,
-    totalPoints: currentAssessment.totalPoints,
-    pct,
-    submittedAt: new Date().toLocaleString(),
-    results
-  };
+  finalData = { name, id, teacherName: document.getElementById("teacher").selectedOptions[0].textContent, teacherEmail: data.teacher, assessment: currentAssessment, points: total, totalPoints: currentAssessment.totalPoints, pct, submittedAt: new Date().toLocaleString(), results };
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = total + "/" + currentAssessment.totalPoints + "<br><small>(" + pct + "%)</small>";
@@ -137,9 +127,7 @@ window.submitWork = function() {
   results.forEach(r => {
     const div = document.createElement("div");
     div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    div.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
-      Your answer: <em>${r.answer}</em><br>
-      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
+    div.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>Your answer: <em>${r.answer}</em><br>${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
     ansDiv.appendChild(div);
   });
   document.getElementById("form").classList.add("hidden");
@@ -151,10 +139,10 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
-// EMAIL / PDF (minimal placeholder – re-add your full version if needed)
+// EMAIL WORK (PDF) – keep your original if needed
 window.emailWork = async function() {
   if (!finalData) return alert("Submit first!");
-  alert("PDF feature not included in this version. Re-add your full emailWork() if needed.");
+  alert("PDF feature not included in minimal secure version. Re-add your emailWork() if needed.");
 };
 
 // =============================
@@ -178,7 +166,6 @@ function showToast(msg) {
 
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
-    // Focus: show warning + overwrite clipboard
     field.addEventListener('focus', function() {
       sabotageClipboard();
       if (!this.value.trim()) {
@@ -187,8 +174,6 @@ function attachProtection() {
         this.style.fontStyle = 'italic';
       }
     });
-
-    // Typing: clear warning + save
     field.addEventListener('input', function() {
       if (this.value === WARNING) {
         this.value = '';
@@ -198,14 +183,7 @@ function attachProtection() {
       const qid = this.id.slice(1);
       saveAnswer(qid);
     });
-
-    // Block paste
-    field.addEventListener('paste', e => {
-      e.preventDefault();
-      showToast('Pasting blocked – type your answer!');
-    });
-
-    // Block copy/cut
+    field.addEventListener('paste', e => { e.preventDefault(); showToast('Pasting blocked!'); });
     field.addEventListener('copy', e => e.preventDefault());
     field.addEventListener('cut',  e => e.preventDefault());
   });

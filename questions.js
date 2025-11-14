@@ -1,54 +1,71 @@
+// questions.js
+const TEACHERS = [
+  { id: "RY", name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
+  { id: "RNR", name: "Mr Ranford", email: "rnr@pukekohehigh.school.nz" },
+  { id: "Other", name: "Unknown", email: "technology@pukekohehigh.school.nz" }
+];
+
 const TASKS = [
-  // =========================================================
+  // =============================================================
   // PART 1 – New Zealand Timbers (11 marks)
-  // =========================================================
+  // =============================================================
   {
     id: "bcats-24355-materials-part1",
-    name: "US 24355 Demonstrate knowledge of construction materials – Part 1: New Zealand Timbers",
+    name: "US 24355 – Demonstrate knowledge of construction materials – Part 1: NZ Timbers",
     totalPoints: 11,
-    instructions: "Answer all questions in this part.",
     questions: [
       {
         id: "q1",
         text: "What is the most common exotic timber that is grown in plantations in New Zealand?",
         type: "short",
         maxPoints: 2,
-        hint: "Fast-growing softwood planted by the millions since the 1930s – the word 'pine' is in the name.",
-        modelAnswer: "Radiata pine (Pinus radiata) is by far the most common plantation timber in New Zealand."
+        hint: "Fast-growing softwood, name includes 'pine', planted everywhere since the 1930s.",
+        modelAnswer: "Radiata pine (Pinus radiata)",
+        rubric: [{ points: 2, check: /radiata\s+pine|pinus\s+radiata/i }]
       },
       {
         id: "q2",
         text: "Name 2 types of New Zealand native timbers that can be used for high-quality furniture.",
         type: "short",
         maxPoints: 2,
-        hint: "One reddish-brown (R……), one pale golden from ancient swamps (K……).",
-        modelAnswer: "Rimu and Kauri (also accept Totara, Puriri or Matai in some cases)."
+        hint: "One starts with R (reddish), one with K (pale golden from swamps).",
+        modelAnswer: "Rimu and Kauri (also accept Totara, Matai, Puriri)",
+        rubric: [
+          { points: 1, check: /rimu/i },
+          { points: 1, check: /kauri/i }
+        ]
       },
       {
         id: "q3",
         text: "Name an imported timber that can be used for decking and outdoor furniture.",
         type: "short",
         maxPoints: 2,
-        hint: "Dense, oily, reddish hardwood from Southeast Asia – sold here as Kwila or Merbau.",
-        modelAnswer: "Kwila (also known as Merbau)."
+        hint: "Dense, reddish-brown Southeast Asian hardwood – sold as Kwila or Merbau.",
+        modelAnswer: "Kwila (Merbau)",
+        rubric: [{ points: 2, check: /kwila|merbau/i }]
       },
       {
         id: "q4",
         text: "List 3 types of timber that are commonly used for woodturning.",
         type: "short",
         maxPoints: 3,
-        hint: "Think native timbers with beautiful figure – ancient swamp wood, honey-coloured, etc.",
-        modelAnswer: "Common choices: Kauri, Matai, Rewarewa, Rimu, Puriri, Totara."
+        hint: "Beautiful native timbers with interesting grain – think ancient swamp wood, honey-coloured, etc.",
+        modelAnswer: "Any 3 from: Kauri, Matai, Rewarewa, Rimu, Puriri, Totara",
+        rubric: [
+          { points: 1, check: /kauri/i },
+          { points: 1, check: /matai/i },
+          { points: 1, check: /rewarewa|rimu|puriri|totara/i }
+        ]
       }
     ]
   },
 
-  // =========================================================
+  // =============================================================
   // PART 2 – Manufactured Boards & Plastics (9 marks)
-  // =========================================================
+  // =============================================================
   {
     id: "bcats-24355-materials-part2",
-    name: "US 24355 Demonstrate knowledge of construction materials – Part 2: Manufactured Boards & Plastics",
+    name: "US 24355 – Demonstrate knowledge of construction materials – Part 2: Boards & Plastics",
     totalPoints: 9,
     questions: [
       {
@@ -56,42 +73,50 @@ const TASKS = [
         text: "Describe the effects of moisture on MDF.",
         type: "long",
         maxPoints: 3,
-        hint: "What happens if water soaks into the edge of an MDF board?",
-        modelAnswer: "MDF swells badly (especially edges), fibres break apart, it becomes soft and loses strength permanently. Must be sealed or kept dry."
+        hint: "What happens when water gets in? Think swelling and strength.",
+        modelAnswer: "MDF swells badly (especially edges), fibres break down, becomes soft and permanently weak.",
+        rubric: [
+          { points: 1, check: /swell|expand/i },
+          { points: 1, check: /fibre|fiber|break|degrade/i },
+          { points: 1, check: /weak|lose.*strength/i }
+        ]
       },
       {
         id: "q6",
-        text: "Name a lightweight expanded plastic used for insulation in houses and buoyancy in boats.",
+        text: "Name a lightweight expanded plastic used for insulation and buoyancy.",
         type: "short",
         maxPoints: 2,
-        hint: "White beady foam – bean-bag filling or under-floor insulation.",
-        modelAnswer: "Expanded polystyrene (EPS) or extruded polystyrene (XPS)."
+        hint: "White beady foam – bean bags, underfloor insulation, boat flotation.",
+        modelAnswer: "Expanded polystyrene (EPS) or polystyrene foam",
+        rubric: [{ points: 2, check: /polystyrene|eps|styrofoam/i }]
       },
       {
         id: "q9",
-        text: "List a hard, transparent material that can be noise-resistant, curved, and even bulletproof.",
+        text: "Name a hard, transparent plastic that can be bulletproof and noise-resistant.",
         type: "short",
         maxPoints: 2,
-        hint: "Clear plastic used for bus shelters and riot shields.",
-        modelAnswer: "Polycarbonate (Lexan, Makrolon, etc.)."
+        hint: "Used for bus shelters, riot shields, safety glazing.",
+        modelAnswer: "Polycarbonate",
+        rubric: [{ points: 2, check: /polycarbonate|lexan|makrolon/i }]
       },
       {
         id: "q10",
-        text: "Name the plastic sheet material commonly used as a waterproof membrane under concrete.",
+        text: "Name the plastic sheet used as a waterproof membrane under concrete slabs.",
         type: "short",
         maxPoints: 2,
-        hint: "Black or clear 0.25 mm polythene under house slabs – often called DPM.",
-        modelAnswer: "Polythene / polyethylene sheet (Damp-Proof Membrane or DPM)."
+        hint: "Black or clear polythene sheet – often called DPM.",
+        modelAnswer: "Polythene / polyethylene / DPM",
+        rubric: [{ points: 2, check: /polythene|polyethylene|dpm|damp.?proof/i }]
       }
     ]
   },
 
-  // =========================================================
+  // =============================================================
   // PART 3 – Metals & Concrete (5 marks)
-  // =========================================================
+  // =============================================================
   {
     id: "bcats-24355-materials-part3",
-    name: "US 24355 Demonstrate knowledge of construction materials – Part 3: Metals & Concrete",
+    name: "US 24355 – Demonstrate knowledge of construction materials – Part 3: Metals & Concrete",
     totalPoints: 5,
     questions: [
       {
@@ -99,26 +124,32 @@ const TASKS = [
         text: "Name a commonly used metal that can be easily joined by welding.",
         type: "short",
         maxPoints: 2,
-        hint: "Everyday workshop structural metal – low-carbon type.",
-        modelAnswer: "Mild steel (low-carbon steel)."
+        hint: "The standard workshop structural metal – low carbon.",
+        modelAnswer: "Mild steel",
+        rubric: [{ points: 2, check: /mild\s+steel|low\s+carbon/i }]
       },
       {
         id: "q11",
         text: "What are the 3 main materials that make up concrete?",
         type: "short",
         maxPoints: 3,
-        hint: "Cement + water + the gritty stuff.",
-        modelAnswer: "Portland cement, water, and aggregate (sand + gravel/crushed stone)."
+        hint: "Cement + water + the stony stuff.",
+        modelAnswer: "Cement, water, aggregate (sand + gravel/stone)",
+        rubric: [
+          { points: 1, check: /cement/i },
+          { points: 1, check: /water/i },
+          { points: 1, check: /aggregate|sand|gravel|stone/i }
+        ]
       }
     ]
   },
 
-  // =========================================================
+  // =============================================================
   // PART 4 – Paint Finishes (5 marks)
-  // =========================================================
+  // =============================================================
   {
     id: "bcats-24355-materials-part4",
-    name: "US 24355 Demonstrate knowledge of construction materials – Part 4: Paint Finishes",
+    name: "US 24355 – Demonstrate knowledge of construction materials – Part 4: Paint",
     totalPoints: 5,
     questions: [
       {
@@ -126,47 +157,67 @@ const TASKS = [
         text: "What is the function of a primer coat when painting?",
         type: "long",
         maxPoints: 2,
-        hint: "It seals the surface and helps top coats stick.",
-        modelAnswer: "Primer seals porous surfaces, provides good adhesion for top coats, and can prevent rust or staining."
+        hint: "Two main jobs: seals the surface and helps paint stick.",
+        modelAnswer: "Seals porous surfaces and improves adhesion of top coats.",
+        rubric: [
+          { points: 1, check: /seal|porous/i },
+          { points: 1, check: /adhesion|bond|stick|key/i }
+        ]
       },
       {
         id: "q13",
-        text: "Identify 3 methods commonly used to apply a paint finish.",
+        text: "Identify 3 methods commonly used to apply paint.",
         type: "short",
         maxPoints: 3,
-        hint: "Bristles, fluffy cylinder, and compressed-air method.",
-        modelAnswer: "Brush, roller, and spray (airless/HVLP/conventional)."
+        hint: "Brush, roller, and one that uses pressure or air.",
+        modelAnswer: "Brush, roller, spray",
+        rubric: [
+          { points: 1, check: /brush/i },
+          { points: 1, check: /roller/i },
+          { points: 1, check: /spray/i }
+        ]
       }
     ]
   },
 
-  // =========================================================
+  // =============================================================
   // PART 5 – Polishes & Varnishes (7 marks)
-  // =========================================================
+  // =============================================================
   {
     id: "bcats-24355-materials-part5",
-    name: "US 24355 Demonstrate knowledge of construction materials – Part 5: Polishes & Varnishes",
+    name: "US 24355 – Demonstrate knowledge of construction materials – Part 5: Polishes & Varnishes",
     totalPoints: 7,
     questions: [
       {
         id: "q14",
-        text: "Name 2 types of polishes and state an advantage polish has over oil finishes.",
+        text: "Name 2 types of polishes and state an advantage over oil finishes.",
         type: "long",
         maxPoints: 3,
-        hint: "Traditional examples: wax and French polish (shellac).",
-        modelAnswer: "Wax polish and French polish (shellac). Advantage: builds a harder, more protective, glossy film that resists water rings and scratches better than oil."
+        hint: "Examples: wax, French polish. They give a harder, glossier surface.",
+        modelAnswer: "Wax polish and French polish. Advantage: harder, more protective, higher gloss, resists water rings better than oil.",
+        rubric: [
+          { points: 1, check: /wax|paste\s+wax|beeswax/i },
+          { points: 1, check: /french\s+polish|shellac/i },
+          { points: 1, check: /hard|durable|gloss|protective|resist/i }
+        ]
       },
       {
         id: "q15",
-        text: "Name 2 types of varnishes, briefly stating an advantage of each.",
+        text: "Name 2 types of varnishes and state an advantage of each.",
         type: "long",
         maxPoints: 4,
-        hint: "One is super tough (gym floors), one is fast-drying and low odour.",
-        modelAnswer: "Polyurethane varnish – extremely durable/scratch-resistant. Water-based acrylic varnish – fast drying, low odour, non-yellowing, easy clean-up."
+        hint: "One is super tough (floors), one is low-odour and fast-drying.",
+        modelAnswer: "Polyurethane – very durable/scratch-resistant. Water-based – quick dry, low odour, easy cleanup.",
+        rubric: [
+          { points: 1, check: /polyurethane/i },
+          { points: 1, check: /polyurethane.*(durable|tough|scratch|wear)/i },
+          { points: 1, check: /water.?based|acrylic/i },
+          { points: 1, check: /water.?based.*(quick|fast.*dry|low.*odou?r|clear|non.?yellow)/i }
+        ]
       }
     ]
   }
 ];
 
-// Test it loads (remove this line in your real code if you want)
-console.log("All 5 parts loaded successfully!", TASKS.length + " parts");
+// Optional: confirm it loaded
+console.log("US 24355 Materials split into 5 parts – all loaded successfully!");

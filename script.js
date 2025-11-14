@@ -144,14 +144,13 @@ window.emailWork = async function() {
   if (!finalData) return alert("Submit first!");
   alert("PDF feature not included in minimal secure version. Re-add your emailWork() if needed.");
 };
-
 // =============================
-//     COPY-PASTE PROTECTION
+// COPY-PASTE PROTECTION (revised)
 // =============================
 const WARNING = `Pasting is disabled. Type your own answer.`;
 
 async function sabotageClipboard() {
-  try { await navigator.clipboard.writeText(WARNING); } catch(e) {}
+  try { await navigator.clipboard.writeText(WARNING); } catch (_) {}
 }
 
 function showToast(msg) {
@@ -164,32 +163,33 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 2200);
 }
 
+/* Attach protection to every .answer-field */
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
-    field.addEventListener('focus', function() {
-      sabotageClipboard();
-      if (!this.value.trim()) {
-        this.value = WARNING;
-        this.style.color = '#c0392b';
-        this.style.fontStyle = 'italic';
-      }
-    });
-    field.addEventListener('input', function() {
-      if (this.value === WARNING) {
-        this.value = '';
-        this.style.color = '';
-        this.style.fontStyle = '';
-      }
-      const qid = this.id.slice(1);
+
+    // ---- 1. When the field gets focus → wipe clipboard
+    field.addEventListener('focus', sabotageClipboard);
+
+    // ---- 2. Normal typing → just save the answer
+    field.addEventListener('input', function () {
+      const qid = this.id.slice(1);          // "a12" → "12"
       saveAnswer(qid);
     });
-    field.addEventListener('paste', e => { e.preventDefault(); showToast('Pasting blocked!'); });
+
+    // ---- 3. Block paste, show toast, and keep clipboard sabotaged
+    field.addEventListener('paste', e => {
+      e.preventDefault();                    // stop the original paste
+      showToast('Pasting blocked!');
+      sabotageClipboard();                  // ensure clipboard stays "poisoned"
+    });
+
+    // ---- 4. Optional: also block copy/cut if you want
     field.addEventListener('copy', e => e.preventDefault());
     field.addEventListener('cut',  e => e.preventDefault());
   });
 }
 
-// Block right-click outside inputs
+/* Keep the right-click block you already had */
 document.addEventListener('contextmenu', e => {
   if (!e.target.matches('input, textarea')) e.preventDefault();
 });

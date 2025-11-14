@@ -1,16 +1,16 @@
 // =============================
-// script.js – SECURE & FULL (with PDF Email)
+// script.js – SECURE & DYNAMIC (PDF + Email)
 // =============================
 
 // =============================
 // 1. CORE DATA & STORAGE
 // =============================
-const STORAGE_KEY = "TECH_DATA";               // EDIT: localStorage key name
+const STORAGE_KEY = "TECH_DATA";
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
-let currentAssessment = null;                  // currently loaded assessment
+let currentAssessment = null;
 
 // ----- XOR OBFUSCATION (light security) -----
-const XOR_KEY = 42;                            // EDIT: change the XOR key (0‑255)
+const XOR_KEY = 42;                            // EDIT: change the XOR key
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join('');
 
@@ -25,13 +25,13 @@ if (data.teacher) document.getElementById("teacher").value = data.teacher;
 if (data.id) {
   document.getElementById("locked-msg").classList.remove("hidden");
   document.getElementById("locked-id").textContent = data.id;
-  document.getElementById("id").readOnly = true;               // EDIT: set false to allow editing
+  document.getElementById("id").readOnly = true;
 }
 
 // ----- POPULATE TEACHER DROPDOWN -----
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
-  o.value = t.email;                 // uses email (required for mailto)
+  o.value = t.email;
   o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
@@ -93,12 +93,10 @@ function saveAnswer(qid) {
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
 function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw) : "";
 }
-
 function gradeIt() {
   let total = 0;
   const results = [];
@@ -159,7 +157,7 @@ window.submitWork = function () {
     results
   };
 
-  // Show results
+  // ---- UI RESULTS (uses assessment.title) ----
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${currentAssessment.totalPoints}<br><small>(${pct}%)</small>`;
@@ -187,110 +185,150 @@ window.back = () => {
 };
 
 // =============================
-// 6. EMAIL WORK – PDF GENERATION & MAILTO
+// 6. EMAIL WORK – PDF (DYNAMIC TITLE + CREST)
 // =============================
 window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
 
-  // Load jsPDF + html2canvas from CDN
-  const loadScript = (src) => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  };
+  // ---- Load PDF libraries on demand ----
+  const loadScript = src => new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
 
   try {
     await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
     await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
   } catch (e) {
-    return alert("Failed to load PDF library. Check internet connection.");
+    return alert("Failed to load PDF library. Check internet.");
   }
 
   const { jsPDF } = window.jspdf;
 
-  // Hide buttons before capture
-  const buttons = document.querySelectorAll('.btn-group');
-  buttons.forEach(b => b.style.display = 'none');
+  // Hide buttons
+  const btns = document.querySelectorAll('.btn-group');
+  btns.forEach(b => b.style.display = 'none');
 
-  // Capture result section
+  // Capture result area
   const resultEl = document.getElementById('result');
   const canvas = await html2canvas(resultEl, { scale: 2 });
   const imgData = canvas.toDataURL('image/png');
+  btns.forEach(b => b.style.display = '');
 
-  // Restore buttons
-  buttons.forEach(b => b.style.display = '');
-
-  // Create PDF
+  // ---- PDF setup ----
   const pdf = new jsPDF('p', 'mm', 'a4');
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  const imgWidth = pageWidth - 20;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
 
-  let heightLeft = imgHeight;
-  let position = 10;
+  // ---- Load crest (optional) ----
+  const crestUrl = 'PHS_Crest.png';
+  let crestImg = null;
+  try {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    await new Promise((res, rej) => {
+      img.onload = res;
+      img.onerror = () => { console.warn("Crest not loaded"); res(); };
+      img.src = crestUrl + '?t=' + Date.now();
+    });
+    if (img.width) crestImg = img;
+  } catch (_) {}
 
-  pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight - 20;
+  // ---- Helper: draw header (re‑used on every page) ----
+  const drawHeader = (yOffset = 0) => {
+    pdf.setFillColor(26, 73, 113);
+    pdf.rect(0, yOffset, pageW, 35, 'F');
+
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(18);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(finalData.assessment.title, 14, yOffset + 20);   // DYNAMIC
+
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`${finalData.assessment.subtitle}`, 14, yOffset + 28);
+
+    if (crestImg) {
+      const sz = 28;
+      pdf.addImage(crestImg, 'PNG', pageW - sz - 10, yOffset + 5, sz, sz);
+    } else {
+      pdf.setFontSize(10);
+      pdf.text("PHS", pageW - 25, yOffset + 20);
+    }
+  };
+
+  // ---- First page header ----
+  drawHeader();
+
+  // ---- Student line ----
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFontSize(11);
+  const info = `${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`;
+  pdf.text(info, 14, 40);
+
+  // ---- Grade box ----
+  pdf.setFillColor(240, 248, 255);
+  pdf.rect(14, 45, 60, 15, 'F');
+  pdf.setTextColor(26, 73, 113);
+  pdf.setFontSize(16);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text(`${finalize.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
+
+  // ---- Add captured image (results) ----
+  const imgW = pageW - 28;
+  const imgH = (canvas.height * imgW) / canvas.width;
+  let heightLeft = imgH;
+  let posY = 70;
+
+  pdf.addImage(imgData, 'PNG', 14, posY, imgW, imgH);
+  heightLeft -= pageH - posY - 10;
 
   while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
+    posY = heightLeft - imgH;
     pdf.addPage();
-    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight - 20;
+    drawHeader();                         // repeat header on new pages
+    pdf.addImage(imgData, 'PNG', 14, posY, imgW, imgH);
+    heightLeft -= pageH - 40;
   }
 
-  // Generate filename
+  // ---- Footer ----
+  pdf.setFontSize(9);
+  pdf.setTextColor(100, 100, 100);
+  pdf.text("Generated by Pukekohe High Tech Dept", 14, pageH - 10);
+
+  // ---- Save / Email ----
   const filename = `${finalData.name.replace(/\s+/g, '_')}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const pdfBlob = pdf.output('blob');
   const pdfUrl = URL.createObjectURL(pdfBlob);
 
-  // Create mailto link with attachment
-  const subject = encodeURIComponent(`US 24355 Results – ${finalData.name} (${finalData.pct}%)`);
+  const subject = encodeURIComponent(`${finalData.assessment.title} – ${finalData.name} (${finalData.pct}%)`);
   const body = encodeURIComponent(
     `Hi ${finalData.teacherName},\n\n` +
-    `Please find attached the completed assessment for ${finalData.name} (ID: ${finalData.id}).\n\n` +
-    `Assessment: ${finalData.assessment.title}\n` +
+    `Attached: completed assessment for ${finalData.name} (ID: ${finalData.id}).\n\n` +
+    `Part: ${finalData.assessment.title}\n` +
     `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)\n` +
     `Submitted: ${finalData.submittedAt}\n\n` +
-    `Regards,\nPukekohe High Tech Dept`
+    `Regards,\nPukekohe High Technology Department`
   );
 
-  // For desktop: mailto with attachment (works in Outlook, Thunderbird)
-  const mailtoLink = document.createElement('a');
-  mailtoLink.href = `mailto:${finalData.teacherEmail}?subject=${subject}&body=${body}`;
-  
-  // Try to attach file (limited support)
+  const mailto = `mailto:${finalData.teacherEmail}?subject=${subject}&body=${body}`;
+
+  // Modern share (mobile)
   const file = new File([pdfBlob], filename, { type: 'application/pdf' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    navigator.share({
-      files: [file],
-      title: filename,
-      text: body
-    }).catch(() => {
-      // Fallback to download
-      mailtoLink.download = filename;
-      mailtoLink.click();
-    });
-  } else {
-    // Fallback: download + open email
-    const downloadLink = document.createElement('a');
-    downloadLink.href = pdfUrl;
-    downloadLink.download = filename;
-    downloadLink.click();
-
-    setTimeout(() => {
-      window.location.href = mailtoLink.href;
-    }, 1000);
+    try { await navigator.share({ files: [file], title: filename, text: body.replace(/%20/g, ' ') }); return; }
+    catch (_) {}
   }
+
+  // Desktop fallback
+  const dl = document.createElement('a');
+  dl.href = pdfUrl; dl.download = filename; dl.click();
+  setTimeout(() => window.location.href = mailto, 1000);
 };
 
 // =============================
-// 7. COPY-PASTE PROTECTION (CONFIGURABLE)
+// 7. COPY‑PASTE PROTECTION
 // =============================
 const PASTE_BLOCKED_MESSAGE      = 'Pasting blocked!';
 const CLEAR_CLIPBOARD_ON_LOAD    = true;
@@ -306,35 +344,28 @@ function showToast(msg) {
   setTimeout(() => t.style.opacity = 0, 1800);
   setTimeout(() => t.remove(), 2200);
 }
-
 async function clearClipboard() {
   try { await navigator.clipboard.writeText(''); } catch (_) {}
 }
-
-if (CLEAR_CLIPBOARD_ON_LOAD) {
-  (async () => { await clearClipboard(); })();
-}
+if (CLEAR_CLIPBOARD_ON_LOAD) (async () => { await clearClipboard(); })();
 
 function attachProtection() {
-  document.querySelectorAll('.answer-field').forEach(field => {
-    field.addEventListener('input', function () {
+  document.querySelectorAll('.answer-field').forEach(f => {
+    f.addEventListener('input', function () {
       const qid = this.id.slice(1);
       saveAnswer(qid);
     });
-
-    field.addEventListener('paste', async e => {
+    f.addEventListener('paste', async e => {
       e.preventDefault();
       showToast(PASTE_BLOCKED_MESSAGE);
       if (CLEAR_CLIPBOARD_AFTER_PASTE) await clearClipboard();
     });
-
     if (BLOCK_COPY_CUT) {
-      field.addEventListener('copy', e => e.preventDefault());
-      field.addEventListener('cut',  e => e.preventDefault());
+      f.addEventListener('copy', e => e.preventDefault());
+      f.addEventListener('cut',  e => e.preventDefault());
     }
   });
 }
-
 document.addEventListener('contextmenu', e => {
   if (!e.target.matches('input, textarea')) e.preventDefault();
 });

@@ -1,7 +1,7 @@
 const TEACHERS = [
-  { id: "ms-smith", name: "Ms. Smith", email: "smith@school.edu" },
-  { id: "mr-jones", name: "Mr. Jones", email: "jones@school.edu" },
-  { id: "dr-lee",    name: "Dr. Lee",    email: "lee@school.edu" }
+  { id: "RY", name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
+  { id: "RNR", name: "Mr Ranford", email: "rnr@pukekohehigh.school.nz" },
+  { id: "Other",    name: "Unknown",    email: "technology@pukekohehigh.school.nz" }
 ];
 
 const TASKS = [
@@ -28,3 +28,4 @@ const TASKS = [
     ]
   }
 ];
+

@@ -27,7 +27,7 @@
 
   <div id="form-view">
     <div class="note">
-      Answer the questions → Click the big purple button → Get auto-graded → Email your teacher with PDF!
+      Answer → Click purple button → Auto-graded → Email with PDF!
     </div>
 
     <form id="task-form">
@@ -49,8 +49,8 @@
       <div id="questions-container"></div>
 
       <div class="authenticity">
-        Type the word "<span id="secret-word">loading…</span>" below to prove this is your work:
-        <input type="text" id="auth-check" style="margin-top:10px;" placeholder="type secret word here" />
+        Type "<span id="secret-word">…</span>" to prove it’s your work:
+        <input type="text" id="auth-check" style="margin-top:10px;" placeholder="secret word" />
       </div>
 
       <button type="button" id="load-button" class="big-btn btn-blue">Load Saved Work</button>
@@ -62,30 +62,25 @@
   <div id="summary-view" class="hidden">
     <h2>All Done!</h2>
     <p style="text-align:center;font-size:1.4rem;" id="summary-header"></p>
-    <div id="grade-display">Calculating grade…</div>
+    <div id="grade-display">Calculating…</div>
     <div id="summary-questions"></div>
     <button id="back-button" class="big-btn btn-orange">Edit Answers</button>
   </div>
 
-  <!-- Load your existing questions.js -->
+  <!-- Load questions.js FIRST -->
   <script src="questions.js"></script>
 
+  <!-- Main script – NO checks that could break loading -->
   <script>
     const { jsPDF } = window.jspdf;
     const STORAGE_PREFIX = "bcats_";
 
-    // Authenticity word
+    // Random secret word
     const words = ["kiwi", "tui", "pohutukawa", "manuka", "kowhai", "rata", "rimu", "kauri"];
     const secretWord = words[Math.floor(Math.random() * words.length)];
     document.getElementById("secret-word").textContent = secretWord;
 
-    // Wait for questions.js
-    if (!TASKS || !TEACHERS) {
-      document.body.innerHTML = "<h2 style='color:red;text-align:center;'>Error: questions.js not found or failed to load.</h2>";
-      throw new Error("Missing TASKS or TEACHERS");
-    }
-
-    // Populate dropdowns
+    // Just use TEACHERS and TASKS directly – like your original working version
     TEACHERS.forEach(t => teacherSelect.add(new Option(t.name, t.id)));
     TASKS.forEach(t => taskSelect.add(new Option(t.name, t.id)));
 
@@ -99,7 +94,7 @@
       return id ? `${STORAGE_PREFIX}${id}_${task.id}` : null;
     }
 
-    function renderQuestions(task, savedAnswers = {}) {
+    function renderQuestions(task, saved = {}) {
       questionsContainer.innerHTML = "";
       task.questions.forEach((q, i) => {
         const block = document.createElement("div");
@@ -107,23 +102,21 @@
         block.innerHTML = `
           <strong>Q${i+1} (${q.maxPoints} pts):</strong> ${q.text}<br>
           ${q.type === "long" 
-            ? `<textarea rows="5" name="q_${q.id}">${savedAnswers[q.id] || ""}</textarea>`
-            : `<input type="text" name="q_${q.id}" value="${savedAnswers[q.id] || ""}">`
-          }
+            ? `<textarea rows="5" name="q_${q.id}">${saved[q.id] || ""}</textarea>`
+            : `<input type="text" name="q_${q.id}" value="${saved[q.id] || ""}">`}
         `;
         questionsContainer.appendChild(block);
       });
     }
 
     function collectData() {
-      if (document.getElementById("auth-check").value.trim().toLowerCase() !== secretWord) {
-        alert(`Wrong secret word! It is: "${secretWord}"`);
+      if (authCheck.value.trim().toLowerCase() !== secretWord) {
+        alert(`Secret word is "${secretWord}"`);
         return null;
       }
       const task = getCurrentTask();
       const answers = task.questions.map(q => ({
-        id: q.id,
-        question: q.text,
+        id: q.id, question: q.text,
         answer: document.querySelector(`[name="q_${q.id}"]`).value.trim()
       }));
       return {
@@ -150,7 +143,7 @@
         }
       });
       const pct = Math.round((earned / task.totalPoints) * 100);
-      const letter = earned >= 90 ? "A" : earned >= 80 ? "B" : earned >= 70 ? "C" : earned >= 60 ? "D" : "F";
+      const letter = earned >= 33 ? "A" : earned >= 26 ? "B" : earned >= 19 ? "C" : earned >= 11 ? "D" : "E";
       return { score: `${earned}/${task.totalPoints}`, letter, pct };
     }
 
@@ -159,14 +152,10 @@
       let y = 25;
       doc.setFontSize(18);
       doc.text(`${data.studentName} – ${data.taskName}`, 105, y, {align:"center"});
-      y += 15;
-      doc.setFontSize(12);
-      doc.text(`ID: ${data.studentId} | Submitted: ${data.submittedAt}`, 105, y, {align:"center"});
       y += 20;
-      doc.setFontSize(22);
+      doc.setFontSize(20);
       doc.text(`GRADE: ${grade.score} (${grade.letter} – ${grade.pct}%)`, 105, y, {align:"center"});
       y += 30;
-
       data.answers.forEach((a, i) => {
         if (y > 260) { doc.addPage(); y = 20; }
         doc.setFontSize(11);
@@ -177,80 +166,64 @@
         doc.splitTextToSize(a.answer || "(no answer)", 180).forEach(line => {
           doc.text(line, 20, y); y += 7;
         });
-        y += 12;
+        y += 10;
       });
       return doc.output('blob');
     }
 
-    // Main submit
     taskForm.addEventListener("submit", e => {
       e.preventDefault();
       const data = collectData();
       if (!data) return;
-
       const grade = autoGrade(data);
-      const key = getStorageKey();
-      if (key) localStorage.setItem(key, JSON.stringify({data, grade}));
+      localStorage.setItem(getStorageKey(), JSON.stringify({data, grade}));
 
       summaryHeader.textContent = `${data.studentName} → ${data.teacher.name}`;
-      gradeDisplay.innerHTML = `<strong>AUTO-GRADE:</strong><br>${grade.score} (${grade.letter}) – ${grade.pct}%`;
-
+      gradeDisplay.innerHTML = `<strong>${grade.score}</strong> (${grade.letter}) – ${grade.pct}%`;
       summaryQuestions.innerHTML = "";
       data.answers.forEach((a,i) => {
         const div = document.createElement("div");
         div.className = "question-block";
-        div.innerHTML = `<strong>Q${i+1}:</strong> ${a.question}<br><em>${a.answer||"(no answer)"}</em>`;
+        div.innerHTML = `<strong>Q${i+1}:</strong> ${a.question}<br><em>${a.answer||"(empty)"}</em>`;
         summaryQuestions.appendChild(div);
       });
-
       formView.classList.add("hidden");
       summaryView.classList.remove("hidden");
-      window.currentSubmission = {data, grade}; // for email/PDF
+      window.current = {data, grade};
     });
 
     loadButton.onclick = () => {
       const key = getStorageKey();
-      if (!key) return alert("Enter your Student ID first");
+      if (!key || !studentId.value.trim()) return alert("Enter Student ID");
       const saved = localStorage.getItem(key);
-      if (!saved) return alert("No saved work found");
+      if (!saved) return alert("No saved work");
       const {data} = JSON.parse(saved);
       studentId.value = data.studentId;
       studentName.value = data.studentName;
       className.value = data.className;
       teacherSelect.value = data.teacher.id;
       taskSelect.value = TASKS.find(t => t.name === data.taskName)?.id;
-      renderQuestions(getCurrentTask(), 
-        data.answers.reduce((o,a)=>(o[a.id]=a.answer,o),{})
-      );
-      alert("Work loaded!");
+      renderQuestions(getCurrentTask(), data.answers.reduce((o,a)=>(o[a.id]=a.answer,o),{}));
+      alert("Loaded!");
     };
 
-    backButton.onclick = () => {
-      summaryView.classList.add("hidden");
-      formView.classList.remove("hidden");
-    };
-
+    backButton.onclick = () => { summaryView.classList.add("hidden"); formView.classList.remove("hidden"); };
     taskSelect.onchange = () => renderQuestions(getCurrentTask());
 
     emailButton.onclick = async () => {
-      if (!window.currentSubmission) return alert("Submit and grade first!");
-      const {data, grade} = window.currentSubmission;
-      const blob = await generatePDF(data, grade);
+      if (!window.current) return alert("Submit first!");
+      const blob = await generatePDF(window.current.data, window.current.grade);
       const reader = new FileReader();
       reader.onload = () => {
         const base64 = reader.result.split(',')[1];
-        const subject = encodeURIComponent(`${data.studentName} - ${data.taskName}`);
-        const body = encodeURIComponent(
-          `Kia ora ${data.teacher.name},\n\nPlease find my completed work attached.\n\n` +
-          `Auto-Grade: ${grade.score} (${grade.letter}, ${grade.pct}%)\n` +
-          `Submitted: ${data.submittedAt}\n\nNgā mihi,\n${data.studentName}`
-        );
-        location.href = `mailto:${data.teacher.email}?subject=${subject}&body=${body}&attachment=data:application/pdf;base64,${base64}`;
+        const subject = encodeURIComponent(`${window.current.data.studentName} - ${window.current.data.taskName}`);
+        const body = encodeURIComponent(`Kia ora ${window.current.data.teacher.name},\n\nAttached is my work.\n\nGrade: ${window.current.grade.score} (${window.current.grade.letter}, ${window.current.grade.pct}%)\n\nNgā mihi,\n${window.current.data.studentName}`);
+        location.href = `mailto:${window.current.data.teacher.email}?subject=${subject}&body=${body}&attachment=data:application/pdf;base64,${base64}`;
       };
       reader.readAsDataURL(blob);
     };
 
-    // Start
+    // Start – just like your original working code
     renderQuestions(getCurrentTask());
   </script>
 </body>

@@ -180,7 +180,7 @@ function attachProtection() {
     field.addEventListener('paste', e => {
       e.preventDefault();                    // stop the original paste
       showToast('Pasting blocked!');
-      sabotageClipboard();                  // ensure clipboard stays "poisoned"
+   //   sabotageClipboard();                  // ensure clipboard stays "poisoned"
     });
 
     // ---- 4. Optional: also block copy/cut if you want

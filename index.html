@@ -28,8 +28,9 @@
   <h1>BCATS Student Submission</h1>
   <p class="subtitle">Answer → Auto-Grade → Email Teacher with PDF</p>
 
+  <!-- FORM VIEW -->
   <div id="form-view">
-    <div class="note">Your work auto-saves. Fill everything in and click the big purple button!</div>
+    <div class="note">Fill in your details and answers – everything auto-saves!</div>
 
     <form id="task-form">
       <label>Student ID: <span style="color:red">*</span></label>
@@ -50,7 +51,7 @@
       <div id="questions-container">Loading questions…</div>
 
       <div class="authenticity">
-        Type the word "<span id="secret-word">loading…</span>" to prove this is your own work:
+        Type the word "<span id="secret-word">…</span>" to prove this is your own work:
         <input type="text" id="auth-check" placeholder="type secret word here" style="margin-top:8px;" />
       </div>
 
@@ -60,10 +61,11 @@
     </form>
   </div>
 
+  <!-- SUMMARY VIEW -->
   <div id="summary-view" class="hidden">
     <h2>All Done!</h2>
     <div id="summary-header" style="text-align:center;font-size:1.4rem;margin:1.5rem 0;"></div>
-    <div id="grade-box">Calculating…</div>
+    <div id="grade-box">Calculating grade…</div>
     <div id="summary-questions"></div>
 
     <button id="back-btn" class="big-btn btn-gray">Edit Answers</button>
@@ -71,29 +73,29 @@
     <button id="email-btn2" class="big-btn btn-green">Email Teacher Now</button>
   </div>
 
-  <!-- Load questions.js FIRST -->
+  <!-- Load questions.js first -->
   <script src="questions.js"></script>
 
-  <!-- Main script – runs only AFTER questions.js is loaded -->
+  <!-- Main app – runs only after questions.js is loaded -->
   <script>
-    const { jsPDF } = window.jspdf;
-    const STORAGE_KEY = "bcats_submission_2025";
-
-    // Wait until questions.js has defined TEACHERS & TASKS
+    // Safety check
     if (typeof TEACHERS === "undefined" || typeof TASKS === "undefined") {
-      document.getElementById("questions-container").innerHTML = "<p style='color:red;'>Error: questions.js not loaded. Check the file name and GitHub Pages link.</p>";
+      document.getElementById("questions-container").innerHTML = 
+        "<p style='color:red;text-align:center;'>Error: questions.js not found or failed to load.<br>Make sure the file is named exactly <strong>questions.js</strong> and is in the same folder.</p>";
     } else {
       // Everything is ready – start the app
-      const words = ["kiwi", "tui", "pohutukawa", "manuka", "kowhai", "rata"];
-      const secretWord = words[Math.floor(Math.random() * words.length)];
+      const words = ["kiwi","tui","pohutukawa","manuka","kowhai","rata"];
+      const secretWord = words[Math.floor(Math.random()*words.length)];
       document.getElementById("secret-word").textContent = secretWord;
 
       let currentData = null;
       let gradeResult = null;
+      const STORAGE_KEY = "bcats_submission_2025";
 
       // Populate dropdowns
       TEACHERS.forEach(t => teacherSelect.add(new Option(t.name, t.id)));
       TASKS.forEach(t => taskSelect.add(new Option(t.name, t.id)));
+      taskSelect.value = TASKS[0].id;   // default to first task
 
       function renderQuestions() {
         const task = TASKS.find(t => t.id === taskSelect.value);
@@ -110,13 +112,14 @@
       }
 
       function collectData() {
-        if (document.getElementById("auth-check").value.trim().toLowerCase() !== secretWord) {
-          alert(`Please type the secret word correctly: "${secretWord}"`);
+        if (authCheck.value.trim().toLowerCase() !== secretWord) {
+          alert(`Secret word incorrect. It is "${secretWord}"`);
           return null;
         }
         const task = TASKS.find(t => t.id === taskSelect.value);
         const answers = task.questions.map(q => ({
-          id: q.id, question: q.text,
+          id: q.id,
+          question: q.text,
           answer: document.querySelector(`[name="q_${q.id}"]`).value.trim()
         }));
         return {
@@ -144,6 +147,7 @@
       }
 
       async function generatePDF() {
+        const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         let y = 25;
         doc.setFontSize(18);
@@ -155,7 +159,6 @@
         doc.setFontSize(20);
         doc.text(`GRADE: ${gradeResult.score} (${gradeResult.letter} – ${gradeResult.pct}%)`, 105, y, {align:"center"});
         y += 25;
-
         currentData.answers.forEach((a, i) => {
           if (y > 260) { doc.addPage(); y = 20; }
           doc.setFontSize(11);
@@ -163,16 +166,16 @@
           doc.text(`Q${i+1}: ${a.question}`, 15, y);
           y += 8;
           doc.setFont("helvetica","normal");
-          doc.splitTextToSize(a.answer || "(no answer)", 180).forEach(line => {
+          doc.splitTextToSize(a.answer || "(no answer)", 180).forEach(l => {
             if (y > 280) { doc.addPage(); y = 20; }
-            doc.text(line, 20, y); y += 7;
+            doc.text(l, 20, y); y += 7;
           });
           y += 10;
         });
         return doc.output('blob');
       }
 
-      // Submit & Grade
+      // ----- Event Listeners -----
       taskForm.addEventListener("submit", e => {
         e.preventDefault();
         currentData = collectData();
@@ -182,7 +185,6 @@
 
         summaryHeader.textContent = `${currentData.studentName} → ${currentData.teacher.name}`;
         gradeBox.innerHTML = `<strong>AUTO-GRADE:</strong> ${gradeResult.score} (${gradeResult.letter}, ${gradeResult.pct}%)`;
-
         summaryQuestions.innerHTML = "";
         currentData.answers.forEach((a,i) => {
           const div = document.createElement("div");
@@ -190,21 +192,20 @@
           div.innerHTML = `<strong>Q${i+1}:</strong> ${a.question}<br><em>${a.answer||"(empty)"}</em>`;
           summaryQuestions.appendChild(div);
         });
-
         formView.classList.add("hidden");
         summaryView.classList.remove("hidden");
       });
 
       loadBtn.onclick = () => {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (!saved) return alert("No saved work");
+        if (!saved) return alert("No saved work found");
         const {currentData: d, gradeResult: g} = JSON.parse(saved);
         currentData = d; gradeResult = g;
         studentId.value = d.studentId;
         studentName.value = d.studentName;
         className.value = d.className;
         teacherSelect.value = d.teacher.id;
-        taskSelect.value = TASKS.find(t=>t.name===d.taskName)?.id || TASKS[0].id;
+        taskSelect.value = TASKS.find(t => t.name === d.taskName)?.id || TASKS[0].id;
         renderQuestions();
         alert("Work loaded!");
       };
@@ -214,14 +215,14 @@
 
       pdfBtn.onclick = async () => {
         const blob = await generatePDF();
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = `${currentData.studentId}_${currentData.taskName.replace(/ /g,"_")}.pdf`;
+        a.href = url; a.download = `${currentData.studentId}_${currentData.taskName.replace(/ /g,"_")}.pdf`;
         a.click();
       };
 
       async function sendEmail() {
-        if (!currentData) return alert("Submit and grade first!");
+        if (!currentData) return alert("Submit & grade first!");
         const blob = await generatePDF();
         const reader = new FileReader();
         reader.onload = () => {
@@ -238,7 +239,7 @@
       }
       emailBtn1.onclick = emailBtn2.onclick = sendEmail;
 
-      // Start the app
+      // Start!
       renderQuestions();
     }
   </script>

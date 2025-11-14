@@ -1,45 +1,46 @@
 // =============================
-// script.js – SECURE & CLEAN VERSION
+// script.js – SECURE & CLEAN VERSION (EDITABLE)
 // =============================
 
 // =============================
 // 1. CORE DATA & STORAGE
 // =============================
-const STORAGE_KEY = "TECH_DATA"; // localStorage key
+const STORAGE_KEY = "TECH_DATA";               // EDIT: localStorage key name
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
-let currentAssessment = null;    // Currently loaded assessment object
+let currentAssessment = null;                  // currently loaded assessment
 
-// Simple XOR obfuscation for localStorage (light security)
-const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join(''));
-const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join('');
+// ----- XOR OBFUSCATION (light security) -----
+const XOR_KEY = 42;                            // EDIT: change the XOR key (0‑255)
+const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
+const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join('');
 
 // =============================
 // 2. INITIAL UI SETUP
 // =============================
 document.getElementById("name").value = data.name || "";
-document.getElementById("id").value = data.id || "";
+document.getElementById("id").value   = data.id   || "";
 if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-// Lock ID if already saved
+// ----- LOCK ID WHEN ALREADY SAVED -----
 if (data.id) {
   document.getElementById("locked-msg").classList.remove("hidden");
   document.getElementById("locked-id").textContent = data.id;
-  document.getElementById("id").readOnly = true;
+  document.getElementById("id").readOnly = true;               // EDIT: set false to allow editing
 }
 
-// Populate teacher dropdown
+// ----- POPULATE TEACHER DROPDOWN -----
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
-  o.value = t.email;
+  o.value = t.email;                 // EDIT: use t.id or any other property
   o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
 
-// Populate assessment selector
+// ----- POPULATE ASSESSMENT SELECTOR -----
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
-  opt.textContent = `${assess.title} – ${assess.subtitle}`;
+  opt.textContent = `${assess.title} – ${assess.subtitle}`;   // EDIT: change format
   document.getElementById("assessmentSelector").appendChild(opt);
 });
 
@@ -47,8 +48,8 @@ ASSESSMENTS.forEach((assess, i) => {
 // 3. STUDENT INFO & ASSESSMENT LOADING
 // =============================
 function saveStudentInfo() {
-  data.name = document.getElementById("name").value.trim();
-  data.id = document.getElementById("id").value.trim();
+  data.name    = document.getElementById("name").value.trim();
+  data.id      = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -67,21 +68,21 @@ function loadAssessment() {
       <p style="margin:5px 0 0;font-size:16px;">${currentAssessment.subtitle}</p>
     </div>`;
 
-  // Render each question
+  // ----- RENDER EACH QUESTION -----
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id] ? unxor(data.answers[currentAssessment.id][q.id]) : "";
-    const div = document.createElement("div");
+    const div   = document.createElement("div");
     div.className = "q";
 
     const fieldHTML = q.type === "long"
-      ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
+      ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`   // EDIT: rows, class, etc.
       : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
 
     div.innerHTML = `<strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>${fieldHTML}`;
     container.appendChild(div);
   });
 
-  attachProtection(); // Re-apply protection after new fields
+  attachProtection();               // re‑apply protection after new fields
 }
 
 // =============================
@@ -106,7 +107,7 @@ function gradeIt() {
   currentAssessment.questions.forEach(q => {
     const ans = getAnswer(q.id);
     let earned = 0;
-    let hints = [];
+    let hints  = [];
 
     if (q.rubric) {
       q.rubric.forEach(rule => {
@@ -159,7 +160,7 @@ window.submitWork = function () {
     results
   };
 
-  // Show results
+  // ----- DISPLAY RESULTS -----
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${currentAssessment.totalPoints}<br><small>(${pct}%)</small>`;
@@ -173,8 +174,7 @@ window.submitWork = function () {
     div.innerHTML = `
       <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       Your answer: <em>${r.answer}</em><br>
-      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}
-    `;
+      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
     ansDiv.appendChild(div);
   });
 
@@ -192,20 +192,20 @@ window.back = () => {
 // =============================
 window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
-  alert("PDF feature not included in minimal secure version. Re-add your emailWork() if needed.");
+  alert("PDF feature not included in minimal secure version. Re‑add your emailWork() if needed.");
 };
 
 // =============================
-// 7. COPY-PASTE PROTECTION (CLEAN & CONFIGURABLE)
+// 7. COPY‑PASTE PROTECTION (FULLY CONFIGURABLE)
 // =============================
 
-// CONFIG: Edit these to customize behavior
-const PASTE_BLOCKED_MESSAGE = 'Pasting blocked!'; // Toast message
-const CLEAR_CLIPBOARD_ON_LOAD = true;            // Clear clipboard when page loads
-const CLEAR_CLIPBOARD_AFTER_PASTE = true;        // Clear after each blocked paste
-const BLOCK_COPY_CUT = true;                     // Prevent copy/cut from answer fields
+// ----- CONFIGURATION (EDIT ANY OF THESE) -----
+const PASTE_BLOCKED_MESSAGE      = 'Pasting blocked!';   // toast text
+const CLEAR_CLIPBOARD_ON_LOAD    = true;                 // clear on page load
+const CLEAR_CLIPBOARD_AFTER_PASTE = true;                // clear after each blocked paste
+const BLOCK_COPY_CUT             = true;                 // prevent copy/cut from answer fields
 
-// Toast notification (appears briefly)
+// ----- TOAST NOTIFICATION -----
 function showToast(msg) {
   const t = document.createElement('div');
   t.textContent = msg;
@@ -216,27 +216,27 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 2200);
 }
 
-// Clear clipboard (empty string)
+// ----- CLEAR CLIPBOARD (empty string) -----
 async function clearClipboard() {
   try { await navigator.clipboard.writeText(''); } catch (_) {}
 }
 
-// --- Run once on page load ---
+// ----- RUN ONCE ON PAGE LOAD -----
 if (CLEAR_CLIPBOARD_ON_LOAD) {
   (async () => { await clearClipboard(); })();
 }
 
-// --- Attach protection to all .answer-field elements ---
+// ----- ATTACH PROTECTION TO ALL .answer-field -----
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
 
-    // Save answer on any input (typing, delete, etc.)
+    // SAVE ON ANY INPUT
     field.addEventListener('input', function () {
-      const qid = this.id.slice(1); // "a1" → "1"
+      const qid = this.id.slice(1);           // "a1" → "1"
       saveAnswer(qid);
     });
 
-    // BLOCK PASTE: Show toast + optionally clear clipboard
+    // BLOCK PASTE
     field.addEventListener('paste', async e => {
       e.preventDefault();
       showToast(PASTE_BLOCKED_MESSAGE);
@@ -251,7 +251,7 @@ function attachProtection() {
   });
 }
 
-// Block right-click outside inputs/textareas
+// ----- BLOCK RIGHT‑CLICK OUTSIDE INPUTS -----
 document.addEventListener('contextmenu', e => {
   if (!e.target.matches('input, textarea')) e.preventDefault();
 });

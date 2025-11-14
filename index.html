@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCATS Materials – PHS Final</title>
+  <title>Pukekohe High – US 24355 Materials</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;line-height:1.6;}
     h1,h2{text-align:center;color:#2c3e50;}
-    .btn{display:block;width:100%;padding:20px;margin:20px 0;font-size:22px;border:none;border-radius:12px;color:white;cursor:pointer;transition:0.2s;}
+    .btn{display:block;width:100%;padding:20px;margin:20px 0;font-size:22px;border:none;border-radius:12px;color:white;cursor:pointer;}
     .btn:hover{opacity:0.9;transform:scale(1.02);}
-    .purple{background:#8e44ad;}.green{background:#27ae60;}.orange{background:#e67e22;}.red{background:#c0392b;}
+    .purple{background:#6a1b9a;}.green{background:#27ae60;}.orange{background:#e67e22;}.red{background:#c0392b;}
     input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;
       autocomplete:off !important; autocorrect:off; autocapitalize:off; spellcheck:false;}
     .q{background:white;padding:18px;margin:18px 0;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
+    .part{margin-top:40px;padding:15px;background:#e8eaf6;border-left:6px solid #3949ab;}
     .hidden{display:none;}
     .locked{background:#e8f5e8;padding:15px;border-left:6px solid #27ae60;text-align:center;font-weight:bold;}
     .feedback{margin-top:10px;padding:12px;border-radius:8px;font-size:15px;}
@@ -24,7 +25,7 @@
 </head>
 <body>
 
-<h1>BCATS Materials Self-Reflection</h1>
+<h1>US 24355 – Demonstrate knowledge of construction materials</h1>
 
 <div id="form">
   <input type="text" id="name" placeholder="Full Name *" required>
@@ -37,9 +38,9 @@
 
   <div id="questions"></div>
 
-  <button class="btn purple" onclick="submitWork()">Submit & Auto-Grade</button>
+  <button class="btn purple" onclick="submitWork()">Submit & Auto-Grade All Parts</button>
   <button class="btn green" onclick="emailWork()">Send via Outlook (PDF attached)</button>
-  <button class="btn red" onclick="if(confirm('Clear ALL data?')) localStorage.clear(); location.reload();">
+  <button class="btn red" onclick="if(confirm('Clear ALL data on this device?')){localStorage.clear();location.reload();}">
     Teacher: Clear All Data
   </button>
 </div>
@@ -64,19 +65,31 @@ if (lockedId) {
   document.getElementById("id").readOnly = true;
 }
 
+// Load teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
   o.value = t.email; o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
 
-const task = TASKS[0];
-task.questions.forEach((q,i) => {
-  const div = document.createElement("div");
-  div.className = "q";
-  div.innerHTML = `<strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
-    ${q.type==="long" ? `<textarea rows="5" id="a${q.id}"></textarea>` : `<input type="text" id="a${q.id}">`}`;
-  document.getElementById("questions").appendChild(div);
+// Show all parts
+let allQuestions = [];
+TASKS.forEach(task => {
+  const partDiv = document.createElement("div");
+  partDiv.className = "part";
+  partDiv.innerHTML = `<h2>${task.name} (${task.totalPoints} marks)</h2>`;
+  document.getElementById("questions").appendChild(partDiv);
+
+  task.questions.forEach((q,i) => {
+    allQuestions.push(q);
+    const div = document.createElement("div");
+    div.className = "q";
+    div.innerHTML = `
+      <strong>Q${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>
+      ${q.type==="long" ? `<textarea rows="5" id="a${q.id}"></textarea>` : `<input type="text" id="a${q.id}">`}
+    `;
+    document.getElementById("questions").appendChild(div);
+  });
 });
 
 function getAnswer(id) { return document.getElementById("a"+id)?.value.trim() || ""; }
@@ -85,7 +98,7 @@ function gradeIt() {
   let total = 0;
   const results = [];
 
-  task.questions.forEach((q,i) => {
+  allQuestions.forEach(q => {
     const ans = getAnswer(q.id);
     let earned = 0;
     let hints = [];
@@ -101,13 +114,13 @@ function gradeIt() {
     const isCorrect = earned === q.maxPoints;
 
     results.push({
-      qNum: i+1,
+      id: q.id.toUpperCase(),
       question: q.text,
       answer: ans || "(blank)",
       earned,
       max: q.maxPoints,
       markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
-      hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : "Check key words or spelling")
+      hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : q.hint || "Check your answer")
     });
   });
 
@@ -119,9 +132,9 @@ let finalData = null;
 window.submitWork = function() {
   const name = document.getElementById("name").value.trim();
   const id = document.getElementById("id").value.trim();
-  if (!name || !id || !document.getElementById("teacher").value) return alert("Fill all fields");
-  if (lockedId && lockedId !== id) return alert("Device locked to ID: " + lockedId);
+  if (!name || !id || !document.getElementById("teacher").value) return alert("Fill Name, ID and Teacher");
 
+  if (lockedId && lockedId !== id) return alert("Device locked to Student ID: " + lockedId);
   if (!lockedId) {
     localStorage.setItem(STORAGE_KEY, id);
     lockedId = id;
@@ -151,7 +164,7 @@ window.submitWork = function() {
   results.forEach(r => {
     const div = document.createElement("div");
     div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    div.innerHTML = `<strong>Q${r.qNum}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
+    div.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       Your answer: <em>${r.answer}</em><br>
       ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
     ansDiv.appendChild(div);
@@ -172,79 +185,62 @@ window.emailWork = async function() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
   let y = 15;
 
-  // === PHS CREST TOP LEFT ===
-  try {
-    doc.addImage("PHS-Crest.png", "PNG", 10, 8, 30, 30); // adjust size if needed
-  } catch(e) { console.log("Crest not found – continuing without logo"); }
+  // PHS Crest
+  try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
 
-  // === HEADER (shifted right to avoid logo) ===
-  y = 20;
-  doc.setFontSize(22);
-  doc.text("BCATS Materials Self-Reflection", 45, y); y += 12;
+  // Header
+  doc.setFontSize(20);
+  doc.text("US 24355 – Construction Materials", 45, 20);
   doc.setFontSize(26);
-  doc.text(finalData.name, 45727, y); y += 12;
-  doc.setFontSize(18);
-  doc.text("ID: " + finalData.id, 45, y); y += 8;
-  doc.text("Teacher: " + finalData.teacherName, 45, y); y += 8;
-  doc.text("Submitted: " + finalData.submittedAt, 45, y); y += 15;
-  doc.setFontSize(26);
-  doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 45, y); y += 20;
+  doc.text(finalData.name, 45, 32);
+  doc.setFontSize(16);
+  doc.text("ID: " + finalData.id + "    |    Teacher: " + finalData.teacherName, 45, 40);
+  doc.text("Submitted: " + finalData.submittedAt, 45, 47);
+  doc.setFontSize(28);
+  doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 45, 60);
+  y = 70;
 
-  // === EACH QUESTION – SAFE MARGINS, NO CUT-OFF ===
   finalData.results.forEach(r => {
-    if (y > 260) { 
-      doc.addPage(); 
-      y = 20;
-      try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 30, 30); } catch(e) {}
-    }
+    if (y > 270) { doc.addPage(); y = 20; try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {} }
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text(`Q${r.qNum}: ${r.question}`, 15, y);
-    y += 8;
+    doc.text(`${r.id}: ${r.question}`, 15, y); y += 8;
 
-    // Marks + Correct/Incorrect
-    doc.setFontSize(24);
+    doc.setFontSize(22);
     if (r.earned === r.max) {
-      doc.setTextColor(0, 130, 0);
+      doc.setTextColor(0,120,0);
       doc.text("Correct", 140, y);
     } else {
-      doc.setTextColor(180, 0, 0);
+      doc.setTextColor(180,0,0);
       doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y);
     }
     doc.setTextColor(0,0,0);
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.text(`${r.earned}/${r.max}`, 170, y - 3);
-    y += 14;
+    y += 12;
 
-    // Student answer – wrapped safely
     doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    const answerLines = doc.splitTextToSize(r.answer, pageWidth - 40);
-    answerLines.forEach(line => {
-      doc.text("→ " + line, 20, y);
-      y += 6;
-    });
+    const lines = doc.splitTextToSize(r.answer, pageWidth - 45);
+    lines.forEach(l => { doc.text("→ " + l, 20, y); y += 6; });
 
-    // Tip if wrong
     if (r.earned < r.max) {
       doc.setFontSize(10);
-      doc.setTextColor(150, 0, 0);
-      const tipLines = doc.splitTextToSize("Tip: " + r.hint, pageWidth - 40);
-      tipLines.forEach(line => { doc.text(line, 20, y); y += 6; });
+      doc.setTextColor(150,0,0);
+      const tip = doc.splitTextToSize("Tip: " + r.hint, pageWidth - 45);
+      tip.forEach(t => { doc.text(t, 20, y); y += 6; });
       doc.setTextColor(0,0,0);
     }
     y += 10;
   });
 
   const blob = doc.output('blob');
-  const file = new File([blob], finalData.id + "_" + finalData.name.replace(/ /g,"_") + "_BCATS.pdf", {type:"application/pdf"});
+  const file = new File([blob], finalData.id + "_" + finalData.name.replace(/ /g,"_") + "_US24355.pdf", {type:"application/pdf"});
 
   if (navigator.canShare && navigator.canShare({files:[file]})) {
-    try { await navigator.share({files:[file], title: finalData.name + " – BCATS"}); }
+    try { await navigator.share({files:[file], title: finalData.name + " – US 24355"}); }
     catch { fallbackOutlook(file); }
   } else fallbackOutlook(file);
 
@@ -252,9 +248,9 @@ window.emailWork = async function() {
     const reader = new FileReader();
     reader.onload = () => {
       window.open("https://outlook.office.com/mail/deeplink/compose?subject=" +
-        encodeURIComponent(finalData.name + " – BCATS Materials") +
+        encodeURIComponent(finalData.name + " – US 24355 Materials") +
         "&body=" + encodeURIComponent(
-          "Kia ora " + finalData.teacherName + ",\n\nPlease find my completed and auto-graded work attached.\n\n" +
+          "Kia ora " + finalData.teacherName + ",\n\nPlease find my completed US 24355 assessment attached.\n\n" +
           "Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n\nNgā mihi,\n" + finalData.name
         ) +
         "&attach=" + encodeURIComponent(reader.result), "_blank");

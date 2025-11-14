@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCATS Materials – Final with Full Marking</title>
+  <title>BCATS Materials – PHS Final</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;line-height:1.6;}
@@ -99,7 +99,6 @@ function gradeIt() {
 
     total += earned;
     const isCorrect = earned === q.maxPoints;
-    const markText = isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect";
 
     results.push({
       qNum: i+1,
@@ -107,7 +106,7 @@ function gradeIt() {
       answer: ans || "(blank)",
       earned,
       max: q.maxPoints,
-      markText,
+      markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
       hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : "Check key words or spelling")
     });
   });
@@ -152,7 +151,7 @@ window.submitWork = function() {
   results.forEach(r => {
     const div = document.createElement("div");
     div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    div.innerHTML = `<strong>Q${r.qNum}: ${r.earned}/${r.max} marks — ${r.markText}</strong><br>
+    div.innerHTML = `<strong>Q${r.qNum}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       Your answer: <em>${r.answer}</em><br>
       ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
     ansDiv.appendChild(div);
@@ -171,60 +170,74 @@ window.emailWork = async function() {
   if (!finalData) return alert("Submit first!");
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  let y = 20;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  let y = 15;
 
-  // === HEADER ===
-  doc.setFontSize(26);
-  doc.text("BCATS Materials Self-Reflection", 105, y, {align:"center"}); y += 18;
-  doc.setFontSize(30);
-  doc.text(finalData.name, 105, y, {align:"center"}); y += 16;
+  // === PHS CREST TOP LEFT ===
+  try {
+    doc.addImage("PHS-Crest.png", "PNG", 10, 8, 30, 30); // adjust size if needed
+  } catch(e) { console.log("Crest not found – continuing without logo"); }
+
+  // === HEADER (shifted right to avoid logo) ===
+  y = 20;
   doc.setFontSize(22);
-  doc.text("ID: " + finalData.id, 105, y, {align:"center"}); y += 12;
+  doc.text("BCATS Materials Self-Reflection", 45, y); y += 12;
+  doc.setFontSize(26);
+  doc.text(finalData.name, 45727, y); y += 12;
   doc.setFontSize(18);
-  doc.text("Teacher: " + finalData.teacherName, 105, y, {align:"center"}); y += 12;
-  doc.text("Submitted: " + finalData.submittedAt, 105, y, {align:"center"}); y += 20;
-  doc.setFontSize(28);
-  doc.text("FINAL GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"}); y += 35;
+  doc.text("ID: " + finalData.id, 45, y); y += 8;
+  doc.text("Teacher: " + finalData.teacherName, 45, y); y += 8;
+  doc.text("Submitted: " + finalData.submittedAt, 45, y); y += 15;
+  doc.setFontSize(26);
+  doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 45, y); y += 20;
 
-  // === EACH QUESTION WITH FULL MARKING ===
+  // === EACH QUESTION – SAFE MARGINS, NO CUT-OFF ===
   finalData.results.forEach(r => {
-    if (y > 240) { doc.addPage(); y = 20; }
+    if (y > 260) { 
+      doc.addPage(); 
+      y = 20;
+      try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 30, 30); } catch(e) {}
+    }
 
-    // Question number and text
-    doc.setFontSize(13);
+    doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text(`Q${r.qNum}: ${r.question}`, 15, y); y += 12;
+    doc.text(`Q${r.qNum}: ${r.question}`, 15, y);
+    y += 8;
 
-    // MARKS + Correct/Incorrect
-    doc.setFontSize(32);
+    // Marks + Correct/Incorrect
+    doc.setFontSize(24);
     if (r.earned === r.max) {
-      doc.setTextColor(0, 140, 0);
-      doc.text("Correct", 150, y);
+      doc.setTextColor(0, 130, 0);
+      doc.text("Correct", 140, y);
     } else {
       doc.setTextColor(180, 0, 0);
       doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y);
     }
     doc.setTextColor(0,0,0);
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
-    doc.text(`${r.earned}/${r.max}`, 170, y - 5);
-    y += 18;
+    doc.setFontSize(16);
+    doc.text(`${r.earned}/${r.max}`, 170, y - 3);
+    y += 14;
 
-    // Student's answer
+    // Student answer – wrapped safely
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    const lines = doc.splitTextToSize(r.answer, 170);
-    lines.forEach(l => { doc.text("→ " + l, 20, y); y += 7; });
+    const answerLines = doc.splitTextToSize(r.answer, pageWidth - 40);
+    answerLines.forEach(line => {
+      doc.text("→ " + line, 20, y);
+      y += 6;
+    });
 
-    // Feedback tip if wrong
+    // Tip if wrong
     if (r.earned < r.max) {
       doc.setFontSize(10);
       doc.setTextColor(150, 0, 0);
-      doc.text("Tip: " + r.hint, 20, y); y += 10;
+      const tipLines = doc.splitTextToSize("Tip: " + r.hint, pageWidth - 40);
+      tipLines.forEach(line => { doc.text(line, 20, y); y += 6; });
       doc.setTextColor(0,0,0);
     }
-    y += 12;
+    y += 10;
   });
 
   const blob = doc.output('blob');
@@ -240,7 +253,7 @@ window.emailWork = async function() {
     reader.onload = () => {
       window.open("https://outlook.office.com/mail/deeplink/compose?subject=" +
         encodeURIComponent(finalData.name + " – BCATS Materials") +
-        "&body=" + utcencodeURIComponent(
+        "&body=" + encodeURIComponent(
           "Kia ora " + finalData.teacherName + ",\n\nPlease find my completed and auto-graded work attached.\n\n" +
           "Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n\nNgā mihi,\n" + finalData.name
         ) +

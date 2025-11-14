@@ -1,34 +1,35 @@
 // =============================
-//   script.js – FINAL VERSION
-//   Your favorite clipboard sabotage
+//   script.js – Final Secure Version
 // =============================
 
 const STORAGE_KEY = "TECH_DATA";
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
 let currentAssessment = null;
 
-// XOR encrypt answers
+// XOR encrypt/decrypt answers in localStorage
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join('');
 
-// Load saved
+// Load saved student info
 document.getElementById("name").value = data.name || "";
 document.getElementById("id").value = data.id || "";
 if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-// Lock ID
+// Lock ID if exists
 if (data.id) {
   document.getElementById("locked-msg").classList.remove("hidden");
   document.getElementById("locked-id").textContent = data.id;
   document.getElementById("id").readOnly = true;
 }
 
-// Teachers & Assessments
+// Populate teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
   o.value = t.email; o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
+
+// Populate assessments
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
@@ -66,7 +67,7 @@ function loadAssessment() {
     container.appendChild(div);
   });
 
-  attachProtection(); // <-- Your favorite part
+  attachProtection();
 }
 
 function saveAnswer(qid) {
@@ -81,15 +82,83 @@ function getAnswer(id) {
   return raw ? unxor(raw) : "";
 }
 
-// [gradeIt, submitWork, back, emailWork — same as before]
-function gradeIt() { /* ... your original grading logic ... */ }
+function gradeIt() {
+  let total = 0;
+  const results = [];
+  currentAssessment.questions.forEach(q => {
+    const ans = getAnswer(q.id);
+    let earned = 0;
+    let hints = [];
+    if (q.rubric) {
+      q.rubric.forEach(rule => {
+        if (rule.check.test(ans)) earned += rule.points;
+        else if (rule.hint) hints.push(rule.hint);
+      });
+    }
+    total += earned;
+    const isCorrect = earned === q.maxPoints;
+    results.push({
+      id: q.id.toUpperCase(),
+      question: q.text,
+      answer: ans || "(blank)",
+      earned, max: q.maxPoints,
+      markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
+      hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : q.hint || "Check your answer")
+    });
+  });
+  return { total, results };
+}
+
 let finalData = null;
-window.submitWork = function() { /* ... your original submit ... */ };
-window.back = () => { document.getElementById("result").classList.add("hidden"); document.getElementById("form").classList.remove("hidden"); };
-window.emailWork = async function() { if (!finalData) return alert("Submit first!"); alert("Re-add your full PDF code if needed."); };
+window.submitWork = function() {
+  saveStudentInfo();
+  const name = data.name, id = data.id;
+  if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
+  if (!currentAssessment) return alert("Select an assessment");
+  if (data.id && document.getElementById("id").value !== data.id) return alert("ID locked to: " + data.id);
+  const { total, results } = gradeIt();
+  const pct = Math.round((total / currentAssessment.totalPoints) * 100);
+  finalData = {
+    name, id,
+    teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
+    teacherEmail: data.teacher,
+    assessment: currentAssessment,
+    points: total,
+    totalPoints: currentAssessment.totalPoints,
+    pct,
+    submittedAt: new Date().toLocaleString(),
+    results
+  };
+  document.getElementById("student").textContent = name;
+  document.getElementById("teacher-name").textContent = finalData.teacherName;
+  document.getElementById("grade").innerHTML = total + "/" + currentAssessment.totalPoints + "<br><small>(" + pct + "%)</small>";
+  const ansDiv = document.getElementById("answers");
+  ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
+  results.forEach(r => {
+    const div = document.createElement("div");
+    div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
+    div.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
+      Your answer: <em>${r.answer}</em><br>
+      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
+    ansDiv.appendChild(div);
+  });
+  document.getElementById("form").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+};
+
+window.back = () => {
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("form").classList.remove("hidden");
+};
+
+// EMAIL / PDF (minimal placeholder – re-add your full version if needed)
+window.emailWork = async function() {
+  if (!finalData) return alert("Submit first!");
+  alert("PDF feature not included in this version. Re-add your full emailWork() if needed.");
+};
 
 // =============================
-//   YOUR FAVORITE PASTE PROTECTION
+//     COPY-PASTE PROTECTION
 // =============================
 const WARNING = `Pasting is disabled. Type your own answer.`;
 
@@ -109,8 +178,9 @@ function showToast(msg) {
 
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
+    // Focus: show warning + overwrite clipboard
     field.addEventListener('focus', function() {
-      sabotageClipboard(); // Overwrite clipboard
+      sabotageClipboard();
       if (!this.value.trim()) {
         this.value = WARNING;
         this.style.color = '#c0392b';
@@ -118,6 +188,7 @@ function attachProtection() {
       }
     });
 
+    // Typing: clear warning + save
     field.addEventListener('input', function() {
       if (this.value === WARNING) {
         this.value = '';
@@ -128,13 +199,15 @@ function attachProtection() {
       saveAnswer(qid);
     });
 
+    // Block paste
     field.addEventListener('paste', e => {
       e.preventDefault();
-      showToast('Pasting blocked!');
+      showToast('Pasting blocked – type your answer!');
     });
 
+    // Block copy/cut
     field.addEventListener('copy', e => e.preventDefault());
-    field.addEventListener('cut', e => e.preventDefault());
+    field.addEventListener('cut',  e => e.preventDefault());
   });
 }
 

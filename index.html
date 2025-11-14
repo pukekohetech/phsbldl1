@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tech Assessment</title>
+  <title>US 24355 – Materials Knowledge</title>
   <style>
     /* =============================
        BASIC RESET & TYPOGRAPHY
@@ -22,7 +22,7 @@
        HEADER
        ============================= */
     header {
-      background: #3949ab;
+      background: #1a4971;
       color: white;
       padding: 20px;
       text-align: center;
@@ -54,8 +54,8 @@
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
-      border-color: #3949ab;
-      box-shadow: 0 0 0 2px rgba(57,73,171,0.2);
+      border-color: #1a4971;
+      box-shadow: 0 0 0 2px rgba(26,73,113,0.2);
     }
     .locked-msg {
       font-size: 0.9rem;
@@ -65,10 +65,10 @@
     .hidden { display: none; }
 
     /* =============================
-       ASSESSMENT LOADER
+       ASSESSMENT HEADER
        ============================= */
     .assessment-header {
-      background: #3949ab;
+      background: #1a4971;
       color: white;
       padding: 15px;
       border-radius: 10px;
@@ -85,7 +85,7 @@
       padding: 18px;
       margin-bottom: 18px;
       border-radius: 8px;
-      border-left: 4px solid #3949ab;
+      border-left: 4px solid #1a4971;
     }
     .q strong {
       color: #2c3e50;
@@ -100,7 +100,7 @@
        BUTTONS
        ============================= */
     .btn {
-      background: #3949ab;
+      background: #1a4971;
       color: white;
       border: none;
       padding: 12px 20px;
@@ -110,7 +110,7 @@
       transition: background 0.2s;
       margin-right: 10px;
     }
-    .btn:hover { background: #283593; }
+    .btn:hover { background: #0f3a56; }
     .btn-secondary {
       background: #7f8c8d;
     }
@@ -133,7 +133,7 @@
     .grade {
       font-size: 2.5rem;
       font-weight: bold;
-      color: #3949ab;
+      color: #1a4971;
     }
     .grade small {
       font-size: 1.2rem;
@@ -186,8 +186,8 @@
        HEADER
        ============================= -->
   <header>
-    <h1>Tech Assessment</h1>
-    <p>Complete your answers below</p>
+    <h1>US 24355 – Materials Knowledge</h1>
+    <p>Pukekohe High School – All 5 Parts</p>
   </header>
 
   <!-- =============================
@@ -213,9 +213,9 @@
         </select>
       </div>
       <div>
-        <label for="assessmentSelector">Assessment</label>
+        <label for="assessmentSelector">Assessment Part</label>
         <select id="assessmentSelector">
-          <option value="">Select assessment</option>
+          <option value="">Select part</option>
         </select>
       </div>
     </div>
@@ -224,11 +224,11 @@
       <button class="btn" onclick="loadAssessment()">Load Assessment</button>
     </div>
 
-    <!-- Questions will be injected here -->
+    <!-- Questions injected here -->
     <div id="questions"></div>
 
     <div class="btn-group">
-      <button class="btn" onclick="submitWork()">Submit Work</button>
+      <button class="btn" onclick="submitWork()">Submit & Grade</button>
     </div>
   </section>
 
@@ -253,94 +253,14 @@
 </div>
 
 <!-- =============================
-     EXTERNAL SCRIPT (your JS file)
+     LOAD QUESTIONS DATA FIRST
      ============================= -->
-<script src="script.js"></script>
+<script src="questions.js"></script>
 
 <!-- =============================
-     SAMPLE DATA (TEACHERS & ASSESSMENTS)
-     Replace with your real data
+     MAIN LOGIC
      ============================= -->
-<script>
-// EDIT: Add your real teachers here
-const TEACHERS = [
-  { name: "Mr. Johnson", email: "johnson@school.edu" },
-  { name: "Ms. Davis",   email: "davis@school.edu" },
-  { name: "Dr. Patel",   email: "patel@school.edu" }
-];
-
-// EDIT: Add your real assessments here
-const ASSESSMENTS = [
-  {
-    id: "midterm",
-    title: "Midterm Exam",
-    subtitle: "HTML, CSS & JavaScript",
-    totalPoints: 50,
-    questions: [
-      {
-        id: "q1",
-        text: "What does HTML stand for?",
-        type: "short",
-        maxPoints: 5,
-        rubric: [
-          { check: /Hyper.*Text.*Markup/i, points: 5 }
-        ],
-        hint: "Think: Hyper Text ..."
-      },
-      {
-        id: "q2",
-        text: "Write a complete HTML5 document structure.",
-        type: "long",
-        maxPoints: 10,
-        rubric: [
-          { check: /<!DOCTYPE html>/i, points: 2 },
-          {  points: 2 },
-          { check: /<head>/i, points: 1 },
-          { check: /<body>/i, points: 1 },
-          { check: /<\/html>/i, points: 1 }
-        ]
-      },
-      {
-        id: "q3",
-        text: "Explain the difference between `let`, `const`, and `var`.",
-        type: "long",
-        maxPoints: 15,
-        rubric: [
-          { check: /block.*scoped/i, points: 5, hint: "`let` and `const` are..." },
-          { check: /cannot.*reassign/i, points: 5, hint: "`const` prevents..." },
-          { check: /function.*scoped/i, points: 5, hint: "`var` is..." }
-        ]
-      }
-    ]
-  },
-  {
-    id: "quiz1",
-    title: "Quick Quiz",
-    subtitle: "Basic Concepts",
-    totalPoints: 20,
-    questions: [
-      {
-        id: "a1",
-        text: "What is the box model in CSS?",
-        type: "long",
-        maxPoints: 10,
-        rubric: [
-          { check: /content.*padding.*border.*margin/i, points: 10 }
-        ]
-      },
-      {
-        id: "a2",
-        text: "Name three ways to select an element in CSS.",
-        type: "short",
-        maxPoints: 10,
-        rubric: [
-          { check: /id|class|tag|element/i, points: 10 }
-        ]
-      }
-    ]
-  }
-];
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCATS Materials – Final with Ticks/Crosses</title>
+  <title>BCATS Materials – Final with Full Marking</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;line-height:1.6;}
@@ -81,7 +81,6 @@ task.questions.forEach((q,i) => {
 
 function getAnswer(id) { return document.getElementById("a"+id)?.value.trim() || ""; }
 
-// Detailed grading + feedback + Correct/Incorrect for PDF
 function gradeIt() {
   let total = 0;
   const results = [];
@@ -100,7 +99,7 @@ function gradeIt() {
 
     total += earned;
     const isCorrect = earned === q.maxPoints;
-    const mark = isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect";
+    const markText = isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect";
 
     results.push({
       qNum: i+1,
@@ -108,7 +107,7 @@ function gradeIt() {
       answer: ans || "(blank)",
       earned,
       max: q.maxPoints,
-      mark,
+      markText,
       hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : "Check key words or spelling")
     });
   });
@@ -153,7 +152,7 @@ window.submitWork = function() {
   results.forEach(r => {
     const div = document.createElement("div");
     div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    div.innerHTML = `<strong>Q${r.qNum}: ${r.earned}/${r.max} marks</strong> ${r.mark}<br>
+    div.innerHTML = `<strong>Q${r.qNum}: ${r.earned}/${r.max} marks — ${r.markText}</strong><br>
       Your answer: <em>${r.answer}</em><br>
       ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
     ansDiv.appendChild(div);
@@ -164,7 +163,7 @@ window.submitWork = function() {
 };
 
 window.back = () => {
-   document.getElementById("result").classList.add("hidden");
+  document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 };
 
@@ -175,55 +174,61 @@ window.emailWork = async function() {
   const doc = new jsPDF();
   let y = 20;
 
-  // Header
-  doc.setFontSize(24);
-  doc.text("BCATS Materials Self-Reflection", 105, y, {align:"center"}); y += 15;
-  doc.setFontSize(28);
-  doc.text(finalData.name, 105, y, {align:"center"}); y += 15;
+  // === HEADER ===
+  doc.setFontSize(26);
+  doc.text("BCATS Materials Self-Reflection", 105, y, {align:"center"}); y += 18;
+  doc.setFontSize(30);
+  doc.text(finalData.name, 105, y, {align:"center"}); y += 16;
   doc.setFontSize(22);
   doc.text("ID: " + finalData.id, 105, y, {align:"center"}); y += 12;
   doc.setFontSize(18);
   doc.text("Teacher: " + finalData.teacherName, 105, y, {align:"center"}); y += 12;
   doc.text("Submitted: " + finalData.submittedAt, 105, y, {align:"center"}); y += 20;
-  doc.setFontSize(24);
-  doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"}); y += 30;
+  doc.setFontSize(28);
+  doc.text("FINAL GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"}); y += 35;
 
-  // Questions with big Correct/Incorrect
+  // === EACH QUESTION WITH FULL MARKING ===
   finalData.results.forEach(r => {
-    if (y > 250) { doc.addPage(); y = 20; }
+    if (y > 240) { doc.addPage(); y = 20; }
 
-    doc.setFontSize(14);
-    doc.setFont("helvetica","bold");
-    doc.text(`Q${r.qNum}: ${r.question}`, 15, y); y += 10;
+    // Question number and text
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Q${r.qNum}: ${r.question}`, 15, y); y += 12;
 
-    // Big Correct or Incorrect mark
-    doc.setFontSize(28);
+    // MARKS + Correct/Incorrect
+    doc.setFontSize(32);
     if (r.earned === r.max) {
-      doc.setTextColor(0,150,0);
-      doc.text("Correct", 170, y);
+      doc.setTextColor(0, 140, 0);
+      doc.text("Correct", 150, y);
     } else {
-      doc.setTextColor(200,0,0);
-      doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 130, y);
+      doc.setTextColor(180, 0, 0);
+      doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y);
     }
     doc.setTextColor(0,0,0);
-    y += 12;
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${r.earned}/${r.max}`, 170, y - 5);
+    y += 18;
 
+    // Student's answer
     doc.setFontSize(11);
-    doc.setFont("helvetica","normal");
+    doc.setFont("helvetica", "normal");
     const lines = doc.splitTextToSize(r.answer, 170);
     lines.forEach(l => { doc.text("→ " + l, 20, y); y += 7; });
 
+    // Feedback tip if wrong
     if (r.earned < r.max) {
       doc.setFontSize(10);
-      doc.setTextColor(150,0,0);
-      doc.text("Tip: " + r.hint, 20, y); y += 8;
+      doc.setTextColor(150, 0, 0);
+      doc.text("Tip: " + r.hint, 20, y); y += 10;
       doc.setTextColor(0,0,0);
     }
-    y += 10;
+    y += 12;
   });
 
   const blob = doc.output('blob');
-  const file = new File([blob], finalData.id + "_" + finalData.name.replace(/ /g,"") + "_BCATS.pdf", {type:"application/pdf"});
+  const file = new File([blob], finalData.id + "_" + finalData.name.replace(/ /g,"_") + "_BCATS.pdf", {type:"application/pdf"});
 
   if (navigator.canShare && navigator.canShare({files:[file]})) {
     try { await navigator.share({files:[file], title: finalData.name + " – BCATS"}); }
@@ -235,8 +240,8 @@ window.emailWork = async function() {
     reader.onload = () => {
       window.open("https://outlook.office.com/mail/deeplink/compose?subject=" +
         encodeURIComponent(finalData.name + " – BCATS Materials") +
-        "&body=" + encodeURIComponent(
-          "Kia ora " + finalData.teacherName + ",\n\nAttached is my completed work.\n\n" +
+        "&body=" + utcencodeURIComponent(
+          "Kia ora " + finalData.teacherName + ",\n\nPlease find my completed and auto-graded work attached.\n\n" +
           "Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n\nNgā mihi,\n" + finalData.name
         ) +
         "&attach=" + encodeURIComponent(reader.result), "_blank");

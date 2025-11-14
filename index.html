@@ -31,7 +31,6 @@
   <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" required>
   <select id="teacher"><option value="">Choose Teacher</option></select>
 
-  <!-- MAIN ASSESSMENT SELECTOR -->
   <select id="assessmentSelector" onchange="loadAssessment()">
     <option value="">→ Choose Assessment to Complete ←</option>
   </select>
@@ -61,7 +60,7 @@
 <script>
 const STORAGE_KEY = "TECH_LOCKED_ID";
 let lockedId = localStorage.getItem(STORAGE_KEY);
-let currentAssessment = null;   // Will hold the selected assessment object
+let currentAssessment = null;
 
 if (lockedId) {
   document.getElementById("locked-msg").classList.remove("hidden");
@@ -70,7 +69,7 @@ if (lockedId) {
   document.getElementById("id").readOnly = true;
 }
 
-// Load teachers
+// Teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
   o.value = t.email; o.textContent = t.name;
@@ -81,23 +80,21 @@ TEACHERS.forEach(t => {
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
-  opt.textContent = assess.title + " – " + assess.subtitle + " (" + assess.totalPoints + " marks)";
+  opt.textContent = assess.title + " – " + assess.subtitle;
   document.getElementById("assessmentSelector").appendChild(opt);
 });
 
 function loadAssessment() {
-  const sel = document.getElementById("assessmentSelector");
-  const idx = sel.value;
+  const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
-
   currentAssessment = ASSESSMENTS[idx];
-  const container = document.getElementById("questions");
-  container.innerHTML = "";
 
-  const header = document.createElement("div");
-  header.style = "background:#3949ab;color:white;padding:15px;border-radius:10px;margin:20px 0;";
-  header.innerHTML = `<h2 style="margin:0;color:white;">${currentAssessment.title}<br><small>${currentAssessment.subtitle} – ${currentAssessment.totalPoints} marks</small></h2>`;
-  container.appendChild(header);
+  const container = document.getElementById("questions");
+  container.innerHTML = `
+    <div style="background:#3949ab;color:white;padding:15px;border-radius:10px;margin:20px 0;">
+      <h2 style="margin:0;color:white;">${currentAssessment.title}</h2>
+      <p style="margin:5px 0 0;font-size:16px;">${currentAssessment.subtitle}</p>
+    </div>`;
 
   currentAssessment.questions.forEach(q => {
     const div = document.createElement("div");
@@ -151,9 +148,9 @@ window.submitWork = function() {
   const name = document.getElementById("name").value.trim();
   const id = document.getElementById("id").value.trim();
   if (!name || !id || !document.getElementById("teacher").value) return alert("Fill Name, ID and Teacher");
-  if (!currentAssessment) return alert("Please select an assessment first");
+  if (!currentAssessment) return alert("Please select an assessment");
 
-  if (lockedId && lockedId !== id) return alert("Device locked to Student ID: " + lockedId);
+  if (lockedId && lockedId !== id) return alert("Device locked to ID: " + lockedId);
   if (!lockedId) {
     localStorage.setItem(STORAGE_KEY, id);
     lockedId = id;
@@ -210,19 +207,32 @@ window.emailWork = async function() {
 
   try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
 
-  doc.setFontSize(20);
-  doc.text(finalData.assessment.title, 45, 20);
-  doc.setFontSize(16);
-  doc.text(finalData.assessment.subtitle, 45, 28);
-  doc.setFontSize(26);
-  doc.text(finalData.name, 45, 40);
-  doc.setFontSize(16);
-  doc.text("ID: " + finalData.id + "  |  Teacher: " + finalData.teacherName, 45, 50);
-  doc.text("Submitted: " + finalData.submittedAt, 45, 57);
-  doc.setFontSize(28);
-  doc.text("GRADE: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)", 45, 70);
-  y = 80;
+  // Header – long titles wrap perfectly
+  doc.setFontSize(18);
+  const titleLines = doc.splitTextToSize(finalData.assessment.title, 150);
+  titleLines.forEach((line, i) => doc.text(line, 45, 20 + i*8));
 
+  doc.setFontSize(14);
+  const subLines = doc.splitTextToSize(finalData.assessment.subtitle, 150);
+  subLines.forEach((line, i) => doc.text(line, 45, 32 + titleLines.length*8 + i*7));
+
+  let headerY = 35 + titleLines.length*8 + subLines.length*7;
+
+  doc.setFontSize(26);
+  doc.text(finalData.name, 45, headerY);
+  headerY += 12;
+
+  doc.setFontSize(16);
+  doc.text("ID: " + finalData.id + "  |  Teacher: " + finalData.teacherName, 45, headerY);
+  headerY += 8;
+  doc.text("Submitted: " + finalData.submittedAt, 45, headerY);
+  headerY += 15;
+
+  doc.setFontSize(28);
+  doc.text("GRADE: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)", 45, headerY);
+  y = headerY + 15;
+
+  // Questions
   finalData.results.forEach(r => {
     if (y > 270) { doc.addPage(); y = 20; try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {} }
 
@@ -243,8 +253,11 @@ window.emailWork = async function() {
     doc.text(`${r.earned}/${r.max}`, 170, y - 3);
     y += 12;
 
-    const lines = doc.splitTextToSize(r.answer, 170);
-    lines.forEach(l => { doc.text("→ " + l, 20, y); y += 6; });
+    const answerLines = doc.splitTextToSize(r.answer || "(no answer)", 170);
+    answerLines.forEach(line => {
+      doc.text("→ " + line, 20, y);
+      y += 6;
+    });
 
     if (r.earned < r.max) {
       doc.setFontSize(10);

@@ -147,7 +147,7 @@ window.emailWork = async function() {
 // =============================
 // COPY-PASTE PROTECTION – FINAL
 // =============================
-const TOAST_MSG = 'Pasting blocked!';
+const TOAST_MSG = 'Pasting is blocked! Cheating is not allowed in assessments and is a serious infraction';
 
 function showToast(msg) {
   const t = document.createElement('div');

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCATS Materials – Final Version</title>
+  <title>BCATS Materials – Final with Ticks/Crosses</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;line-height:1.6;}
@@ -64,7 +64,6 @@ if (lockedId) {
   document.getElementById("id").readOnly = true;
 }
 
-// Teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
   o.value = t.email; o.textContent = t.name;
@@ -75,21 +74,17 @@ const task = TASKS[0];
 task.questions.forEach((q,i) => {
   const div = document.createElement("div");
   div.className = "q";
-  div.innerHTML = `
-    <strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
-    ${q.type==="long"
-      ? `<textarea rows="5" id="a${q.id}"></textarea>`
-      : `<input type="text" id="a${q.id}">`}
-  `;
+  div.innerHTML = `<strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
+    ${q.type==="long" ? `<textarea rows="5" id="a${q.id}"></textarea>` : `<input type="text" id="a${q.id}">`}`;
   document.getElementById("questions").appendChild(div);
 });
 
 function getAnswer(id) { return document.getElementById("a"+id)?.value.trim() || ""; }
 
-// Auto-grader with detailed feedback
+// Detailed grading + feedback + Correct/Incorrect for PDF
 function gradeIt() {
   let total = 0;
-  const feedback = [];
+  const results = [];
 
   task.questions.forEach((q,i) => {
     const ans = getAnswer(q.id);
@@ -98,27 +93,27 @@ function gradeIt() {
 
     if (q.rubric) {
       q.rubric.forEach(rule => {
-        if (rule.check.test(ans)) {
-          earned += rule.points;
-        } else if (rule.hint) {
-          hints.push(rule.hint);
-        }
+        if (rule.check.test(ans)) earned += rule.points;
+        else if (rule.hint) hints.push(rule.hint);
       });
     }
 
     total += earned;
+    const isCorrect = earned === q.maxPoints;
+    const mark = isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect";
 
-    const fbDiv = document.createElement("div");
-    fbDiv.className = "feedback " + (earned === q.maxPoints ? "correct" : earned > 0 ? "partial" : "wrong");
-    fbDiv.innerHTML = `
-      <strong>Q${i+1}: ${earned}/${q.maxPoints} marks</strong><br>
-      Your answer: <em>${ans||"(blank)"}</em><br>
-      ${earned < q.maxPoints ? "<strong>Tip:</strong> " + (hints.length ? hints.join(" • ") : "Check spelling or include key words") : "Perfect!"}
-    `;
-    feedback.push(fbDiv);
+    results.push({
+      qNum: i+1,
+      question: q.text,
+      answer: ans || "(blank)",
+      earned,
+      max: q.maxPoints,
+      mark,
+      hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : "Check key words or spelling")
+    });
   });
 
-  return { total, feedback };
+  return { total, results };
 }
 
 let finalData = null;
@@ -127,8 +122,8 @@ window.submitWork = function() {
   const name = document.getElementById("name").value.trim();
   const id = document.getElementById("id").value.trim();
   if (!name || !id || !document.getElementById("teacher").value) return alert("Fill all fields");
-
   if (lockedId && lockedId !== id) return alert("Device locked to ID: " + lockedId);
+
   if (!lockedId) {
     localStorage.setItem(STORAGE_KEY, id);
     lockedId = id;
@@ -137,7 +132,7 @@ window.submitWork = function() {
     document.getElementById("id").readOnly = true;
   }
 
-  const { total, feedback } = gradeIt();
+  const { total, results } = gradeIt();
   const pct = Math.round((total / 37) * 100);
 
   finalData = {
@@ -145,7 +140,8 @@ window.submitWork = function() {
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
     teacherEmail: document.getElementById("teacher").value,
     points: total, pct,
-    submittedAt: new Date().toLocaleString()
+    submittedAt: new Date().toLocaleString(),
+    results
   };
 
   document.getElementById("student").textContent = name;
@@ -154,14 +150,21 @@ window.submitWork = function() {
 
   const ansDiv = document.getElementById("answers");
   ansDiv.innerHTML = "<h3>Your Answers & Feedback</h3>";
-  feedback.forEach(f => ansDiv.appendChild(f));
+  results.forEach(r => {
+    const div = document.createElement("div");
+    div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
+    div.innerHTML = `<strong>Q${r.qNum}: ${r.earned}/${r.max} marks</strong> ${r.mark}<br>
+      Your answer: <em>${r.answer}</em><br>
+      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
+    ansDiv.appendChild(div);
+  });
 
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 };
 
 window.back = () => {
-  document.getElementById("result").classList.add("hidden");
+   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 };
 
@@ -172,6 +175,7 @@ window.emailWork = async function() {
   const doc = new jsPDF();
   let y = 20;
 
+  // Header
   doc.setFontSize(24);
   doc.text("BCATS Materials Self-Reflection", 105, y, {align:"center"}); y += 15;
   doc.setFontSize(28);
@@ -184,14 +188,37 @@ window.emailWork = async function() {
   doc.setFontSize(24);
   doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"}); y += 30;
 
-  task.questions.forEach((q,i) => {
-    if (y > 260) { doc.addPage(); y = 20; }
-    doc.setFontSize(12);
+  // Questions with big Correct/Incorrect
+  finalData.results.forEach(r => {
+    if (y > 250) { doc.addPage(); y = 20; }
+
+    doc.setFontSize(14);
     doc.setFont("helvetica","bold");
-    doc.text("Q" + (i+1) + ": " + q.text, 15, y); y += 10;
+    doc.text(`Q${r.qNum}: ${r.question}`, 15, y); y += 10;
+
+    // Big Correct or Incorrect mark
+    doc.setFontSize(28);
+    if (r.earned === r.max) {
+      doc.setTextColor(0,150,0);
+      doc.text("Correct", 170, y);
+    } else {
+      doc.setTextColor(200,0,0);
+      doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 130, y);
+    }
+    doc.setTextColor(0,0,0);
+    y += 12;
+
+    doc.setFontSize(11);
     doc.setFont("helvetica","normal");
-    const lines = doc.splitTextToSize(getAnswer(q.id) || "(no answer)", 180);
-    lines.forEach(l => { doc.text(l, 20, y); y += 7; });
+    const lines = doc.splitTextToSize(r.answer, 170);
+    lines.forEach(l => { doc.text("→ " + l, 20, y); y += 7; });
+
+    if (r.earned < r.max) {
+      doc.setFontSize(10);
+      doc.setTextColor(150,0,0);
+      doc.text("Tip: " + r.hint, 20, y); y += 8;
+      doc.setTextColor(0,0,0);
+    }
     y += 10;
   });
 
@@ -206,14 +233,13 @@ window.emailWork = async function() {
   function fallbackOutlook(file) {
     const reader = new FileReader();
     reader.onload = () => {
-      const url = "https://outlook.office.com/mail/deeplink/compose?subject=" +
+      window.open("https://outlook.office.com/mail/deeplink/compose?subject=" +
         encodeURIComponent(finalData.name + " – BCATS Materials") +
         "&body=" + encodeURIComponent(
           "Kia ora " + finalData.teacherName + ",\n\nAttached is my completed work.\n\n" +
           "Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n\nNgā mihi,\n" + finalData.name
         ) +
-        "&attach=" + encodeURIComponent(reader.result);
-      window.open(url, "_blank");
+        "&attach=" + encodeURIComponent(reader.result), "_blank");
     };
     reader.readAsDataURL(file);
   }

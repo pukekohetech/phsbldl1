@@ -1,5 +1,5 @@
 // =============================
-// script.js – SECURE & CLEAN VERSION (EDITABLE)
+// script.js – SECURE & FULL (with PDF Email)
 // =============================
 
 // =============================
@@ -31,7 +31,7 @@ if (data.id) {
 // ----- POPULATE TEACHER DROPDOWN -----
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
-  o.value = t.email;                 // EDIT: use t.id or any other property
+  o.value = t.email;                 // uses email (required for mailto)
   o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
@@ -40,7 +40,7 @@ TEACHERS.forEach(t => {
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
-  opt.textContent = `${assess.title} – ${assess.subtitle}`;   // EDIT: change format
+  opt.textContent = `${assess.title} – ${assess.subtitle}`;
   document.getElementById("assessmentSelector").appendChild(opt);
 });
 
@@ -63,26 +63,25 @@ function loadAssessment() {
 
   const container = document.getElementById("questions");
   container.innerHTML = `
-    <div style="background:#3949ab;color:white;padding:15px;border-radius:10px;margin:20px 0;">
-      <h2 style="margin:0;color:white;">${currentAssessment.title}</h2>
-      <p style="margin:5px 0 0;font-size:16px;">${currentAssessment.subtitle}</p>
+    <div class="assessment-header">
+      <h2>${currentAssessment.title}</h2>
+      <p>${currentAssessment.subtitle}</p>
     </div>`;
 
-  // ----- RENDER EACH QUESTION -----
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id] ? unxor(data.answers[currentAssessment.id][q.id]) : "";
     const div   = document.createElement("div");
     div.className = "q";
 
     const fieldHTML = q.type === "long"
-      ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`   // EDIT: rows, class, etc.
+      ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
       : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
 
     div.innerHTML = `<strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>${fieldHTML}`;
     container.appendChild(div);
   });
 
-  attachProtection();               // re‑apply protection after new fields
+  attachProtection();
 }
 
 // =============================
@@ -160,7 +159,7 @@ window.submitWork = function () {
     results
   };
 
-  // ----- DISPLAY RESULTS -----
+  // Show results
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${currentAssessment.totalPoints}<br><small>(${pct}%)</small>`;
@@ -188,24 +187,116 @@ window.back = () => {
 };
 
 // =============================
-// 6. EMAIL / PDF (DISABLED IN MINIMAL)
+// 6. EMAIL WORK – PDF GENERATION & MAILTO
 // =============================
 window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
-  alert("PDF feature not included in minimal secure version. Re‑add your emailWork() if needed.");
+
+  // Load jsPDF + html2canvas from CDN
+  const loadScript = (src) => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
+
+  try {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+  } catch (e) {
+    return alert("Failed to load PDF library. Check internet connection.");
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  // Hide buttons before capture
+  const buttons = document.querySelectorAll('.btn-group');
+  buttons.forEach(b => b.style.display = 'none');
+
+  // Capture result section
+  const resultEl = document.getElementById('result');
+  const canvas = await html2canvas(resultEl, { scale: 2 });
+  const imgData = canvas.toDataURL('image/png');
+
+  // Restore buttons
+  buttons.forEach(b => b.style.display = '');
+
+  // Create PDF
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgWidth = pageWidth - 20;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 10;
+
+  pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+  heightLeft -= pageHeight - 20;
+
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight - 20;
+  }
+
+  // Generate filename
+  const filename = `${finalData.name.replace(/\s+/g, '_')}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
+  const pdfBlob = pdf.output('blob');
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  // Create mailto link with attachment
+  const subject = encodeURIComponent(`US 24355 Results – ${finalData.name} (${finalData.pct}%)`);
+  const body = encodeURIComponent(
+    `Hi ${finalData.teacherName},\n\n` +
+    `Please find attached the completed assessment for ${finalData.name} (ID: ${finalData.id}).\n\n` +
+    `Assessment: ${finalData.assessment.title}\n` +
+    `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)\n` +
+    `Submitted: ${finalData.submittedAt}\n\n` +
+    `Regards,\nPukekohe High Tech Dept`
+  );
+
+  // For desktop: mailto with attachment (works in Outlook, Thunderbird)
+  const mailtoLink = document.createElement('a');
+  mailtoLink.href = `mailto:${finalData.teacherEmail}?subject=${subject}&body=${body}`;
+  
+  // Try to attach file (limited support)
+  const file = new File([pdfBlob], filename, { type: 'application/pdf' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({
+      files: [file],
+      title: filename,
+      text: body
+    }).catch(() => {
+      // Fallback to download
+      mailtoLink.download = filename;
+      mailtoLink.click();
+    });
+  } else {
+    // Fallback: download + open email
+    const downloadLink = document.createElement('a');
+    downloadLink.href = pdfUrl;
+    downloadLink.download = filename;
+    downloadLink.click();
+
+    setTimeout(() => {
+      window.location.href = mailtoLink.href;
+    }, 1000);
+  }
 };
 
 // =============================
-// 7. COPY‑PASTE PROTECTION (FULLY CONFIGURABLE)
+// 7. COPY-PASTE PROTECTION (CONFIGURABLE)
 // =============================
+const PASTE_BLOCKED_MESSAGE      = 'Pasting blocked!';
+const CLEAR_CLIPBOARD_ON_LOAD    = true;
+const CLEAR_CLIPBOARD_AFTER_PASTE = true;
+const BLOCK_COPY_CUT             = true;
 
-// ----- CONFIGURATION (EDIT ANY OF THESE) -----
-const PASTE_BLOCKED_MESSAGE      = 'Pasting blocked!';   // toast text
-const CLEAR_CLIPBOARD_ON_LOAD    = true;                 // clear on page load
-const CLEAR_CLIPBOARD_AFTER_PASTE = true;                // clear after each blocked paste
-const BLOCK_COPY_CUT             = true;                 // prevent copy/cut from answer fields
-
-// ----- TOAST NOTIFICATION -----
 function showToast(msg) {
   const t = document.createElement('div');
   t.textContent = msg;
@@ -216,34 +307,27 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 2200);
 }
 
-// ----- CLEAR CLIPBOARD (empty string) -----
 async function clearClipboard() {
   try { await navigator.clipboard.writeText(''); } catch (_) {}
 }
 
-// ----- RUN ONCE ON PAGE LOAD -----
 if (CLEAR_CLIPBOARD_ON_LOAD) {
   (async () => { await clearClipboard(); })();
 }
 
-// ----- ATTACH PROTECTION TO ALL .answer-field -----
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
-
-    // SAVE ON ANY INPUT
     field.addEventListener('input', function () {
-      const qid = this.id.slice(1);           // "a1" → "1"
+      const qid = this.id.slice(1);
       saveAnswer(qid);
     });
 
-    // BLOCK PASTE
     field.addEventListener('paste', async e => {
       e.preventDefault();
       showToast(PASTE_BLOCKED_MESSAGE);
       if (CLEAR_CLIPBOARD_AFTER_PASTE) await clearClipboard();
     });
 
-    // BLOCK COPY / CUT (optional)
     if (BLOCK_COPY_CUT) {
       field.addEventListener('copy', e => e.preventDefault());
       field.addEventListener('cut',  e => e.preventDefault());
@@ -251,7 +335,6 @@ function attachProtection() {
   });
 }
 
-// ----- BLOCK RIGHT‑CLICK OUTSIDE INPUTS -----
 document.addEventListener('contextmenu', e => {
   if (!e.target.matches('input, textarea')) e.preventDefault();
 });

@@ -1,39 +1,51 @@
-// script.js – Complete with PDF Email, Anti-Cheat, Grading, All 5 Parts
-const STORAGE_KEY = "TECH_DATA";
-let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
-let currentAssessment = null;
+// =============================
+// script.js – SECURE & CLEAN VERSION
+// =============================
 
-// XOR encryption for localStorage
+// =============================
+// 1. CORE DATA & STORAGE
+// =============================
+const STORAGE_KEY = "TECH_DATA"; // localStorage key
+let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
+let currentAssessment = null;    // Currently loaded assessment object
+
+// Simple XOR obfuscation for localStorage (light security)
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join('');
 
-// Load saved data
+// =============================
+// 2. INITIAL UI SETUP
+// =============================
 document.getElementById("name").value = data.name || "";
 document.getElementById("id").value = data.id || "";
 if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-// Lock ID
+// Lock ID if already saved
 if (data.id) {
   document.getElementById("locked-msg").classList.remove("hidden");
   document.getElementById("locked-id").textContent = data.id;
   document.getElementById("id").readOnly = true;
 }
 
-// Populate teachers
+// Populate teacher dropdown
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
-  o.value = t.email; o.textContent = t.name;
+  o.value = t.email;
+  o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
 
-// Populate assessments
+// Populate assessment selector
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
-  opt.textContent = assess.title + " – " + assess.subtitle;
+  opt.textContent = `${assess.title} – ${assess.subtitle}`;
   document.getElementById("assessmentSelector").appendChild(opt);
 });
 
+// =============================
+// 3. STUDENT INFO & ASSESSMENT LOADING
+// =============================
 function saveStudentInfo() {
   data.name = document.getElementById("name").value.trim();
   data.id = document.getElementById("id").value.trim();
@@ -44,8 +56,10 @@ function saveStudentInfo() {
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
+
   saveStudentInfo();
   currentAssessment = ASSESSMENTS[idx];
+
   const container = document.getElementById("questions");
   container.innerHTML = `
     <div style="background:#3949ab;color:white;padding:15px;border-radius:10px;margin:20px 0;">
@@ -53,20 +67,26 @@ function loadAssessment() {
       <p style="margin:5px 0 0;font-size:16px;">${currentAssessment.subtitle}</p>
     </div>`;
 
+  // Render each question
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id] ? unxor(data.answers[currentAssessment.id][q.id]) : "";
     const div = document.createElement("div");
     div.className = "q";
+
     const fieldHTML = q.type === "long"
       ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
       : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
+
     div.innerHTML = `<strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>${fieldHTML}`;
     container.appendChild(div);
   });
 
-  attachProtection();
+  attachProtection(); // Re-apply protection after new fields
 }
 
+// =============================
+// 4. ANSWER SAVING & GRADING
+// =============================
 function saveAnswer(qid) {
   const val = document.getElementById("a" + qid).value;
   if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
@@ -79,7 +99,6 @@ function getAnswer(id) {
   return raw ? unxor(raw) : "";
 }
 
-// FULL GRADING
 function gradeIt() {
   let total = 0;
   const results = [];
@@ -91,11 +110,8 @@ function gradeIt() {
 
     if (q.rubric) {
       q.rubric.forEach(rule => {
-        if (rule.check.test(ans)) {
-          earned += rule.points;
-        } else if (rule.hint) {
-          hints.push(rule.hint);
-        }
+        if (rule.check.test(ans)) earned += rule.points;
+        else if (rule.hint) hints.push(rule.hint);
       });
     }
 
@@ -116,8 +132,12 @@ function gradeIt() {
   return { total, results };
 }
 
+// =============================
+// 5. SUBMIT & RESULTS
+// =============================
 let finalData = null;
-window.submitWork = function() {
+
+window.submitWork = function () {
   saveStudentInfo();
   const name = data.name, id = data.id;
   if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
@@ -139,9 +159,10 @@ window.submitWork = function() {
     results
   };
 
+  // Show results
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
-  document.getElementById("grade").innerHTML = total + "/" + currentAssessment.totalPoints + "<br><small>(" + pct + "%)</small>";
+  document.getElementById("grade").innerHTML = `${total}/${currentAssessment.totalPoints}<br><small>(${pct}%)</small>`;
 
   const ansDiv = document.getElementById("answers");
   ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
@@ -149,9 +170,11 @@ window.submitWork = function() {
   results.forEach(r => {
     const div = document.createElement("div");
     div.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    div.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
+    div.innerHTML = `
+      <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       Your answer: <em>${r.answer}</em><br>
-      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
+      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}
+    `;
     ansDiv.appendChild(div);
   });
 
@@ -164,98 +187,25 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
-// FULL EMAIL + PDF FUNCTION (RESTORED!)
-window.emailWork = async function() {
+// =============================
+// 6. EMAIL / PDF (DISABLED IN MINIMAL)
+// =============================
+window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
-  let y = 15;
-
-  // Optional: Add school crest
-  try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
-
-  // Header
-  doc.setFontSize(18);
-  const titleLines = doc.splitTextToSize(finalData.assessment.title, 150);
-  titleLines.forEach((line, i) => doc.text(line, 45, 20 + i*8));
-
-  doc.setFontSize(14);
-  const subLines = doc.splitTextToSize(finalData.assessment.subtitle, 150);
-  subLines.forEach((line, i) => doc.text(line, 45, 32 + titleLines.length*8 + i*7));
-
-  let headerY = 35 + titleLines.length*8 + subLines.length*7;
-  doc.setFontSize(26); doc.text(finalData.name, 45, headerY); headerY += 12;
-  doc.setFontSize(16); doc.text("ID: " + finalData.id + " | Teacher: " + finalData.teacherName, 45, headerY); headerY += 8;
-  doc.text("Submitted: " + finalData.submittedAt, 45, headerY); headerY += 15;
-  doc.setFontSize(28); doc.text("GRADE: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)", 45, headerY);
-  y = headerY + 18;
-
-  // Questions
-  finalData.results.forEach(r => {
-    if (y > 265) { doc.addPage(); y = 20; try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {} }
-
-    doc.setFontSize(11); doc.setFont("helvetica", "bold");
-    const qLines = doc.splitTextToSize(`${r.id}: ${r.question}`, 180);
-    qLines.forEach(line => { doc.text(line, 15, y); y += 6; });
-
-    doc.setFontSize(20);
-    if (r.earned === r.max) {
-      doc.setTextColor(0,120,0); doc.text("Correct", 140, y);
-    } else {
-      doc.setTextColor(180,0,0); doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y);
-    }
-    doc.setTextColor(0,0,0); doc.setFontSize(13); doc.text(`${r.earned}/${r.max}`, 170, y - 3);
-    y += 10;
-
-    doc.setFontSize(10); doc.setFont("helvetica", "normal");
-    const cleanAnswer = (r.answer || "(no answer)").replace(/!/g, "");
-    const answerLines = doc.splitTextToSize(cleanAnswer, 170);
-    answerLines.forEach(line => { doc.text("Answer: " + line, 20, y); y += 5.5; });
-
-    if (r.earned < r.max && r.hint) {
-      doc.setFontSize(9); doc.setTextColor(150,0,0);
-      const tipLines = doc.splitTextToSize("Tip: " + r.hint, 165);
-      tipLines.forEach(line => { doc.text(line, 22, y); y += 5; });
-      doc.setTextColor(0,0,0);
-    }
-    y += 8;
-  });
-
-  const filename = finalData.id + "_" + finalData.name.replace(/ /g,"_") + "_" + finalData.assessment.id + ".pdf";
-  const blob = doc.output('blob');
-  const file = new File([blob], filename, {type:"application/pdf"});
-
-  // Try Web Share API (mobile)
-  if (navigator.canShare && navigator.canShare({files:[file]})) {
-    try { await navigator.share({files:[file], title: finalData.name + " – " + finalData.assessment.title}); }
-    catch { fallbackOutlook(file); }
-  } else {
-    fallbackOutlook(file);
-  }
-
-  function fallbackOutlook(file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      window.open("https://outlook.office.com/mail/deeplink/compose?subject=" +
-        encodeURIComponent(finalData.name + " – " + finalData.assessment.title) +
-        "&body=" + encodeURIComponent(
-          "Kia ora " + finalData.teacherName + ",\n\nPlease find my completed " + finalData.assessment.subtitle + " attached.\n\n" +
-          "Grade: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)\n\nNgā mihi,\n" + finalData.name
-        ) +
-        "&attach=" + encodeURIComponent(reader.result), "_blank");
-    };
-    reader.readAsDataURL(file);
-  }
+  alert("PDF feature not included in minimal secure version. Re-add your emailWork() if needed.");
 };
 
-// ANTI-CHEAT: Clipboard Sabotage (your favorite)
-const WARNING = `Pasting is disabled. Type your own answer.`;
+// =============================
+// 7. COPY-PASTE PROTECTION (CLEAN & CONFIGURABLE)
+// =============================
 
-async function sabotageClipboard() {
-  try { await navigator.clipboard.writeText(WARNING); } catch(e) {}
-}
+// CONFIG: Edit these to customize behavior
+const PASTE_BLOCKED_MESSAGE = 'Pasting blocked!'; // Toast message
+const CLEAR_CLIPBOARD_ON_LOAD = true;            // Clear clipboard when page loads
+const CLEAR_CLIPBOARD_AFTER_PASTE = true;        // Clear after each blocked paste
+const BLOCK_COPY_CUT = true;                     // Prevent copy/cut from answer fields
 
+// Toast notification (appears briefly)
 function showToast(msg) {
   const t = document.createElement('div');
   t.textContent = msg;
@@ -266,38 +216,42 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 2200);
 }
 
+// Clear clipboard (empty string)
+async function clearClipboard() {
+  try { await navigator.clipboard.writeText(''); } catch (_) {}
+}
+
+// --- Run once on page load ---
+if (CLEAR_CLIPBOARD_ON_LOAD) {
+  (async () => { await clearClipboard(); })();
+}
+
+// --- Attach protection to all .answer-field elements ---
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
-    field.addEventListener('focus', function() {
-      sabotageClipboard();
-      if (!this.value.trim()) {
-        this.value = WARNING;
-        this.style.color = '#c0392b';
-        this.style.fontStyle = 'italic';
-      }
-    });
 
-    field.addEventListener('input', function() {
-      if (this.value === WARNING) {
-        this.value = '';
-        this.style.color = '';
-        this.style.fontStyle = '';
-      }
-      const qid = this.id.slice(1);
+    // Save answer on any input (typing, delete, etc.)
+    field.addEventListener('input', function () {
+      const qid = this.id.slice(1); // "a1" → "1"
       saveAnswer(qid);
     });
 
-    field.addEventListener('paste', e => {
+    // BLOCK PASTE: Show toast + optionally clear clipboard
+    field.addEventListener('paste', async e => {
       e.preventDefault();
-      showToast('Pasting blocked!');
+      showToast(PASTE_BLOCKED_MESSAGE);
+      if (CLEAR_CLIPBOARD_AFTER_PASTE) await clearClipboard();
     });
 
-    field.addEventListener('copy', e => e.preventDefault());
-    field.addEventListener('cut', e => e.preventDefault());
+    // BLOCK COPY / CUT (optional)
+    if (BLOCK_COPY_CUT) {
+      field.addEventListener('copy', e => e.preventDefault());
+      field.addEventListener('cut',  e => e.preventDefault());
+    }
   });
 }
 
-// Block right-click outside inputs
+// Block right-click outside inputs/textareas
 document.addEventListener('contextmenu', e => {
   if (!e.target.matches('input, textarea')) e.preventDefault();
 });

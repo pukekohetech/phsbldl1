@@ -1,61 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pukekohe High – Technology Assessments</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tech Assessment</title>
   <style>
-    body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;line-height:1.6;}
-    h1,h2{text-align:center;color:#2c3e50;}
-    .btn{display:block;width:100%;padding:20px;margin:20px 0;font-size:22px;border:none;border-radius:12px;color:white;cursor:pointer;}
-    .btn:hover{opacity:0.9;transform:scale(1.02);}
-    .purple{background:#6a1b9a;}.green{background:#27ae60;}.orange{background:#e67e22;}.red{background:#c0392b;}
-    input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;}
-    .q{background:white;padding:18px;margin:18px 0;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
-    .hidden{display:none;}
-    .locked{background:#e8f5e8;padding:15px;border-left:6px solid #27ae60;text-align:center;font-weight:bold;}
-    .feedback{margin-top:10px;padding:12px;border-radius:8px;font-size:15px;}
-    .wrong{background:#ffebee;border-left:5px solid #e74c3c;}
-    .partial{background:#fff3cd;border-left:5px solid #f39c12;}
-    .correct{background:#e8f5e8;border-left:5px solid #27ae60;}
-    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-           background:#c0392b;color:#fff;padding:8px 16px;border-radius:6px;
-           font-size:14px;z-index:9999;pointer-events:none;opacity:0;
-           transition:opacity .3s;}
+    /* =============================
+       BASIC RESET & TYPOGRAPHY
+       ============================= */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
+      color: #2c3e50;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .container { max-width: 900px; margin: auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+    /* =============================
+       HEADER
+       ============================= */
+    header {
+      background: #3949ab;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 { margin: 0; font-size: 1.8rem; }
+    header p { margin: 5px 0 0; font-size: 1rem; opacity: 0.9; }
+
+    /* =============================
+       FORM SECTION
+       ============================= */
+    .form-section {
+      padding: 25px;
+      border-bottom: 1px solid #eee;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #3949ab;
+      box-shadow: 0 0 0 2px rgba(57,73,171,0.2);
+    }
+    .locked-msg {
+      font-size: 0.9rem;
+      color: #e74c3c;
+      margin-top: 5px;
+    }
+    .hidden { display: none; }
+
+    /* =============================
+       ASSESSMENT LOADER
+       ============================= */
+    .assessment-header {
+      background: #3949ab;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    .assessment-header h2 { margin: 0; font-size: 1.5rem; }
+    .assessment-header p { margin: 5px 0 0; font-size: 1rem; }
+
+    /* =============================
+       QUESTIONS
+       ============================= */
+    .q {
+      background: #f8f9fa;
+      padding: 18px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border-left: 4px solid #3949ab;
+    }
+    .q strong {
+      color: #2c3e50;
+      font-size: 1.1rem;
+    }
+    .answer-field {
+      margin-top: 10px;
+      font-family: inherit;
+    }
+
+    /* =============================
+       BUTTONS
+       ============================= */
+    .btn {
+      background: #3949ab;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-right: 10px;
+    }
+    .btn:hover { background: #283593; }
+    .btn-secondary {
+      background: #7f8c8d;
+    }
+    .btn-secondary:hover { background: #95a5a6; }
+    .btn-group {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* =============================
+       RESULTS
+       ============================= */
+    .result-section {
+      padding: 25px;
+      text-align: center;
+    }
+    .result-header {
+      margin-bottom: 25px;
+    }
+    .grade {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3949ab;
+    }
+    .grade small {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+    }
+    .feedback {
+      text-align: left;
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #f8f9fa;
+    }
+    .correct { border-left: 5px solid #27ae60; }
+    .partial { border-left: 5px solid #f39c12; }
+    .wrong   { border-left: 5px solid #e74c3c; }
+
+    /* =============================
+       TOAST NOTIFICATION
+       ============================= */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2c3e50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* =============================
+       RESPONSIVE
+       ============================= */
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .btn { width: 100%; margin: 8px 0; }
+    }
   </style>
 </head>
 <body>
-<h1>Pukekohe High School – Technology Self-Assessments</h1>
-<div id="form">
-  <input type="text" id="name" placeholder="Full Name *" required>
-  <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" required>
-  <select id="teacher"><option value="">Choose Teacher</option></select>
-  <select id="assessmentSelector" onchange="loadAssessment()">
-    <option value="">Choose Assessment to Complete</option>
-  </select>
 
-  <div id="locked-msg" class="locked hidden">
-    Device locked to Student ID: <strong id="locked-id"></strong>
-  </div>
-  <div id="questions"></div>
+<div class="container">
 
-  <button class="btn purple" onclick="submitWork()">Submit & Auto-Grade</button>
-  <button class="btn green" onclick="emailWork()">Send via Outlook (PDF attached)</button>
-  <button class="btn red" onclick="if(confirm('Clear ALL data (student info + answers)?')){localStorage.clear();location.reload();}">
-    Teacher: Clear All Data
-  </button>
+  <!-- =============================
+       HEADER
+       ============================= -->
+  <header>
+    <h1>Tech Assessment</h1>
+    <p>Complete your answers below</p>
+  </header>
+
+  <!-- =============================
+       STUDENT INFO FORM
+       ============================= -->
+  <section class="form-section" id="form">
+    <div class="form-grid">
+      <div>
+        <label for="name">Student Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required />
+      </div>
+      <div>
+        <label for="id">Student ID</label>
+        <input type="text" id="id" placeholder="e.g. 12345" required />
+        <div id="locked-msg" class="locked-msg hidden">
+          ID locked to: <strong id="locked-id"></strong>
+        </div>
+      </div>
+      <div>
+        <label for="teacher">Teacher</label>
+        <select id="teacher" required>
+          <option value="">Select teacher</option>
+        </select>
+      </div>
+      <div>
+        <label for="assessmentSelector">Assessment</label>
+        <select id="assessmentSelector">
+          <option value="">Select assessment</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="loadAssessment()">Load Assessment</button>
+    </div>
+
+    <!-- Questions will be injected here -->
+    <div id="questions"></div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="submitWork()">Submit Work</button>
+    </div>
+  </section>
+
+  <!-- =============================
+       RESULTS SECTION
+       ============================= -->
+  <section class="result-section hidden" id="result">
+    <div class="result-header">
+      <h2>Assessment Complete!</h2>
+      <p><strong id="student"></strong> → <span id="teacher-name"></span></p>
+      <div class="grade" id="grade"></div>
+    </div>
+
+    <div id="answers"></div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="emailWork()">Email Results (PDF)</button>
+      <button class="btn btn-secondary" onclick="back()">Back to Form</button>
+    </div>
+  </section>
+
 </div>
 
-<div id="result" class="hidden">
-  <h2>All Done <span id="student"></span>!</h2>
-  <h1 style="color:#27ae60;text-align:center;" id="grade">0/37</h1>
-  <p style="text-align:center;font-size:180%;">Teacher: <span id="teacher-name"></span></p>
-  <div id="answers"></div>
-  <button class="btn orange" onclick="back()">Back to Form</button>
-</div>
-
-<script src="questions.js"></script>
+<!-- =============================
+     EXTERNAL SCRIPT (your JS file)
+     ============================= -->
 <script src="script.js"></script>
+
+<!-- =============================
+     SAMPLE DATA (TEACHERS & ASSESSMENTS)
+     Replace with your real data
+     ============================= -->
+<script>
+// EDIT: Add your real teachers here
+const TEACHERS = [
+  { name: "Mr. Johnson", email: "johnson@school.edu" },
+  { name: "Ms. Davis",   email: "davis@school.edu" },
+  { name: "Dr. Patel",   email: "patel@school.edu" }
+];
+
+// EDIT: Add your real assessments here
+const ASSESSMENTS = [
+  {
+    id: "midterm",
+    title: "Midterm Exam",
+    subtitle: "HTML, CSS & JavaScript",
+    totalPoints: 50,
+    questions: [
+      {
+        id: "q1",
+        text: "What does HTML stand for?",
+        type: "short",
+        maxPoints: 5,
+        rubric: [
+          { check: /Hyper.*Text.*Markup/i, points: 5 }
+        ],
+        hint: "Think: Hyper Text ..."
+      },
+      {
+        id: "q2",
+        text: "Write a complete HTML5 document structure.",
+        type: "long",
+        maxPoints: 10,
+        rubric: [
+          { check: /<!DOCTYPE html>/i, points: 2 },
+          {  points: 2 },
+          { check: /<head>/i, points: 1 },
+          { check: /<body>/i, points: 1 },
+          { check: /<\/html>/i, points: 1 }
+        ]
+      },
+      {
+        id: "q3",
+        text: "Explain the difference between `let`, `const`, and `var`.",
+        type: "long",
+        maxPoints: 15,
+        rubric: [
+          { check: /block.*scoped/i, points: 5, hint: "`let` and `const` are..." },
+          { check: /cannot.*reassign/i, points: 5, hint: "`const` prevents..." },
+          { check: /function.*scoped/i, points: 5, hint: "`var` is..." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "quiz1",
+    title: "Quick Quiz",
+    subtitle: "Basic Concepts",
+    totalPoints: 20,
+    questions: [
+      {
+        id: "a1",
+        text: "What is the box model in CSS?",
+        type: "long",
+        maxPoints: 10,
+        rubric: [
+          { check: /content.*padding.*border.*margin/i, points: 10 }
+        ]
+      },
+      {
+        id: "a2",
+        text: "Name three ways to select an element in CSS.",
+        type: "short",
+        maxPoints: 10,
+        rubric: [
+          { check: /id|class|tag|element/i, points: 10 }
+        ]
+      }
+    ]
+  }
+];
+</script>
+
 </body>
 </html>

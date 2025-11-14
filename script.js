@@ -145,9 +145,9 @@ window.emailWork = async function() {
   alert("PDF feature not included in minimal secure version. Re-add your emailWork() if needed.");
 };
 // =============================
-// COPY-PASTE PROTECTION (final version)
+// COPY-PASTE PROTECTION – FINAL
 // =============================
-const WARNING = `Pasting is disabled. Type your own answer.`;
+const TOAST_MSG = 'Pasting blocked!';
 
 function showToast(msg) {
   const t = document.createElement('div');
@@ -161,26 +161,32 @@ function showToast(msg) {
 
 /* ---- 1. Clear clipboard once when the page loads ---- */
 (async () => {
-  try { await navigator.clipboard.writeText(WARNING); } catch (_) {}
+  try { await navigator.clipboard.writeText(''); } catch (_) {}
 })();
 
-/* ---- 2. Attach protection to every .answer-field ---- */
+/* ---- 2. Clear clipboard (empty string) – reusable ---- */
+async function clearClipboard() {
+  try { await navigator.clipboard.writeText(''); } catch (_) {}
+}
+
+/* ---- 3. Attach protection to every .answer-field ---- */
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(field => {
 
-    // Normal typing → just save the answer
+    /* Normal typing → just save */
     field.addEventListener('input', function () {
-      const qid = this.id.slice(1);   // "a12" → "12"
+      const qid = this.id.slice(1);          // "a12" → "12"
       saveAnswer(qid);
     });
 
-    // Block paste + toast (clipboard stays as-is after page load)
-    field.addEventListener('paste', e => {
-      e.preventDefault();
-      showToast('Pasting blocked!');
+    /* Paste attempt */
+    field.addEventListener('paste', async e => {
+      e.preventDefault();                    // block the paste
+      showToast(TOAST_MSG);                  // show the popup
+      await clearClipboard();                // empty clipboard right after
     });
 
-    // Optional: block copy/cut
+    /* Optional – block copy/cut from the fields */
     field.addEventListener('copy', e => e.preventDefault());
     field.addEventListener('cut',  e => e.preventDefault());
   });

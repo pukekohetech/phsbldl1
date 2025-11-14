@@ -1,144 +1,81 @@
-// =============================
-//   script.js – FINAL VERSION
-//   Your favorite clipboard sabotage
-// =============================
+// questions.js – All 5 Parts of US 24355
+const TEACHERS = [
+  { id: "RY", name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
+  { id: "RNR", name: "Mr Ranford", email: "rnr@pukekohehigh.school.nz" },
+  { id: "Other", name: "Other Teacher", email: "technology@pukekohehigh.school.nz" }
+];
 
-const STORAGE_KEY = "TECH_DATA";
-let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
-let currentAssessment = null;
+const ASSESSMENTS = [
+  {
+    id: "24355-part1", title: "US 24355 Materials – Part 1", subtitle: "New Zealand Timbers (11 marks)", totalPoints: 11,
+    questions: [
+      { id: "q1", text: "What is the most common exotic timber that is grown in plantations in New Zealand?", type: "short", maxPoints: 2,
+        hint: "Fast-growing softwood, name includes 'pine', planted everywhere since the 1930s – check Radiata pine on page 13 of the booklet.",
+        rubric: [{ points: 2, check: /radiata\s+pine|pinus\s+radiata/i }] },
+      { id: "q2", text: "Name 2 types of New Zealand native timbers that can be used for high-quality furniture.", type: "short", maxPoints: 2,
+        hint: "One starts with R (warm golden colour) on page 12, one with K (light brown, also used for furniture) on page 13.",
+        rubric: [{ points: 1, check: /rimu/i }, { points: 1, check: /kauri/i }] },
+      { id: "q3", text: "Name an imported timber that can be used for decking and outdoor furniture.", type: "short", maxPoints: 2,
+        hint: "Dense, reddish-brown Southeast Asian hardwood – see the dot points about imported timbers on page 14.",
+        rubric: [{ points: 2, check: /kwila|merbau/i }] },
+      { id: "q4", text: "List 3 types of timber that are commonly used for woodturning.", type: "short", maxPoints: 3,
+        hint: "Have another look at the native and swamp timbers (especially swamp kauri) described on pages 12–13.",
+        rubric: [{ points: 1, check: /kauri/i }, { points: 1, check: /matai/i }, { points: 1, check: /rewarewa|rimu|puriri|totara/i }] }
+    ]
+  },
+  {
+    id: "24355-part2", title: "US 24355 Materials – Part 2", subtitle: "Manufactured Boards & Plastics (9 marks)", totalPoints: 9,
+    questions: [
+      { id: "q5", text: "Describe the effects of moisture on MDF.", type: "long", maxPoints: 3,
+        hint: "Look at the disadvantages of MDF in the Manufactured Boards section on page 18 – what happens when it gets wet?",
+        rubric: [{ points: 1, check: /swell|expand/i }, { points: 1, check: /fibre|fiber|break|degrade/i }, { points: 1, check: /weak|lose.*strength/i }] },
+      { id: "q6", text: "Name a lightweight expanded plastic used for insulation and buoyancy.", type: "short", maxPoints: 2,
+        hint: "Check the Plastics (Thermoplastics) section on page 22 – white beady foam sheets used for packaging and insulation.",
+        rubric: [{ points: 2, check: /polystyrene|eps|styrofoam/i }] },
+      { id: "q9", text: "Name a hard, transparent plastic that can be bulletproof and noise-resistant.", type: "short", maxPoints: 2,
+        hint: "This one goes beyond the booklet (which talks about glass on page 24) – think of the clear plastic used for riot shields and bus shelters.",
+        rubric: [{ points: 2, check: /polycarbonate|lexan|makrolon/i }] },
+      { id: "q10", text: "Name the plastic sheet used as a waterproof membrane under concrete slabs.", type: "short", maxPoints: 2,
+        hint: "See the note about polythene being used as a damp-proof membrane (DPM) in the Plastics section on page 22.",
+        rubric: [{ points: 2, check: /polythene|polyethylene|dpm|damp.?proof/i }] }
+    ]
+  },
+  {
+    id: "24355-part3", title: "US 24355 Materials – Part 3", subtitle: "Metals & Concrete (5 marks)", totalPoints: 5,
+    questions: [
+      { id: "q7", text: "Name a commonly used metal that can be easily joined by welding.", type: "short", maxPoints: 2,
+        hint: "Check the first bullet list under Mild steel on page 20 – it says it is easily worked and welded.",
+        rubric: [{ points: 2, check: /mild\s+steel|low\s+carbon/i }] },
+      { id: "q11", text: "What are the 3 main materials that make up concrete?", type: "short", maxPoints: 3,
+        hint: "Read the first paragraph under Concrete on page 25 – it lists the three ingredients mixed together.",
+        rubric: [{ points: 1, check: /cement/i }, { points: 1, check: /water/i }, { points: 1, check: /aggregate|sand|gravel|stone/i }] }
+    ]
+  },
+  {
+    id: "24355-part4", title: "US 24355 Materials – Part 4", subtitle: "Paint Finishes (5 marks)", totalPoints: 5,
+    questions: [
+      { id: "q12", text: "What is the function of a primer coat when painting?", type: "long", maxPoints: 2,
+        hint: "Check the description of Primer in the Paint section on page 26 – it talks about adhesion and protection.",
+        rubric: [{ points: 1, check: /seal|porous/i }, { points: 1, check: /adhesion|bond|stick|key/i }] },
+      { id: "q13", text: "Identify 3 methods commonly used to apply paint.", type: "short", maxPoints: 3,
+        hint: "See the first paragraph under Surface finishes/ Paint on page 26 – three methods are listed there.",
+        rubric: [{ points: 1, check: /brush/i }, { points: 1, check: /roller/i }, { points: 1, check: /spray/i }] }
+    ]
+  },
+  {
+    id: "24355-part5", title: "US 24355 Materials – Part 5", subtitle: "Polishes & Varnishes (7 marks)", totalPoints: 7,
+    questions: [
+      { id: "q14", text: "Name 2 types of polishes and state an advantage over oil finishes.", type: "long", maxPoints: 3,
+        hint: "Compare the Oil section on page 27 with the Polish section on page 28 – look at wax polish and French polish.",
+        rubric: [{ points: 1, check: /wax|paste\s+wax|beeswax/i }, { points: 1, check: /french\s+polish|shellac/i }, { points: 1, check: /hard|durable|gloss|protective|resist/i }] },
+      { id: "q15", text: "Name 2 types of varnishes and state an advantage of each.", type: "long", maxPoints: 4,
+        hint: "Read the Varnish section on page 27 – look for acrylic varnish and polyurethane and what each is good at.",
+        rubric: [
+          { points: 1, check: /polyurethane/i }, { points: 1, check: /polyurethane.*(durable|tough|scratch|wear)/i },
+          { points: 1, check: /water.?based|acrylic/i }, { points: 1, check: /water.?based.*(quick|fast.*dry|low.*odou?r|clear|non.?yellow)/i }
+        ] }
+    ]
+  }
+];
 
-// XOR encrypt answers
-const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join(''));
-const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ 42)).join('');
-
-// Load saved
-document.getElementById("name").value = data.name || "";
-document.getElementById("id").value = data.id || "";
-if (data.teacher) document.getElementById("teacher").value = data.teacher;
-
-// Lock ID
-if (data.id) {
-  document.getElementById("locked-msg").classList.remove("hidden");
-  document.getElementById("locked-id").textContent = data.id;
-  document.getElementById("id").readOnly = true;
-}
-
-// Teachers & Assessments
-TEACHERS.forEach(t => {
-  const o = document.createElement("option");
-  o.value = t.email; o.textContent = t.name;
-  document.getElementById("teacher").appendChild(o);
-});
-ASSESSMENTS.forEach((assess, i) => {
-  const opt = document.createElement("option");
-  opt.value = i;
-  opt.textContent = assess.title + " – " + assess.subtitle;
-  document.getElementById("assessmentSelector").appendChild(opt);
-});
-
-function saveStudentInfo() {
-  data.name = document.getElementById("name").value.trim();
-  data.id = document.getElementById("id").value.trim();
-  data.teacher = document.getElementById("teacher").value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function loadAssessment() {
-  const idx = document.getElementById("assessmentSelector").value;
-  if (idx === "") return;
-  saveStudentInfo();
-  currentAssessment = ASSESSMENTS[idx];
-  const container = document.getElementById("questions");
-  container.innerHTML = `
-    <div style="background:#3949ab;color:white;padding:15px;border-radius:10px;margin:20px 0;">
-      <h2 style="margin:0;color:white;">${currentAssessment.title}</h2>
-      <p style="margin:5px 0 0;font-size:16px;">${currentAssessment.subtitle}</p>
-    </div>`;
-
-  currentAssessment.questions.forEach(q => {
-    const saved = data.answers[currentAssessment.id]?.[q.id] ? unxor(data.answers[currentAssessment.id][q.id]) : "";
-    const div = document.createElement("div");
-    div.className = "q";
-    const fieldHTML = q.type === "long"
-      ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
-      : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
-    div.innerHTML = `<strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>${fieldHTML}`;
-    container.appendChild(div);
-  });
-
-  attachProtection(); // <-- Your favorite part
-}
-
-function saveAnswer(qid) {
-  const val = document.getElementById("a" + qid).value;
-  if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
-  data.answers[currentAssessment.id][qid] = xor(val);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function getAnswer(id) {
-  const raw = data.answers[currentAssessment.id]?.[id] || "";
-  return raw ? unxor(raw) : "";
-}
-
-// [gradeIt, submitWork, back, emailWork — same as before]
-function gradeIt() { /* ... your original grading logic ... */ }
-let finalData = null;
-window.submitWork = function() { /* ... your original submit ... */ };
-window.back = () => { document.getElementById("result").classList.add("hidden"); document.getElementById("form").classList.remove("hidden"); };
-window.emailWork = async function() { if (!finalData) return alert("Submit first!"); alert("Re-add your full PDF code if needed."); };
-
-// =============================
-//   YOUR FAVORITE PASTE PROTECTION
-// =============================
-const WARNING = `Pasting is disabled. Type your own answer.`;
-
-async function sabotageClipboard() {
-  try { await navigator.clipboard.writeText(WARNING); } catch(e) {}
-}
-
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.textContent = msg;
-  t.className = 'toast';
-  document.body.appendChild(t);
-  requestAnimationFrame(() => t.style.opacity = 1);
-  setTimeout(() => t.style.opacity = 0, 1800);
-  setTimeout(() => t.remove(), 2200);
-}
-
-function attachProtection() {
-  document.querySelectorAll('.answer-field').forEach(field => {
-    field.addEventListener('focus', function() {
-      sabotageClipboard(); // Overwrite clipboard
-      if (!this.value.trim()) {
-        this.value = WARNING;
-        this.style.color = '#c0392b';
-        this.style.fontStyle = 'italic';
-      }
-    });
-
-    field.addEventListener('input', function() {
-      if (this.value === WARNING) {
-        this.value = '';
-        this.style.color = '';
-        this.style.fontStyle = '';
-      }
-      const qid = this.id.slice(1);
-      saveAnswer(qid);
-    });
-
-    field.addEventListener('paste', e => {
-      e.preventDefault();
-      showToast('Pasting blocked!');
-    });
-
-    field.addEventListener('copy', e => e.preventDefault());
-    field.addEventListener('cut', e => e.preventDefault());
-  });
-}
-
-// Block right-click outside inputs
-document.addEventListener('contextmenu', e => {
-  if (!e.target.matches('input, textarea')) e.preventDefault();
-});
+console.log("Pukekohe High US 24355 – All 5 parts loaded – READY TO GO!");

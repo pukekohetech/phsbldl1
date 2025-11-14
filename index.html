@@ -11,8 +11,7 @@
     .btn{display:block;width:100%;padding:20px;margin:20px 0;font-size:22px;border:none;border-radius:12px;color:white;cursor:pointer;}
     .btn:hover{opacity:0.9;transform:scale(1.02);}
     .purple{background:#6a1b9a;}.green{background:#27ae60;}.orange{background:#e67e22;}.red{background:#c0392b;}
-    input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;
-      autocomplete:off !important; autocorrect:off; autocapitalize:off; spellcheck:false;}
+    input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;}
     .q{background:white;padding:18px;margin:18px 0;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
     .hidden{display:none;}
     .locked{background:#e8f5e8;padding:15px;border-left:6px solid #27ae60;text-align:center;font-weight:bold;}
@@ -32,7 +31,7 @@
   <select id="teacher"><option value="">Choose Teacher</option></select>
 
   <select id="assessmentSelector" onchange="loadAssessment()">
-    <option value="">→ Choose Assessment to Complete ←</option>
+    <option value="">Choose Assessment to Complete</option>
   </select>
 
   <div id="locked-msg" class="locked hidden">
@@ -43,7 +42,7 @@
 
   <button class="btn purple" onclick="submitWork()">Submit & Auto-Grade</button>
   <button class="btn green" onclick="emailWork()">Send via Outlook (PDF attached)</button>
-  <button class="btn red" onclick="if(confirm('Clear ALL data?')){localStorage.clear();location.reload();}">
+  <button class="btn red" onclick="if(confirm('Clear ALL data (student info + answers)?')){localStorage.clear();location.reload();}">
     Teacher: Clear All Data
   </button>
 </div>
@@ -58,14 +57,22 @@
 
 <script src="questions.js"></script>
 <script>
-const STORAGE_KEY = "TECH_LOCKED_ID";
-let lockedId = localStorage.getItem(STORAGE_KEY);
+// LocalStorage keys
+const STORAGE_KEY = "TECH_DATA";
+let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
 let currentAssessment = null;
 
-if (lockedId) {
+// Load saved student info
+document.getElementById("name").value = data.name || "";
+document.getElementById("id").value = data.id || "";
+if (data.teacher) {
+  document.getElementById("teacher").value = data.teacher;
+}
+
+// Lock if ID exists
+if (data.id) {
   document.getElementById("locked-msg").classList.remove("hidden");
-  document.getElementById("locked-id").textContent = lockedId;
-  document.getElementById("id").value = lockedId;
+  document.getElementById("locked-id").textContent = data.id;
   document.getElementById("id").readOnly = true;
 }
 
@@ -76,7 +83,7 @@ TEACHERS.forEach(t => {
   document.getElementById("teacher").appendChild(o);
 });
 
-// Populate assessment dropdown
+// Populate assessments
 ASSESSMENTS.forEach((assess, i) => {
   const opt = document.createElement("option");
   opt.value = i;
@@ -84,11 +91,19 @@ ASSESSMENTS.forEach((assess, i) => {
   document.getElementById("assessmentSelector").appendChild(opt);
 });
 
+function saveStudentInfo() {
+  data.name = document.getElementById("name").value.trim();
+  data.id = document.getElementById("id").value.trim();
+  data.teacher = document.getElementById("teacher").value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
-  currentAssessment = ASSESSMENTS[idx];
+  saveStudentInfo();
 
+  currentAssessment = ASSESSMENTS[idx];
   const container = document.getElementById("questions");
   container.innerHTML = `
     <div style="background:#3949ab;color:white;padding:15px;border-radius:10px;margin:20px 0;">
@@ -97,17 +112,28 @@ function loadAssessment() {
     </div>`;
 
   currentAssessment.questions.forEach(q => {
+    const saved = data.answers[currentAssessment.id]?.[q.id] || "";
     const div = document.createElement("div");
     div.className = "q";
     div.innerHTML = `
       <strong>Q${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>
-      ${q.type==="long" ? `<textarea rows="5" id="a${q.id}"></textarea>` : `<input type="text" id="a${q.id}">`}
+      ${q.type==="long" ? `<textarea rows="5" id="a${q.id}" oninput="saveAnswer('${q.id}')">${saved}</textarea>` 
+                       : `<input type="text" id="a${q.id}" value="${saved}" oninput="saveAnswer('${q.id}')">`}
     `;
     container.appendChild(div);
   });
 }
 
-function getAnswer(id) { return document.getElementById("a"+id)?.value.trim() || ""; }
+function saveAnswer(qid) {
+  const val = document.getElementById("a" + qid).value;
+  if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
+  data.answers[currentAssessment.id][qid] = val;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getAnswer(id) {
+  return document.getElementById("a"+id)?.value.trim() || "";
+}
 
 function gradeIt() {
   let total = 0;
@@ -145,18 +171,14 @@ function gradeIt() {
 let finalData = null;
 
 window.submitWork = function() {
-  const name = document.getElementById("name").value.trim();
-  const id = document.getElementById("id").value.trim();
-  if (!name || !id || !document.getElementById("teacher").value) return alert("Fill Name, ID and Teacher");
-  if (!currentAssessment) return alert("Please select an assessment");
+  saveStudentInfo();
+  const name = data.name;
+  const id = data.id;
+  if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
+  if (!currentAssessment) return alert("Select an assessment");
 
-  if (lockedId && lockedId !== id) return alert("Device locked to ID: " + lockedId);
-  if (!lockedId) {
-    localStorage.setItem(STORAGE_KEY, id);
-    lockedId = id;
-    document.getElementById("locked-msg").classList.remove("hidden");
-    document.getElementById("locked-id").textContent = id;
-    document.getElementById("id").readOnly = true;
+  if (data.id && document.getElementById("id").value !== data.id) {
+    return alert("ID locked to: " + data.id);
   }
 
   const { total, results } = gradeIt();
@@ -165,7 +187,7 @@ window.submitWork = function() {
   finalData = {
     name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
-    teacherEmail: document.getElementById("teacher").value,
+    teacherEmail: data.teacher,
     assessment: currentAssessment,
     points: total,
     totalPoints: currentAssessment.totalPoints,
@@ -197,6 +219,7 @@ window.back = () => {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 };
+
 window.emailWork = async function() {
   if (!finalData) return alert("Submit first!");
 
@@ -204,10 +227,9 @@ window.emailWork = async function() {
   const doc = new jsPDF('p', 'mm', 'a4');
   let y = 15;
 
-  // Crest
   try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
 
-  // === HEADER – safe wrapping ===
+  // Header
   doc.setFontSize(18);
   const titleLines = doc.splitTextToSize(finalData.assessment.title, 150);
   titleLines.forEach((line, i) => doc.text(line, 45, 20 + i*8));
@@ -217,72 +239,40 @@ window.emailWork = async function() {
   subLines.forEach((line, i) => doc.text(line, 45, 32 + titleLines.length*8 + i*7));
 
   let headerY = 35 + titleLines.length*8 + subLines.length*7;
-
-  doc.setFontSize(26);
-  doc.text(finalData.name, 45, headerY);
-  headerY += 12;
-
-  doc.setFontSize(16);
-  doc.text("ID: " + finalData.id + "  |  Teacher: " + finalData.teacherName, 45, headerY);
-  headerY += 8;
-  doc.text("Submitted: " + finalData.submittedAt, 45, headerY);
-  headerY += 15;
-
-  doc.setFontSize(28);
-  doc.text("GRADE: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)", 45, headerY);
+  doc.setFontSize(26); doc.text(finalData.name, 45, headerY); headerY += 12;
+  doc.setFontSize(16); doc.text("ID: " + finalData.id + "  |  Teacher: " + finalData.teacherName, 45, headerY); headerY += 8;
+  doc.text("Submitted: " + finalData.submittedAt, 45, headerY); headerY += 15;
+  doc.setFontSize(28); doc.text("GRADE: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)", 45, headerY);
   y = headerY + 18;
 
-  // === QUESTIONS – 100% FIXED (no ! and no cut-off) ===
+  // Questions
   finalData.results.forEach(r => {
-    if (y > 265) {
-      doc.addPage();
-      y = 20;
-      try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
-    }
+    if (y > 265) { doc.addPage(); y = 20; try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {} }
 
-    // Question
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11); doc.setFont("helvetica", "bold");
     const qLines = doc.splitTextToSize(`${r.id}: ${r.question}`, 180);
     qLines.forEach(line => { doc.text(line, 15, y); y += 6; });
 
-    // Correct / Incorrect + marks
     doc.setFontSize(20);
-    if (r.earned === r.max) {
-      doc.setTextColor(0,120,0);
-      doc.text("Correct", 140, y);
-    } else {
-      doc.setTextColor(180,0,0);
-      doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y);
-    }
-    doc.setTextColor(0,0,0);
-    doc.setFontSize(13);
-    doc.text(`${r.earned}/${r.max}`, 170, y - 3);
+    if (r.earned === r.max) { doc.setTextColor(0,120,0); doc.text("Correct", 140, y); }
+    else { doc.setTextColor(180,0,0); doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y); }
+    doc.setTextColor(0,0,0); doc.setFontSize(13); doc.text(`${r.earned}/${r.max}`, 170, y - 3);
     y += 10;
 
-    // Student answer – CLEAN, wrapped, no weird characters
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    const cleanAnswer = (r.answer || "(no answer)").replace(/!/g, ""); // remove any stray !
+    doc.setFontSize(10); doc.setFont("helvetica", "normal");
+    const cleanAnswer = (r.answer || "(no answer)").replace(/!/g, "");
     const answerLines = doc.splitTextToSize(cleanAnswer, 170);
-    answerLines.forEach(line => {
-      doc.text("Answer: " + line, 20, y);
-      y += 5.5;
-    });
+    answerLines.forEach(line => { doc.text("Answer: " + line, 20, y); y += 5.5; });
 
-    // Tip if needed
     if (r.earned < r.max && r.hint) {
-      doc.setFontSize(9);
-      doc.setTextColor(150,0,0);
+      doc.setFontSize(9); doc.setTextColor(150,0,0);
       const tipLines = doc.splitTextToSize("Tip: " + r.hint, 165);
       tipLines.forEach(line => { doc.text(line, 22, y); y += 5; });
       doc.setTextColor(0,0,0);
     }
-
-    y += 8; // space before next question
+    y += 8;
   });
 
-  // Save PDF
   const filename = finalData.id + "_" + finalData.name.replace(/ /g,"_") + "_" + finalData.assessment.id + ".pdf";
   const blob = doc.output('blob');
   const file = new File([blob], filename, {type:"application/pdf"});
@@ -291,6 +281,7 @@ window.emailWork = async function() {
     try { await navigator.share({files:[file], title: finalData.name + " – " + finalData.assessment.title}); }
     catch { fallbackOutlook(file); }
   } else fallbackOutlook(file);
+
   function fallbackOutlook(file) {
     const reader = new FileReader();
     reader.onload = () => {
@@ -308,4 +299,3 @@ window.emailWork = async function() {
 </script>
 </body>
 </html>
-

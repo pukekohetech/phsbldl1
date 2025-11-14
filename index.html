@@ -116,7 +116,7 @@ function loadAssessment() {
     const div = document.createElement("div");
     div.className = "q";
     div.innerHTML = `
-      <strong>Q${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>
+      <strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>
       ${q.type==="long" ? `<textarea rows="5" id="a${q.id}" oninput="saveAnswer('${q.id}')">${saved}</textarea>` 
                        : `<input type="text" id="a${q.id}" value="${saved}" oninput="saveAnswer('${q.id}')">`}
     `;
@@ -299,3 +299,4 @@ window.emailWork = async function() {
 </script>
 </body>
 </html>
+

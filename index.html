@@ -11,7 +11,8 @@
     .btn{display:block;width:100%;padding:20px;margin:20px 0;font-size:22px;border:none;border-radius:12px;color:white;cursor:pointer;transition:0.2s;}
     .btn:hover{opacity:0.9;transform:scale(1.02);}
     .purple{background:#8e44ad;}.green{background:#27ae60;}.orange{background:#e67e22;}.red{background:#c0392b;}
-    input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;}
+    input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;
+      autocomplete:off !important; autocorrect:off; autocapitalize:off; spellcheck:false;}
     .q{background:white;padding:18px;margin:18px 0;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
     .hidden{display:none;}
     .secret{background:#fff3cd;padding:18px;border-left:6px solid #f39c12;text-align:center;font-weight:bold;font-size:18px;}
@@ -23,13 +24,13 @@
 <h1>BCATS Materials Self-Reflection</h1>
 
 <div id="form">
-  <input type="text" id="name" placeholder="Full Name *" required>
-  <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" required>
+  <input type="text" id="name" placeholder="Full Name *" autocomplete="off">
+  <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" autocomplete="off">
   <select id="teacher"><option value="">Choose Your Teacher</option></select>
 
   <div class="secret">
     Secret word: "<span id="word"></span>"<br>
-    <input type="text" id="check" placeholder="type the word above">
+    <input type="text" id="check" placeholder="type the word above" autocomplete="off">
   </div>
 
   <div id="locked-msg" class="locked hidden">
@@ -78,8 +79,11 @@ const task = TASKS[0];
 task.questions.forEach((q,i) => {
   const div = document.createElement("div");
   div.className = "q";
-  div.innerHTML = `<strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
-    ${q.type==="long" ? '<textarea rows="5" id="a'+q.id+'"></textarea>' : '<input type="text" id="a'+q.id+'">'}
+  div.innerHTML = `
+    <strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
+    ${q.type==="long" 
+      ? `<textarea rows="5" id="a${q.id}" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>`
+      : `<input type="text" id="a${q.id}" autocomplete="off" autocorrect="off" spellcheck="false">`}
   `;
   document.getElementById("questions").appendChild(div);
 });
@@ -117,8 +121,7 @@ window.submitWork = function() {
   const points = gradeIt();
   const pct = Math.round((points / 37) * 100);
 
-  finalData = {
-    name, id,
+  finalData = { name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
     teacherEmail: document.getElementById("teacher").value,
     points, pct,
@@ -144,7 +147,6 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
-/* THIS IS THE NEW OUTLOOK-FRIENDLY EMAIL FUNCTION */
 window.emailWork = async function() {
   if (!finalData) return alert("Click Submit & Auto-Grade first!");
 
@@ -178,16 +180,9 @@ window.emailWork = async function() {
   const file = new File([pdfBlob], finalData.id + "_" + finalData.name.replace(/ /g,"") + "_BCATS.pdf", {type: "application/pdf"});
 
   if (navigator.canShare && navigator.canShare({files: [file]})) {
-    // Mobile / modern browsers – perfect attachment
-    try {
-      await navigator.share({
-        files: [file],
-        title: finalData.name + " – BCATS Materials",
-        text: "Please find my completed work attached.\nGrade: " + finalData.points + "/37"
-      });
-    } catch(e) { fallbackOutlook(); }
+    try { await navigator.share({files: [file], title: finalData.name + " – BCATS Materials", text: "Grade: " + finalData.points + "/37"}); }
+    catch(e) { fallbackOutlook(file); }
   } else {
-    // Desktop Outlook (forces proper attachment)
     fallbackOutlook(file);
   }
 
@@ -196,18 +191,15 @@ window.emailWork = async function() {
     reader.onload = function() {
       const base64 = reader.result.split(',')[1];
       const body = encodeURIComponent(
-        "Kia ora " + finalData.teacherName + ",\n\n" +
-        "Please find my completed Materials self-reflection attached.\n\n" +
+        "Kia ora " + finalData.teacherName + ",\n\nPlease find my work attached.\n\n" +
         "Student: " + finalData.name + " (ID: " + finalData.id + ")\n" +
-        "Auto-Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n" +
-        "Submitted: " + finalData.submittedAt + "\n\n" +
-        "Ngā mihi,\n" + finalData.name
+        "Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n" +
+        "Submitted: " + finalData.submittedAt + "\n\nNgā mihi,\n" + finalData.name
       );
-      const url = "https://outlook.office.com/mail/deeplink/compose?subject=" +
-                  encodeURIComponent(finalData.name + " – BCATS Materials") +
-                  "&body=" + body +
-                  "&attach=" + encodeURIComponent("data:application/pdf;base64," + base64);
-      window.open(url, "_blank");
+      window.open("https://outlook.office.com/mail/deeplink/compose?subject=" +
+        encodeURIComponent(finalData.name + " – BCATS Materials") +
+        "&body=" + body +
+        "&attach=" + encodeURIComponent("data:application/pdf;base64," + base64), "_blank");
     };
     reader.readAsDataURL(file);
   }

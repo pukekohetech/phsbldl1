@@ -25,27 +25,23 @@
 <div id="form">
   <input type="text" id="name" placeholder="Full Name *" required>
   <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" required>
-
-  <select id="teacher">
-    <option value="">Choose Your Teacher</option>
-  </select>
+  <select id="teacher"><option value="">Choose Your Teacher</option></select>
 
   <div class="secret">
-    Secret word (changes every time you refresh): "<span id="word"></span>"<br>
+    Secret word: "<span id="word"></span>"<br>
     <input type="text" id="check" placeholder="type the word above">
   </div>
 
   <div id="locked-msg" class="locked hidden">
-    This device is locked to Student ID: <strong id="locked-id"></strong><br>
-    Only that student can submit this work.
+    Device locked to Student ID: <strong id="locked-id"></strong>
   </div>
 
   <div id="questions"></div>
 
   <button class="btn purple" onclick="submitWork()">Submit & Auto-Grade</button>
-  <button class="btn green" onclick="emailWork()">Email Teacher with PDF</button>
-  <button class="btn red" onclick="if(confirm('Really clear ALL saved work on this device?')) localStorage.clear(); location.reload();">
-    Clear All Data (Teacher Only)
+  <button class="btn green" onclick="emailWork()">Send via Outlook (PDF attached)</button>
+  <button class="btn red" onclick="if(confirm('Clear ALL data on this device?')) localStorage.clear(); location.reload();">
+    Teacher: Clear All Data
   </button>
 </div>
 
@@ -56,11 +52,8 @@
   <button class="btn orange" onclick="back()">Back to Form</button>
 </div>
 
-<!-- Load questions first -->
 <script src="questions.js"></script>
-
 <script>
-// =============== SECURITY SYSTEM ===============
 const STORAGE_KEY = "BCATS_LOCKED_ID";
 let lockedId = localStorage.getItem(STORAGE_KEY);
 
@@ -75,29 +68,23 @@ if (lockedId) {
   document.getElementById("id").readOnly = true;
 }
 
-// Fill teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
   o.value = t.email; o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
 
-// Show questions
 const task = TASKS[0];
 task.questions.forEach((q,i) => {
   const div = document.createElement("div");
   div.className = "q";
-  div.innerHTML = `
-    <strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
+  div.innerHTML = `<strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
     ${q.type==="long" ? '<textarea rows="5" id="a'+q.id+'"></textarea>' : '<input type="text" id="a'+q.id+'">'}
   `;
   document.getElementById("questions").appendChild(div);
 });
 
-function getAnswer(id) {
-  const el = document.getElementById("a"+id);
-  return el ? el.value.trim() : "";
-}
+function getAnswer(id) { return document.getElementById("a"+id)?.value.trim() || ""; }
 
 function gradeIt() {
   let score = 0;
@@ -115,20 +102,10 @@ window.submitWork = function() {
   const id = document.getElementById("id").value.trim();
   const check = document.getElementById("check").value.trim();
 
-  if (!name || !id || !document.getElementById("teacher").value) {
-    alert("Please fill Name, Student ID and Teacher");
-    return;
-  }
-  if (check !== secret) {
-    alert("Wrong secret word! It is: " + secret);
-    return;
-  }
-  if (lockedId && lockedId !== id) {
-    alert("This device is already locked to Student ID: " + lockedId + "\n\nYou cannot submit someone else's work.");
-    return;
-  }
+  if (!name || !id || !document.getElementById("teacher").value) return alert("Fill Name, ID and Teacher");
+  if (check !== secret) return alert("Wrong secret word! It is: " + secret);
+  if (lockedId && lockedId !== id) return alert("This device is locked to Student ID: " + lockedId);
 
-  // LOCK THIS DEVICE TO THIS STUDENT FOREVER
   if (!lockedId) {
     localStorage.setItem(STORAGE_KEY, id);
     lockedId = id;
@@ -141,18 +118,15 @@ window.submitWork = function() {
   const pct = Math.round((points / 37) * 100);
 
   finalData = {
-    name: name,
-    id: id,
+    name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
     teacherEmail: document.getElementById("teacher").value,
-    points: points,
-    pct: pct,
+    points, pct,
     submittedAt: new Date().toLocaleString()
   };
 
   document.getElementById("student").textContent = name;
   document.getElementById("grade").innerHTML = points + "/37<br><small>(" + pct + "%)</small>";
-
   document.getElementById("answers").innerHTML = "";
   task.questions.forEach((q,i) => {
     const div = document.createElement("div");
@@ -170,8 +144,9 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
+/* THIS IS THE NEW OUTLOOK-FRIENDLY EMAIL FUNCTION */
 window.emailWork = async function() {
-  if (!finalData) { alert("Click 'Submit & Auto-Grade' first!"); return; }
+  if (!finalData) return alert("Click Submit & Auto-Grade first!");
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -185,7 +160,6 @@ window.emailWork = async function() {
   doc.text("ID: " + finalData.id, 105, y, {align:"center"}); y += 18;
   doc.setFontSize(18);
   doc.text("Submitted: " + finalData.submittedAt, 105, y, {align:"center"}); y += 25;
-
   doc.setFontSize(22);
   doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"}); y += 30;
 
@@ -200,25 +174,43 @@ window.emailWork = async function() {
     y += 12;
   });
 
-  const blob = doc.output('blob');
-  const reader = new FileReader();
-  reader.onload = () => {
-    const base64 = reader.result.split(',')[1];
-    const subject = encodeURIComponent(finalData.name + " - BCATS Materials");
-    const body = encodeURIComponent(
-      "Kia ora " + finalData.teacherName + ",\n\n" +
-      "Please find my completed Materials self-reflection attached.\n\n" +
-      "Student: " + finalData.name + " (ID: " + finalData.id + ")\n" +
-      "Auto-Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n" +
-      "Submitted: " + finalData.submittedAt + "\n\n" +
-      "Ngā mihi,\n" + finalData.name
-    );
-    location.href = "mailto:" + finalData.teacherEmail +
-                    "?subject=" + subject +
-                    "&body=" + body +
-                    "&attachment=data:application/pdf;base64," + base64;
-  };
-  reader.readAsDataURL(blob);
+  const pdfBlob = doc.output('blob');
+  const file = new File([pdfBlob], finalData.id + "_" + finalData.name.replace(/ /g,"") + "_BCATS.pdf", {type: "application/pdf"});
+
+  if (navigator.canShare && navigator.canShare({files: [file]})) {
+    // Mobile / modern browsers – perfect attachment
+    try {
+      await navigator.share({
+        files: [file],
+        title: finalData.name + " – BCATS Materials",
+        text: "Please find my completed work attached.\nGrade: " + finalData.points + "/37"
+      });
+    } catch(e) { fallbackOutlook(); }
+  } else {
+    // Desktop Outlook (forces proper attachment)
+    fallbackOutlook(file);
+  }
+
+  function fallbackOutlook(file) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      const base64 = reader.result.split(',')[1];
+      const body = encodeURIComponent(
+        "Kia ora " + finalData.teacherName + ",\n\n" +
+        "Please find my completed Materials self-reflection attached.\n\n" +
+        "Student: " + finalData.name + " (ID: " + finalData.id + ")\n" +
+        "Auto-Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n" +
+        "Submitted: " + finalData.submittedAt + "\n\n" +
+        "Ngā mihi,\n" + finalData.name
+      );
+      const url = "https://outlook.office.com/mail/deeplink/compose?subject=" +
+                  encodeURIComponent(finalData.name + " – BCATS Materials") +
+                  "&body=" + body +
+                  "&attach=" + encodeURIComponent("data:application/pdf;base64," + base64);
+      window.open(url, "_blank");
+    };
+    reader.readAsDataURL(file);
+  }
 };
 </script>
 </body>

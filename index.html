@@ -21,6 +21,54 @@
     .correct{background:#e8f5e8;border-left:5px solid #27ae60;}
   </style>
 </head>
+  <script>
+/* ---------- COPY/PASTE PROTECTION ---------- */
+document.addEventListener('keydown', e=>{
+  if (e.ctrlKey && [67,86,65,88].includes(e.keyCode) ||
+      (e.ctrlKey && e.shiftKey && e.keyCode===67)) {
+    e.preventDefault();
+  }
+});
+document.addEventListener('contextmenu', e=>e.preventDefault());
+document.addEventListener('copy', e=>e.preventDefault());
+document.addEventListener('cut',  e=>e.preventDefault());
+
+function blockPaste(e){
+  e.preventDefault();
+  alert('Pasting is not allowed.');
+}
+function makeReadOnly(el){
+  el.readOnly = true;
+  setTimeout(()=>{el.readOnly = false;},0);
+}
+
+/* Hook into field creation (modify loadAssessment) */
+const origLoad = loadAssessment;
+loadAssessment = function(){
+  origLoad.apply(this, arguments);
+  document.querySelectorAll('#questions input[type=text], #questions textarea')
+          .forEach(f=>{
+            f.onpaste = blockPaste;
+            f.onfocus = ()=>makeReadOnly(f);
+          });
+};
+
+/* XOR localStorage (optional) */
+function xor(s){ return btoa([...s].map(c=>String.fromCharCode(c.charCodeAt(0)^42)).join('')); }
+function unxor(s){ return atob(s).split('').map(c=>String.fromCharCode(c.charCodeAt(0)^42)).join(''); }
+const origSave = saveAnswer;
+saveAnswer = function(qid){
+  const val = document.getElementById("a"+qid).value;
+  if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id]={};
+  data.answers[currentAssessment.id][qid] = xor(val);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+const origGet = getAnswer;
+getAnswer = function(id){
+  const raw = data.answers[currentAssessment.id]?.[id] || "";
+  return raw ? unxor(raw) : "";
+};
+</script>
 <body>
 
 <h1>Pukekohe High School – Technology Self-Assessments</h1>
@@ -299,4 +347,5 @@ window.emailWork = async function() {
 </script>
 </body>
 </html>
+
 

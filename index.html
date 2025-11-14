@@ -197,7 +197,6 @@ window.back = () => {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 };
-
 window.emailWork = async function() {
   if (!finalData) return alert("Submit first!");
 
@@ -205,9 +204,10 @@ window.emailWork = async function() {
   const doc = new jsPDF('p', 'mm', 'a4');
   let y = 15;
 
+  // Crest
   try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
 
-  // Header – long titles wrap perfectly
+  // === HEADER – safe wrapping ===
   doc.setFontSize(18);
   const titleLines = doc.splitTextToSize(finalData.assessment.title, 150);
   titleLines.forEach((line, i) => doc.text(line, 45, 20 + i*8));
@@ -230,17 +230,24 @@ window.emailWork = async function() {
 
   doc.setFontSize(28);
   doc.text("GRADE: " + finalData.points + "/" + finalData.totalPoints + " (" + finalData.pct + "%)", 45, headerY);
-  y = headerY + 15;
+  y = headerY + 18;
 
-  // Questions
+  // === QUESTIONS – 100% FIXED (no ! and no cut-off) ===
   finalData.results.forEach(r => {
-    if (y > 270) { doc.addPage(); y = 20; try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {} }
+    if (y > 265) {
+      doc.addPage();
+      y = 20;
+      try { doc.addImage("PHS-Crest.png", "PNG", 10, 8, 28, 28); } catch(e) {}
+    }
 
-    doc.setFontSize(12);
+    // Question
+    doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
-    doc.text(`${r.id}: ${r.question}`, 15, y); y += 8;
+    const qLines = doc.splitTextToSize(`${r.id}: ${r.question}`, 180);
+    qLines.forEach(line => { doc.text(line, 15, y); y += 6; });
 
-    doc.setFontSize(22);
+    // Correct / Incorrect + marks
+    doc.setFontSize(20);
     if (r.earned === r.max) {
       doc.setTextColor(0,120,0);
       doc.text("Correct", 140, y);
@@ -249,26 +256,33 @@ window.emailWork = async function() {
       doc.text(r.earned > 0 ? "Incorrect (partial)" : "Incorrect", 110, y);
     }
     doc.setTextColor(0,0,0);
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.text(`${r.earned}/${r.max}`, 170, y - 3);
-    y += 12;
+    y += 10;
 
-    const answerLines = doc.splitTextToSize(r.answer || "(no answer)", 170);
+    // Student answer – CLEAN, wrapped, no weird characters
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const cleanAnswer = (r.answer || "(no answer)").replace(/!/g, ""); // remove any stray !
+    const answerLines = doc.splitTextToSize(cleanAnswer, 170);
     answerLines.forEach(line => {
-      doc.text("→ " + line, 20, y);
-      y += 6;
+      doc.text("Answer: " + line, 20, y);
+      y += 5.5;
     });
 
-    if (r.earned < r.max) {
-      doc.setFontSize(10);
+    // Tip if needed
+    if (r.earned < r.max && r.hint) {
+      doc.setFontSize(9);
       doc.setTextColor(150,0,0);
-      const tip = doc.splitTextToSize("Tip: " + r.hint, 170);
-      tip.forEach(t => { doc.text(t, 20, y); y += 6; });
+      const tipLines = doc.splitTextToSize("Tip: " + r.hint, 165);
+      tipLines.forEach(line => { doc.text(line, 22, y); y += 5; });
       doc.setTextColor(0,0,0);
     }
-    y += 10;
+
+    y += 8; // space before next question
   });
 
+  // Save PDF
   const filename = finalData.id + "_" + finalData.name.replace(/ /g,"_") + "_" + finalData.assessment.id + ".pdf";
   const blob = doc.output('blob');
   const file = new File([blob], filename, {type:"application/pdf"});
@@ -277,7 +291,6 @@ window.emailWork = async function() {
     try { await navigator.share({files:[file], title: finalData.name + " – " + finalData.assessment.title}); }
     catch { fallbackOutlook(file); }
   } else fallbackOutlook(file);
-
   function fallbackOutlook(file) {
     const reader = new FileReader();
     reader.onload = () => {
@@ -295,3 +308,4 @@ window.emailWork = async function() {
 </script>
 </body>
 </html>
+

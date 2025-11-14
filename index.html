@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCATS Submission</title>
+  <title>BCATS Materials – Secure Submission</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;}
+    body {font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;background:#f9f9f9;color:#333;line-height:1.6;}
     h1,h2{text-align:center;color:#2c3e50;}
-    .btn{display:block;width:100%;padding:18px;margin:20px 0;font-size:20px;border:none;border-radius:12px;color:white;cursor:pointer;}
+    .btn{display:block;width:100%;padding:20px;margin:20px 0;font-size:22px;border:none;border-radius:12px;color:white;cursor:pointer;transition:0.2s;}
     .btn:hover{opacity:0.9;transform:scale(1.02);}
-    .purple{background:#8e44ad;}.green{background:#27ae60;}.orange{background:#e67e22;}
-    input,select,textarea{width:100%;padding:12px;margin:8px 0;border:2px solid #ddd;border-radius:8px;font-size:16px;}
-    .q{background:white;padding:15px;margin:15px 0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+    .purple{background:#8e44ad;}.green{background:#27ae60;}.orange{background:#e67e22;}.red{background:#c0392b;}
+    input,select,textarea{width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:18px;}
+    .q{background:white;padding:18px;margin:18px 0;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,0.1);}
     .hidden{display:none;}
-    .secret{background:#fff3cd;padding:15px;border-left:5px solid #f39c12;text-align:center;font-weight:bold;}
+    .secret{background:#fff3cd;padding:18px;border-left:6px solid #f39c12;text-align:center;font-weight:bold;font-size:18px;}
+    .locked{background:#e8f5e8;padding:15px;border-left:6px solid #27ae60;text-align:center;font-weight:bold;}
   </style>
 </head>
 <body>
@@ -23,43 +24,61 @@
 
 <div id="form">
   <input type="text" id="name" placeholder="Full Name *" required>
-  <input type="text" id="id" placeholder="Student ID *" required>
+  <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" required>
+
   <select id="teacher">
-    <option value="">Choose Teacher</option>
+    <option value="">Choose Your Teacher</option>
   </select>
 
   <div class="secret">
-    Type "<span id="word"></span>" to prove it's your work:<br>
-    <input type="text" id="check" placeholder="secret word">
+    Secret word (changes every time you refresh): "<span id="word"></span>"<br>
+    <input type="text" id="check" placeholder="type the word above">
+  </div>
+
+  <div id="locked-msg" class="locked hidden">
+    This device is locked to Student ID: <strong id="locked-id"></strong><br>
+    Only that student can submit this work.
   </div>
 
   <div id="questions"></div>
 
-  <button class="btn purple" onclick="submitWork()">Submit & Grade</button>
+  <button class="btn purple" onclick="submitWork()">Submit & Auto-Grade</button>
   <button class="btn green" onclick="emailWork()">Email Teacher with PDF</button>
+  <button class="btn red" onclick="if(confirm('Really clear ALL saved work on this device?')) localStorage.clear(); location.reload();">
+    Clear All Data (Teacher Only)
+  </button>
 </div>
 
 <div id="result" class="hidden">
   <h2>All Done <span id="student"></span>!</h2>
   <h1 style="color:#27ae60;text-align:center;" id="grade">0/37</h1>
   <div id="answers"></div>
-  <button class="btn orange" onclick="back()">Edit Answers</button>
+  <button class="btn orange" onclick="back()">Back to Form</button>
 </div>
 
 <!-- Load questions first -->
 <script src="questions.js"></script>
 
 <script>
-// Secret word
-const words = ["kiwi","tui","pohutukawa","manuka","kowhai","rata","rimu","kauri"];
+// =============== SECURITY SYSTEM ===============
+const STORAGE_KEY = "BCATS_LOCKED_ID";
+let lockedId = localStorage.getItem(STORAGE_KEY);
+
+const words = ["kiwi","tui","pohutukawa","manuka","kowhai","rata","rimu","kauri","tōtara","mānuka"];
 const secret = words[Math.floor(Math.random()*words.length)];
 document.getElementById("word").textContent = secret;
 
-// Fill teacher dropdown
+if (lockedId) {
+  document.getElementById("locked-msg").classList.remove("hidden");
+  document.getElementById("locked-id").textContent = lockedId;
+  document.getElementById("id").value = lockedId;
+  document.getElementById("id").readOnly = true;
+}
+
+// Fill teachers
 TEACHERS.forEach(t => {
   const o = document.createElement("option");
-  o.value = t.email;
-  o.textContent = t.name;
+  o.value = t.email; o.textContent = t.name;
   document.getElementById("teacher").appendChild(o);
 });
 
@@ -70,7 +89,7 @@ task.questions.forEach((q,i) => {
   div.className = "q";
   div.innerHTML = `
     <strong>Q${i+1} (${q.maxPoints} pts)</strong><br>${q.text}<br>
-    ${q.type==="long" ? '<textarea rows="4" id="a'+q.id+'"></textarea>' : '<input type="text" id="a'+q.id+'">'}
+    ${q.type==="long" ? '<textarea rows="5" id="a'+q.id+'"></textarea>' : '<input type="text" id="a'+q.id+'">'}
   `;
   document.getElementById("questions").appendChild(div);
 });
@@ -84,11 +103,7 @@ function gradeIt() {
   let score = 0;
   task.questions.forEach(q => {
     const ans = getAnswer(q.id);
-    if (q.rubric) {
-      q.rubric.forEach(r => {
-        if (r.check.test(ans)) score += r.points;
-      });
-    }
+    if (q.rubric) q.rubric.forEach(r => { if (r.check.test(ans)) score += r.points; });
   });
   return score;
 }
@@ -96,29 +111,47 @@ function gradeIt() {
 let finalData = null;
 
 window.submitWork = function() {
-  if (document.getElementById("check").value.trim() !== secret) {
+  const name = document.getElementById("name").value.trim();
+  const id = document.getElementById("id").value.trim();
+  const check = document.getElementById("check").value.trim();
+
+  if (!name || !id || !document.getElementById("teacher").value) {
+    alert("Please fill Name, Student ID and Teacher");
+    return;
+  }
+  if (check !== secret) {
     alert("Wrong secret word! It is: " + secret);
     return;
   }
-  if (!document.getElementById("name").value || !document.getElementById("id").value || !document.getElementById("teacher").value) {
-    alert("Please fill Name, ID and Teacher");
+  if (lockedId && lockedId !== id) {
+    alert("This device is already locked to Student ID: " + lockedId + "\n\nYou cannot submit someone else's work.");
     return;
+  }
+
+  // LOCK THIS DEVICE TO THIS STUDENT FOREVER
+  if (!lockedId) {
+    localStorage.setItem(STORAGE_KEY, id);
+    lockedId = id;
+    document.getElementById("locked-msg").classList.remove("hidden");
+    document.getElementById("locked-id").textContent = id;
+    document.getElementById("id").readOnly = true;
   }
 
   const points = gradeIt();
   const pct = Math.round((points / 37) * 100);
 
   finalData = {
-    name: document.getElementById("name").value.trim(),
-    id: document.getElementById("id").value.trim(),
+    name: name,
+    id: id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
     teacherEmail: document.getElementById("teacher").value,
     points: points,
-    pct: pct
+    pct: pct,
+    submittedAt: new Date().toLocaleString()
   };
 
-  document.getElementById("student").textContent = finalData.name;
-  document.getElementById("grade").textContent = points + "/37 (" + pct + "%)";
+  document.getElementById("student").textContent = name;
+  document.getElementById("grade").innerHTML = points + "/37<br><small>(" + pct + "%)</small>";
 
   document.getElementById("answers").innerHTML = "";
   task.questions.forEach((q,i) => {
@@ -132,61 +165,60 @@ window.submitWork = function() {
   document.getElementById("result").classList.remove("hidden");
 };
 
-window.back = function() {
+window.back = () => {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 };
 
 window.emailWork = async function() {
-  if (!finalData) {
-    alert("Click 'Submit & Grade' first!");
-    return;
-  }
+  if (!finalData) { alert("Click 'Submit & Auto-Grade' first!"); return; }
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  let y = 30;
+  let y = 25;
 
-  doc.setFontSize(20);
-  doc.text(finalData.name + " - BCATS Materials", 105, y, {align:"center"});
-  y += 15;
-  doc.setFontSize(16);
-  doc.text("Grade: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"});
-  y += 25;
+  doc.setFontSize(24);
+  doc.text("BCATS Materials Self-Reflection", 105, y, {align:"center"}); y += 18;
+  doc.setFontSize(28);
+  doc.text(finalData.name, 105, y, {align:"center"}); y += 18;
+  doc.setFontSize(24);
+  doc.text("ID: " + finalData.id, 105, y, {align:"center"}); y += 18;
+  doc.setFontSize(18);
+  doc.text("Submitted: " + finalData.submittedAt, 105, y, {align:"center"}); y += 25;
+
+  doc.setFontSize(22);
+  doc.text("GRADE: " + finalData.points + "/37 (" + finalData.pct + "%)", 105, y, {align:"center"}); y += 30;
 
   task.questions.forEach((q,i) => {
-    if (y > 270) { doc.addPage(); y = 20; }
-    doc.setFontSize(11);
+    if (y > 260) { doc.addPage(); y = 20; }
+    doc.setFontSize(12);
     doc.setFont("helvetica","bold");
-    doc.text("Q" + (i+1) + ": " + q.text, 15, y);
-    y += 8;
+    doc.text("Q" + (i+1) + ": " + q.text, 15, y); y += 10;
     doc.setFont("helvetica","normal");
     const lines = doc.splitTextToSize(getAnswer(q.id) || "(no answer)", 180);
-    lines.forEach(line => {
-      doc.text(line, 20, y);
-      y += 7;
-    });
-    y += 10;
+    lines.forEach(l => { doc.text(l, 20, y); y += 7; });
+    y += 12;
   });
 
-  const pdfBlob = doc.output('blob');
+  const blob = doc.output('blob');
   const reader = new FileReader();
-  reader.onload = function() {
+  reader.onload = () => {
     const base64 = reader.result.split(',')[1];
-    const subject = encodeURIComponent(finalData.name + " - BCATS Materials Submission");
+    const subject = encodeURIComponent(finalData.name + " - BCATS Materials");
     const body = encodeURIComponent(
       "Kia ora " + finalData.teacherName + ",\n\n" +
       "Please find my completed Materials self-reflection attached.\n\n" +
-      "Auto-Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n\n" +
+      "Student: " + finalData.name + " (ID: " + finalData.id + ")\n" +
+      "Auto-Grade: " + finalData.points + "/37 (" + finalData.pct + "%)\n" +
+      "Submitted: " + finalData.submittedAt + "\n\n" +
       "Ngā mihi,\n" + finalData.name
     );
-    const mailto = "mailto:" + finalData.teacherEmail +
-                   "?subject=" + subject +
-                   "&body=" + body +
-                   "&attachment=data:application/pdf;base64," + base64;
-    location.href = mailto;
+    location.href = "mailto:" + finalData.teacherEmail +
+                    "?subject=" + subject +
+                    "&body=" + body +
+                    "&attachment=data:application/pdf;base64," + base64;
   };
-  reader.readAsDataURL(pdfBlob);
+  reader.readAsDataURL(blob);
 };
 </script>
 </body>

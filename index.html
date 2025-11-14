@@ -58,10 +58,9 @@
 const STORAGE_KEY = "BCATS_LOCKED_ID";
 let lockedId = localStorage.getItem(STORAGE_KEY);
 
-const words = ["kiwi","tui","pohutukawa","manuka","kowhai","rata","rimu","kauri","tōtara","mānuka"];
-const secret = words[Math.floor(Math.random()*words.length)];
+const secret = SECRET_WORDS[Math.floor(Math.random() * SECRET_WORDS.length)];
 document.getElementById("word").textContent = secret;
-
+  
 if (lockedId) {
   document.getElementById("locked-msg").classList.remove("hidden");
   document.getElementById("locked-id").textContent = lockedId;
@@ -207,3 +206,4 @@ window.emailWork = async function() {
 </script>
 </body>
 </html>
+

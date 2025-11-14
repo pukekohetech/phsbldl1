@@ -24,11 +24,14 @@
 <h1>BCATS Materials Self-Reflection</h1>
 
 <div id="form">
-  <input type="text" id="name" placeholder="Full Name *" autocomplete="off">
-  <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" autocomplete="off">
+  <input type="text" id="name" placeholder="Full Name *" autocomplete="on">
+  <input type="text" id="id" placeholder="Student ID * (e.g. 12345)" autocomplete="on">
   <select id="teacher"><option value="">Choose Your Teacher</option></select>
 
-
+ <div class="secret">
+    Secret word: "<span id="word"></span>"<br>
+    <input type="text" id="check" placeholder="type the word above" autocomplete="off">
+  </div>
 
   <div id="locked-msg" class="locked hidden">
     Device locked to Student ID: <strong id="locked-id"></strong>
@@ -203,6 +206,7 @@ window.emailWork = async function() {
 </script>
 </body>
 </html>
+
 
 
 

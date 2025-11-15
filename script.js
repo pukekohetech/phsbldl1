@@ -1,5 +1,4 @@
-// script.js – Must load BEFORE questions.js
-
+/* script.js – Core logic, init, grading, PDF, protection */
 const STORAGE_KEY = "TECH_DATA";
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
 let currentAssessment = null;
@@ -7,50 +6,62 @@ let finalData = null;
 
 const XOR_KEY = 42;
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
-const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
+const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join('');
 
-// GLOBAL: initApp is available for questions.js to call
-window.initApp = function() {
-  if (!window.APP_TITLE) {
-    console.error("APP_TITLE not loaded yet");
+/* --------------------------------------------------------------
+   initApp – called by DOMContentLoaded once questions.js is ready
+   -------------------------------------------------------------- */
+window.initApp = function () {
+  // safety – DOM might not be ready yet
+  if (!document.getElementById("page-title")) {
     return setTimeout(window.initApp, 50);
   }
 
-  document.getElementById("page-title").textContent   = APP_TITLE;
-  document.getElementById("header-title").textContent = APP_TITLE;
-  document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
+  // remove loading message
+  document.getElementById("loading")?.remove();
 
+  // titles
+  document.getElementById("page-title").textContent = window.APP_TITLE;
+  document.getElementById("header-title").textContent = window.APP_TITLE;
+  document.getElementById("header-subtitle").textContent = window.APP_SUBTITLE;
+
+  // restore saved student info
   document.getElementById("name").value = data.name || "";
-  document.getElementById("id").value   = data.id   || "";
+  document.getElementById("id").value = data.id || "";
   if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
+  // lock ID if already saved
   if (data.id) {
     document.getElementById("locked-msg").classList.remove("hidden");
     document.getElementById("locked-id").textContent = data.id;
     document.getElementById("id").readOnly = true;
   }
 
-  TEACHERS.forEach(t => {
+  // populate teachers
+  const teacherSel = document.getElementById("teacher");
+  window.TEACHERS.forEach(t => {
     const o = document.createElement("option");
     o.value = t.email; o.textContent = t.name;
-    document.getElementById("teacher").appendChild(o);
+    teacherSel.appendChild(o);
   });
 
-  ASSESSMENTS.forEach((a, i) => {
+  // populate assessment selector
+  const assSel = document.getElementById("assessmentSelector");
+  window.ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
     o.value = i; o.textContent = `${a.title} – ${a.subtitle}`;
-    document.getElementById("assessmentSelector").appendChild(o);
+    assSel.appendChild(o);
   });
 
-  console.log("App initialized!");
+  console.log("App initialized");
 };
 
-// ---------------------------------------------------------------------
-// **CORE FUNCTIONS** (same as before)
-// ---------------------------------------------------------------------
+/* --------------------------------------------------------------
+   Core functions
+   -------------------------------------------------------------- */
 function saveStudentInfo() {
   data.name = document.getElementById("name").value.trim();
-  data.id   = document.getElementById("id").value.trim();
+  data.id = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -59,18 +70,21 @@ function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
   saveStudentInfo();
-  currentAssessment = ASSESSMENTS[idx];
-  const c = document.getElementById("questions");
-  c.innerHTML = `<div class="assessment-header"><h2>${currentAssessment.title}</h2><p>${currentAssessment.subtitle}</p></div>`;
+  currentAssessment = window.ASSESSMENTS[idx];
+  const container = document.getElementById("questions");
+  container.innerHTML = `<div class="assessment-header"><h2>${currentAssessment.title}</h2><p>${currentAssessment.subtitle}</p></div>`;
+
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id] ? unxor(data.answers[currentAssessment.id][q.id]) : "";
-    const div = document.createElement("div"); div.className = "q";
     const field = q.type === "long"
       ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
       : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
+    const div = document.createElement("div");
+    div.className = "q";
     div.innerHTML = `<strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>${field}`;
-    c.appendChild(div);
+    container.appendChild(div);
   });
+
   attachProtection();
 }
 
@@ -80,19 +94,33 @@ function saveAnswer(qid) {
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
+
 function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw) : "";
 }
+
 function gradeIt() {
   let total = 0, results = [];
   currentAssessment.questions.forEach(q => {
-    const ans = getAnswer(q.id); let earned = 0, hints = [];
-    if (q.rubric) q.rubric.forEach(r => { if (r.check.test(ans)) earned += r.points; else if (r.hint) hints.push(r.hint); });
+    const ans = getAnswer(q.id);
+    let earned = 0, hints = [];
+
+    if (q.rubric) {
+      q.rubric.forEach(r => {
+        if (r.check.test(ans)) earned += r.points;
+        else if (r.hint) hints.push(r.hint);
+      });
+    }
+
     total += earned;
     const isCorrect = earned === q.maxPoints;
     results.push({
-      id: q.id.toUpperCase(), question: q.text, answer: ans || "(blank)", earned, max: q.maxPoints,
+      id: q.id.toUpperCase(),
+      question: q.text,
+      answer: ans || "(blank)",
+      earned,
+      max: q.maxPoints,
       markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
       hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : q.hint || "Check your answer")
     });
@@ -100,6 +128,9 @@ function gradeIt() {
   return { total, results };
 }
 
+/* --------------------------------------------------------------
+   Submit & show results
+   -------------------------------------------------------------- */
 window.submitWork = function () {
   saveStudentInfo();
   const name = data.name, id = data.id;
@@ -115,7 +146,9 @@ window.submitWork = function () {
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
     teacherEmail: data.teacher,
     assessment: currentAssessment,
-    points: total, totalPoints: currentAssessment.totalPoints, pct,
+    points: total,
+    totalPoints: currentAssessment.totalPoints,
+    pct,
     submittedAt: new Date().toLocaleString(),
     results
   };
@@ -142,9 +175,9 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
-// ---------------------------------------------------------------------
-// **EMAIL VIA DEFAULT APP (DOWNLOAD + MAILTO)**
-// ---------------------------------------------------------------------
+/* --------------------------------------------------------------
+   Email via PDF + mailto
+   -------------------------------------------------------------- */
 window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
 
@@ -160,13 +193,16 @@ window.emailWork = async function () {
 
   const { jsPDF } = window.jspdf;
   const resultEl = document.getElementById('result');
-  const btns = document.querySelectorAll('.btn-group'); btns.forEach(b => b.style.display = 'none');
+  const btns = document.querySelectorAll('.btn-group');
+  btns.forEach(b => b.style.display = 'none');
+
   const canvas = await html2canvas(resultEl, { scale: 2 });
   const imgData = canvas.toDataURL('image/png');
   btns.forEach(b => b.style.display = '');
 
   const pdf = new jsPDF('p', 'mm', 'a4');
-  const pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
 
   let crestImg = null;
   try {
@@ -178,9 +214,9 @@ window.emailWork = async function () {
   const drawHeader = (y = 0) => {
     pdf.setFillColor(26, 73, 113); pdf.rect(0, y, pageW, 35, 'F');
     pdf.setTextColor(255, 255, 255); pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
-    pdf.text(APP_TITLE, 14, y + 20);
+    pdf.text(window.APP_TITLE, 14, y + 20);
     pdf.setFontSize(12); pdf.setFont('helvetica', 'normal');
-    pdf.text(APP_SUBTITLE, 14, y + 28);
+    pdf.text(window.APP_SUBTITLE, 14, y + 28);
     if (crestImg) pdf.addImage(crestImg, 'PNG', pageW - 38, y + 5, 28, 28);
   };
   drawHeader();
@@ -191,11 +227,21 @@ window.emailWork = async function () {
   pdf.setTextColor(26, 73, 113); pdf.setFontSize(16); pdf.setFont('helvetica', 'bold');
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
 
-  const imgW = pageW - 28, imgH = (canvas.height * imgW) / canvas.width;
+  const imgW = pageW - 28;
+  const imgH = (canvas.height * imgW) / canvas.width;
   let posY = 70, heightLeft = imgH;
-  pdf.addImage(imgData, 'PNG', 14, posY, imgW, imgH); heightLeft -= pageH - posY - 10;
-  while (heightLeft > 0) { posY = heightLeft - imgH; pdf.addPage(); drawHeader(); pdf.addImage(imgData, 'PNG', 14, posY, imgW, imgH); heightLeft -= pageH - 40; }
-  pdf.setFontSize(9); pdf.setTextColor(100, 100, 100); pdf.text("Generated by Pukekohe High Tech Dept", 14, pageH - 10);
+  pdf.addImage(imgData, 'PNG', 14, posY, imgW, imgH);
+  heightLeft -= pageH - posY - 10;
+  while (heightLeft > 0) {
+    posY = heightLeft - imgH;
+    pdf.addPage();
+    drawHeader();
+    pdf.addImage(imgData, 'PNG', 14, posY, imgW, imgH);
+    heightLeft -= pageH - 40;
+  }
+
+  pdf.setFontSize(9); pdf.setTextColor(100, 100, 100);
+  pdf.text("Generated by Pukekohe High Tech Dept", 14, pageH - 10);
 
   const filename = `${finalData.name.replace(/\s+/g, '_')}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const pdfBlob = pdf.output('blob');
@@ -206,24 +252,28 @@ window.emailWork = async function () {
   a.href = fileUrl; a.download = filename; document.body.appendChild(a); a.click();
   setTimeout(() => {
     document.body.removeChild(a); URL.revokeObjectURL(fileUrl);
-    // open default mail client
-    const subject = encodeURIComponent(`${APP_TITLE} – ${finalData.name} (${finalData.pct}%)`);
+
+    // open mail client
+    const subject = encodeURIComponent(`${window.APP_TITLE} – ${finalData.name} (${finalData.pct}%)`);
     const body = encodeURIComponent(`Hi ${finalData.teacherName},\n\nPlease find the assessment attached.\n\nScore: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)\nSubmitted: ${finalData.submittedAt}\n\nRegards,\nPukekohe High Tech`);
     window.location.href = `mailto:${finalData.teacherEmail}?subject=${subject}&body=${body}`;
   }, 1000);
 };
 
-// ---------------------------------------------------------------------
-// **PROTECTION**
-// ---------------------------------------------------------------------
+/* --------------------------------------------------------------
+   Protection (paste/copy/cut block)
+   -------------------------------------------------------------- */
 const PASTE_BLOCKED_MESSAGE = 'Pasting blocked!';
 function showToast(msg) {
   const t = document.createElement('div'); t.textContent = msg; t.className = 'toast';
-  document.body.appendChild(t); requestAnimationFrame(() => t.style.opacity = 1);
-  setTimeout(() => t.style.opacity = 0, 1800); setTimeout(() => t.remove(), 2200);
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.style.opacity = 1);
+  setTimeout(() => t.style.opacity = 0, 1800);
+  setTimeout(() => t.remove(), 2200);
 }
 async function clearClipboard() { try { await navigator.clipboard.writeText(''); } catch (_) {} }
 (async () => { await clearClipboard(); })();
+
 function attachProtection() {
   document.querySelectorAll('.answer-field').forEach(f => {
     f.addEventListener('input', () => saveAnswer(f.id.slice(1)));
@@ -233,3 +283,13 @@ function attachProtection() {
   });
 }
 document.addEventListener('contextmenu', e => { if (!e.target.matches('input, textarea')) e.preventDefault(); });
+
+/* --------------------------------------------------------------
+   AUTO-INIT when DOM + questions.js are ready
+   -------------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof window.APP_TITLE === "undefined") {
+    console.error("questions.js failed to load – APP_TITLE missing");
+    return;
+  }
+  if (typeof window.initApp === "function

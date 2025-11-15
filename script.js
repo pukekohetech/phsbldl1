@@ -9,40 +9,47 @@ const XOR_KEY = 42;
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
 
-// === DYNAMIC TITLE INJECTION (FROM questions.js) ===
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("page-title").textContent = APP_TITLE;
+// ---------------------------------------------------------------------
+// **INIT – called from questions.js when data is ready**
+// ---------------------------------------------------------------------
+function initApp() {
+  // ---- set titles (from questions.js) ----
+  document.getElementById("page-title").textContent   = APP_TITLE;
   document.getElementById("header-title").textContent = APP_TITLE;
   document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
-});
 
-// === INITIALIZE UI ===
-document.getElementById("name").value = data.name || "";
-document.getElementById("id").value = data.id || "";
-if (data.teacher) document.getElementById("teacher").value = data.teacher;
+  // ---- restore saved student info ----
+  document.getElementById("name").value = data.name || "";
+  document.getElementById("id").value   = data.id   || "";
+  if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-if (data.id) {
-  document.getElementById("locked-msg").classList.remove("hidden");
-  document.getElementById("locked-id").textContent = data.id;
-  document.getElementById("id").readOnly = true;
+  if (data.id) {
+    document.getElementById("locked-msg").classList.remove("hidden");
+    document.getElementById("locked-id").textContent = data.id;
+    document.getElementById("id").readOnly = true;
+  }
+
+  // ---- fill teacher dropdown ----
+  TEACHERS.forEach(t => {
+    const o = document.createElement("option");
+    o.value = t.email; o.textContent = t.name;
+    document.getElementById("teacher").appendChild(o);
+  });
+
+  // ---- fill assessment dropdown ----
+  ASSESSMENTS.forEach((a, i) => {
+    const o = document.createElement("option");
+    o.value = i; o.textContent = `${a.title} – ${a.subtitle}`;
+    document.getElementById("assessmentSelector").appendChild(o);
+  });
 }
 
-TEACHERS.forEach(t => {
-  const o = document.createElement("option");
-  o.value = t.email; o.textContent = t.name;
-  document.getElementById("teacher").appendChild(o);
-});
-
-ASSESSMENTS.forEach((a, i) => {
-  const o = document.createElement("option");
-  o.value = i; o.textContent = `${a.title} – ${a.subtitle}`;
-  document.getElementById("assessmentSelector").appendChild(o);
-});
-
-// === CORE FUNCTIONS ===
+// ---------------------------------------------------------------------
+// **CORE FUNCTIONS** (same as before)
+// ---------------------------------------------------------------------
 function saveStudentInfo() {
   data.name = document.getElementById("name").value.trim();
-  data.id = document.getElementById("id").value.trim();
+  data.id   = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -72,12 +79,10 @@ function saveAnswer(qid) {
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
 function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw) : "";
 }
-
 function gradeIt() {
   let total = 0, results = [];
   currentAssessment.questions.forEach(q => {
@@ -136,7 +141,9 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
-// === EMAIL VIA DEFAULT APP (DOWNLOAD + MAILTO) ===
+// ---------------------------------------------------------------------
+// **EMAIL VIA DEFAULT APP (DOWNLOAD + MAILTO)**
+// ---------------------------------------------------------------------
 window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
 
@@ -170,9 +177,9 @@ window.emailWork = async function () {
   const drawHeader = (y = 0) => {
     pdf.setFillColor(26, 73, 113); pdf.rect(0, y, pageW, 35, 'F');
     pdf.setTextColor(255, 255, 255); pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
-    pdf.text(APP_TITLE, 14, y + 20);  // DYNAMIC
+    pdf.text(APP_TITLE, 14, y + 20);
     pdf.setFontSize(12); pdf.setFont('helvetica', 'normal');
-    pdf.text(APP_SUBTITLE, 14, y + 28);  // DYNAMIC
+    pdf.text(APP_SUBTITLE, 14, y + 28);
     if (crestImg) pdf.addImage(crestImg, 'PNG', pageW - 38, y + 5, 28, 28);
   };
   drawHeader();
@@ -193,19 +200,21 @@ window.emailWork = async function () {
   const pdfBlob = pdf.output('blob');
   const fileUrl = URL.createObjectURL(pdfBlob);
 
-  // Download
+  // download
   const a = document.createElement('a');
   a.href = fileUrl; a.download = filename; document.body.appendChild(a); a.click();
   setTimeout(() => {
     document.body.removeChild(a); URL.revokeObjectURL(fileUrl);
-    // Open default mail
+    // open default mail client
     const subject = encodeURIComponent(`${APP_TITLE} – ${finalData.name} (${finalData.pct}%)`);
     const body = encodeURIComponent(`Hi ${finalData.teacherName},\n\nPlease find the assessment attached.\n\nScore: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)\nSubmitted: ${finalData.submittedAt}\n\nRegards,\nPukekohe High Tech`);
     window.location.href = `mailto:${finalData.teacherEmail}?subject=${subject}&body=${body}`;
   }, 1000);
 };
 
-// === PROTECTION ===
+// ---------------------------------------------------------------------
+// **PROTECTION**
+// ---------------------------------------------------------------------
 const PASTE_BLOCKED_MESSAGE = 'Pasting blocked!';
 function showToast(msg) {
   const t = document.createElement('div'); t.textContent = msg; t.className = 'toast';

@@ -81,10 +81,12 @@
 </div>
 
 <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-
+<!-- Load script.js as ES module -->
 <script type="module">
   import './script.js';
 </script>
+
+<!-- Fallback for very old browsers -->
 <script nomodule>
   alert("Your browser is too old. Please use Chrome, Edge, Firefox, or Safari.");
 </script>

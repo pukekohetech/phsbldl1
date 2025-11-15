@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title id="page-title">Loading…</title>
   <style>
-    /* (same CSS you already have – no changes needed) */
+    /* (Your full CSS from before – unchanged) */
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4f6f9;color:#2c3e50;line-height:1.6;padding:20px}
     .container{max-width:900px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
@@ -79,8 +79,9 @@
   </section>
 </div>
 
-<script src="questions.js"></script>
-<script src="script.js"></script>
+<!-- KEY: defer = run after HTML is parsed -->
+<script src="questions.js" defer></script>
+<script src="script.js" defer></script>
 
 </body>
 </html>

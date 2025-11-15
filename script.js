@@ -1,103 +1,93 @@
-/* script.js – US 24355 Materials Assessment – Clean & Final */
+/* script.js – US 24355 Materials Assessment – Fixed & Final */
 const STORAGE_KEY = "TECH_DATA";
 let data = { answers: {} };
 try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || data; } catch (_) {}
 
-// State
+/* ---------- State & Config ---------- */
 let currentAssessment = null;
 let finalData = null;
-
-// App config (filled from questions.json)
 let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
 
-/* --------------------------------------------------------------
-   Load questions.json
-   -------------------------------------------------------------- */
+/* ---------- Load questions.json ---------- */
 async function loadQuestions() {
-  try {
-    const res = await fetch("questions.json");
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    APP_TITLE = json.APP_TITLE;
-    APP_SUBTITLE = json.APP_SUBTITLE;
-    TEACHERS = json.TEACHERS;
-    ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
-      ...ass,
-      questions: ass.questions.map(q => ({
-        ...q,
-        rubric: q.rubric?.map(r => ({ ...r, check: new RegExp(r.check, "i") })) || []
-      }))
-    }));
-  } catch (err) {
-    console.error("Failed to load questions.json:", err);
-    document.body.innerHTML = `<div style="text-align:center;padding:40px;color:#e74c3c;font-family:sans-serif;">
-      <h2>Failed to load assessment data</h2>
-      <p>Check that <code>questions.json</code> exists and is valid JSON.</p>
-      <p><strong>Error:</strong> ${err.message}</p>
-    </div>`;
-    throw err;
-  }
+  const res = await fetch("questions.json");
+  if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
+  const json = await res.json();
+
+  APP_TITLE = json.APP_TITLE;
+  APP_SUBTITLE = json.APP_SUBTITLE;
+  TEACHERS = json.TEACHERS;
+
+  ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
+    ...ass,
+    questions: ass.questions.map(q => ({
+      ...q,
+      rubric: q.rubric?.map(r => ({ ...r, check: new RegExp(r.check, "i") })) || []
+    }))
+  }));
 }
 
-/* --------------------------------------------------------------
-   Init UI
-   -------------------------------------------------------------- */
+/* ---------- Initialise UI ---------- */
 function initApp() {
+  // Remove loading spinner
   document.getElementById("loading")?.remove();
-  document.getElementById("page-title").textContent = APP_TITLE;
-  document.getElementById("header-title").textContent = APP_TITLE;
-  document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
 
+  // Header
+  document.getElementById("page-title")!.textContent = APP_TITLE;
+  document.getElementById("header-title")!.textContent = APP_TITLE;
+  document.getElementById("header-subtitle")!.textContent = APP_SUBTITLE;
+
+  // Student info
   const nameEl = document.getElementById("name");
   const idEl = document.getElementById("id");
-  nameEl.value = data.name || "";
-  idEl.value = data.id || "";
-  if (data.teacher) document.getElementById("teacher").value = data.teacher;
+  if (nameEl) nameEl.value = data.name || "";
+  if (idEl) idEl.value = data.id || "";
+  if (data.teacher) document.getElementById("teacher")!.value = data.teacher;
 
+  // Lock ID
   if (data.id) {
-    document.getElementById("locked-msg").classList.remove("hidden");
-    document.getElementById("locked-id").textContent = data.id;
+    document.getElementById("locked-msg")?.classList.remove("hidden");
+    document.getElementById("locked-id")!.textContent = data.id;
     idEl.readOnly = true;
   }
 
+  // Teachers
   const teacherSel = document.getElementById("teacher");
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
-    o.value = t.email;
-    o.textContent = t.name;
+    o.value = t.email; o.textContent = t.name;
     teacherSel.appendChild(o);
   });
 
+  // Assessments
   const assSel = document.getElementById("assessmentSelector");
   ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
-    o.value = i;
-    o.textContent = `${a.title} – ${a.subtitle}`;
+    o.value = i; o.textContent = `${a.title} – ${a.subtitle}`;
     assSel.appendChild(o);
   });
 
-  // Attach event listeners
-  document.getElementById("load-btn").addEventListener("click", loadAssessment);
-  document.getElementById("submit-btn").addEventListener("click", submitWork);
-  document.getElementById("email-btn").addEventListener("click", emailWork);
-  document.getElementById("back-btn").addEventListener("click", back);
+  // Button listeners
+  document.getElementById("load-btn")?.addEventListener("click", loadAssessment);
+  document.getElementById("submit-btn")?.addEventListener("click", submitWork);
+  document.getElementById("email-btn")?.addEventListener("click", emailWork);
+  document.getElementById("back-btn")?.addEventListener("click", back);
 }
 
-/* --------------------------------------------------------------
-   Core Functions
-   -------------------------------------------------------------- */
+/* ---------- Core Logic ---------- */
 function saveStudentInfo() {
-  data.name = document.getElementById("name").value.trim();
-  data.id = document.getElementById("id").value.trim();
-  data.teacher = document.getElementById("teacher").value;
+  data.name = document.getElementById("name")?.value.trim() || "";
+  data.id = document.getElementById("id")?.value.trim() || "";
+  data.teacher = document.getElementById("teacher")?.value || "";
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function loadAssessment() {
-  const idx = document.getElementById("assessmentSelector").value;
-  if (idx === "") return;
+  const idx = document.getElementById("assessmentSelector")?.value;
+  if (!idx) return;
   saveStudentInfo();
   currentAssessment = ASSESSMENTS[idx];
+
   const container = document.getElementById("questions");
   container.innerHTML = `
     <div class="assessment-header">
@@ -122,7 +112,7 @@ function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);
   if (!el) return;
   if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
-  data.answers[currentAssessment.id][qid] = btoa(el.value); // Simple base64 (not XOR)
+  data.answers[currentAssessment.id][qid] = btoa(el.value);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
@@ -138,12 +128,10 @@ function gradeIt() {
     const ans = getAnswer(q.id);
     let earned = 0;
     const hints = [];
-    if (q.rubric) {
-      q.rubric.forEach(r => {
-        if (r.check.test(ans)) earned += r.points;
-        else if (r.hint) hints.push(r.hint);
-      });
-    }
+    q.rubric?.forEach(r => {
+      if (r.check.test(ans)) earned += r.points;
+      else if (r.hint) hints.push(r.hint);
+    });
     earned = Math.min(earned, q.maxPoints);
     total += earned;
     const isCorrect = earned === q.maxPoints;
@@ -159,28 +147,32 @@ function gradeIt() {
   return { total, results };
 }
 
-/* --------------------------------------------------------------
-   Submit & Results
-   -------------------------------------------------------------- */
+/* ---------- Submit & Results ---------- */
 function submitWork() {
   saveStudentInfo();
   const name = data.name, id = data.id;
   if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
   if (!currentAssessment) return alert("Select an assessment");
-  if (data.id && document.getElementById("id").value !== data.id) return alert("ID locked to: " + data.id);
+  if (data.id && document.getElementById("id")?.value !== data.id) return alert("ID locked to: " + data.id);
 
   const { total, results } = gradeIt();
   const totalPoints = currentAssessment.totalPoints ||
     currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
   const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
 
-  finalData = { name, id, teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
-    teacherEmail: data.teacher, assessment: currentAssessment, points: total, totalPoints, pct,
-    submittedAt: new Date().toLocaleString(), results };
+  finalData = {
+    name, id,
+    teacherName: document.getElementById("teacher")?.selectedOptions[0].textContent || "",
+    teacherEmail: data.teacher,
+    assessment: currentAssessment,
+    points: total, totalPoints, pct,
+    submittedAt: new Date().toLocaleString(),
+    results
+  };
 
-  document.getElementById("student").textContent = name;
-  document.getElementById("teacher-name").textContent = finalData.teacherName;
-  document.getElementById("grade").innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
+  document.getElementById("student")!.textContent = name;
+  document.getElementById("teacher-name")!.textContent = finalData.teacherName;
+  document.getElementById("grade")!.innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
 
   const ansDiv = document.getElementById("answers");
   ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
@@ -193,63 +185,16 @@ function submitWork() {
     ansDiv.appendChild(d);
   });
 
-  document.getElementById("form").classList.add("hidden");
-  document.getElementById("result").classList.remove("hidden");
+  document.getElementById("form")?.classList.add("hidden");
+  document.getElementById("result")?.classList.remove("hidden");
 }
 
 function back() {
-  document.getElementById("result").classList.add("hidden");
-  document.getElementById("form").classList.remove("hidden");
+  document.getElementById("result")?.classList.add("hidden");
+  document.getElementById("form")?.classList.remove("hidden");
 }
 
-/* --------------------------------------------------------------
-   Email / PDF Share
-   -------------------------------------------------------------- */
-function buildEmailBody(fd) {
-  const l = [];
-  l.push(`Pukekohe High School – ${APP_TITLE}`); l.push(APP_SUBTITLE); l.push("");
-  l.push(`Assessment: ${fd.assessment.title} – ${fd.assessment.subtitle}`);
-  l.push(`Student: ${fd.name} (ID: ${fd.id})`);
-  l.push(`Teacher: ${fd.teacherName} <${fd.teacherEmail}>`);
-  l.push(`Submitted: ${fd.submittedAt}`); l.push("");
-  l.push(`Score: ${fd.points}/${fd.totalPoints} (${fd.pct}%)`); l.push("=".repeat(60)); l.push("");
-  fd.results.forEach(r => {
-    l.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
-    l.push(`Question: ${r.question}`); l.push(`Answer: ${r.answer}`);
-    if (r.earned < r.max && r.hint) l.push(`Tip: ${r.hint}`);
-    l.push("-".repeat(60)); l.push("");
-  });
-  l.push("Generated by Pukekohe High School Technology Dept");
-  return l.join("\n");
-}
-
-async function sharePDF(file) {
-  if (!finalData) return;
-  const subject = `${finalData.assessment.title} – ${finalData.name} (${finalData.id})`;
-  const fullBody = buildEmailBody(finalData);
-  const shareData = { files: [file], title: subject, text: fullBody };
-
-  if (navigator.canShare && navigator.canShare(shareData)) {
-    try { await navigator.share(shareData); showToast("Shared"); return; }
-    catch (err) { if (!String(err).includes("AbortError")) showToast("Share failed", false); }
-  }
-
-  // Fallback: download + mailto
-  const url = URL.createObjectURL(file);
-  const a = document.createElement("a"); a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 0);
-
-  const shortBody = [
-    `Assessment: ${finalData.assessment.title}`, `Student: ${finalData.name} (ID: ${finalData.id})`,
-    `Teacher: ${finalData.teacherName}`, `Submitted: ${finalData.submittedAt}`,
-    `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, "",
-    "Full report attached as PDF."
-  ].join("\n");
-
-  window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
-  showToast("Downloaded + email opened");
-}
-
+/* ---------- PDF – Fixed duplicate pages ---------- */
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
@@ -277,100 +222,108 @@ async function emailWork() {
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const imgWidth = pageWidth - 28; // 14mm margin on each side
+  const imgWidth = pageWidth - 28;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  // Header function
   const addHeader = () => {
     pdf.setFillColor(26, 73, 113);
     pdf.rect(0, 0, pageWidth, 35, "F");
     pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(18);
-    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18); pdf.setFont("helvetica", "bold");
     pdf.text(APP_TITLE, 14, 20);
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12); pdf.setFont("helvetica", "normal");
     pdf.text(APP_SUBTITLE, 14, 28);
-
-    // Optional crest
-    let crestImg = null;
     try {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
+      const img = new Image(); img.crossOrigin = "anonymous";
       img.src = "PHS_Crest.png?t=" + Date.now();
-      // Wait for load (sync in try/catch)
       const loaded = new Promise(res => { img.onload = img.onerror = res; });
-      await loaded;
-      if (img.width) pdf.addImage(img, "PNG", pageWidth - 38, 5, 28, 28);
+      loaded.then(() => img.width && pdf.addImage(img, "PNG", pageWidth - 38, 5, 28, 28));
     } catch (_) {}
   };
 
-  // Add first page header
   addHeader();
-
-  // Student info
-  pdf.setTextColor(0, 0, 0);
-  pdf.setFontSize(11);
+  pdf.setTextColor(0, 0, 0); pdf.setFontSize(11);
   pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`, 14, 40);
-
-  // Grade box
-  pdf.setFillColor(240, 248, 255);
-  pdf.rect(14, 45, 60, 15, "F");
-  pdf.setTextColor(26, 73, 113);
-  pdf.setFontSize(16);
-  pdf.setFont("helvetica", "bold");
+  pdf.setFillColor(240, 248, 255); pdf.rect(14, 45, 60, 15, "F");
+  pdf.setTextColor(26, 73, 113); pdf.setFontSize(16); pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
 
-  // Image placement
-  let yPosition = 70;
-  const availableHeight = pageHeight - yPosition - 20; // bottom margin
+  const yStart = 70;
+  const available = pageHeight - yStart - 20;
 
-  if (imgHeight <= availableHeight) {
-    // Fits on first page
-    pdf.addImage(imgData, "PNG", 14, yPosition, imgWidth, imgHeight);
+  if (imgHeight <= available) {
+    pdf.addImage(imgData, "PNG", 14, yStart, imgWidth, imgHeight);
   } else {
-    // Split across pages
     let heightLeft = imgHeight;
-    let sourceY = 0;
-
+    let srcY = 0;
     while (heightLeft > 0) {
-      const sliceHeight = Math.min(availableHeight, heightLeft);
-      const scaledSliceHeight = (sliceHeight * canvas.width) / imgWidth;
-
-      // Create canvas slice
+      const sliceH = Math.min(available, heightLeft);
       const sliceCanvas = document.createElement("canvas");
       sliceCanvas.width = canvas.width;
-      sliceCanvas.height = scaledSliceHeight;
+      sliceCanvas.height = (sliceH * canvas.width) / imgWidth;
       const ctx = sliceCanvas.getContext("2d");
-      ctx.drawImage(canvas, 0, sourceY, canvas.width, scaledSliceHeight, 0, 0, canvas.width, scaledSliceHeight);
-
-      pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yPosition, imgWidth, sliceHeight);
-
-      heightLeft -= sliceHeight;
-      sourceY += scaledSliceHeight;
-
-      if (heightLeft > 0) {
-        pdf.addPage();
-        addHeader();
-        yPosition = 50; // new page start
-      }
+      ctx.drawImage(canvas, 0, srcY, canvas.width, sliceCanvas.height, 0, 0, canvas.width, sliceCanvas.height);
+      pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yStart, imgWidth, sliceH);
+      heightLeft -= sliceH; srcY += sliceCanvas.height;
+      if (heightLeft > 0) { pdf.addPage(); addHeader(); }
     }
   }
 
-  // Footer
-  pdf.setFontSize(9);
-  pdf.setTextColor(100, 100, 100);
+  pdf.setFontSize(9); pdf.setTextColor(100, 100, 100);
   pdf.text("Generated by Pukekohe High Tech Dept", 14, pageHeight - 10);
 
   const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
-  const pdfBlob = pdf.output("blob");
-  const file = new File([pdfBlob], filename, { type: "application/pdf" });
+  const file = new File([pdf.output("blob")], filename, { type: "application/pdf" });
   await sharePDF(file);
 }
 
-/* --------------------------------------------------------------
-   Toast & Protection
-   -------------------------------------------------------------- */
+/* ---------- Share / Email ---------- */
+async function sharePDF(file) {
+  if (!finalData) return;
+  const subject = `${finalData.assessment.title} – ${finalData.name} (${finalData.id})`;
+  const fullBody = buildEmailBody(finalData);
+  const shareData = { files: [file], title: subject, text: fullBody };
+
+  if (navigator.canShare?.(shareData)) {
+    try { await navigator.share(shareData); showToast("Shared"); return; }
+    catch (e) { if (!String(e).includes("AbortError")) showToast("Share failed", false); }
+  }
+
+  const url = URL.createObjectURL(file);
+  const a = document.createElement("a"); a.href = url; a.download = file.name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+
+  const shortBody = [
+    `Assessment: ${finalData.assessment.title}`, `Student: ${finalData.name} (ID: ${finalData.id})`,
+    `Teacher: ${finalData.teacherName}`, `Submitted: ${finalData.submittedAt}`,
+    `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, "",
+    "Full report attached as PDF."
+  ].join("\n");
+
+  window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
+  showToast("Downloaded + email opened");
+}
+
+function buildEmailBody(fd) {
+  const l = [];
+  l.push(`Pukekohe High School – ${APP_TITLE}`); l.push(APP_SUBTITLE); l.push("");
+  l.push(`Assessment: ${fd.assessment.title} – ${fd.assessment.subtitle}`);
+  l.push(`Student: ${fd.name} (ID: ${fd.id})`);
+  l.push(`Teacher: ${fd.teacherName} <${fd.teacherEmail}>`);
+  l.push(`Submitted: ${fd.submittedAt}`); l.push("");
+  l.push(`Score: ${fd.points}/${fd.totalPoints} (${fd.pct}%)`); l.push("=".repeat(60)); l.push("");
+  fd.results.forEach(r => {
+    l.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
+    l.push(`Question: ${r.question}`); l.push(`Answer: ${r.answer}`);
+    if (r.earned < r.max && r.hint) l.push(`Tip: ${r.hint}`);
+    l.push("-".repeat(60)); l.push("");
+  });
+  l.push("Generated by Pukekohe High School Technology Dept");
+  return l.join("\n");
+}
+
+/* ---------- Toast & Protection ---------- */
 function showToast(text, ok = true) {
   const toast = document.getElementById("toast");
   toast.textContent = text;
@@ -392,12 +345,17 @@ function attachProtection() {
   });
 }
 
-/* --------------------------------------------------------------
-   Start App
-   -------------------------------------------------------------- */
+/* ---------- Start App ---------- */
 (async () => {
   try {
     await loadQuestions();
-    initApp();
-  } catch (_) {}
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+      initApp();
+    }
+  } catch (err) {
+    console.error("App failed to start:", err);
+    showToast("Failed to load questions.json – check file", false);
+  }
 })();

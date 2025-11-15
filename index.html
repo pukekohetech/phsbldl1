@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">Loading…</title>
   <style>
+    /* (same CSS you already have – paste it here) */
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4f6f9;color:#2c3e50;line-height:1.6;padding:20px}
     .container{max-width:900px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
@@ -83,8 +84,12 @@
   </section>
 </div>
 
-<!-- Load scripts with defer (executed after DOM is ready) -->
-<script src="script.js" defer></script>
-<script src="questions.js" defer></script>
+<!-- Modern browsers – ES modules -->
+<script type="module" src="script.js"></script>
+
+<!-- Very old browsers – show a friendly message -->
+<script nomodule>
+  alert("Your browser is too old for this app. Please use Chrome, Edge, Firefox or Safari (latest version).");
+</script>
 </body>
 </html>

@@ -86,4 +86,10 @@ const ASSESSMENTS = [
 // ---------------------------------------------------------------------
 // **IMPORTANT** – call the init function that lives in script.js
 // ---------------------------------------------------------------------
-if (typeof initApp === "function") initApp();
+
+// CALL initApp() – this runs AFTER script.js is loaded (thanks to defer)
+if (typeof initApp === "function") {
+  initApp();
+} else {
+  console.error("initApp not found – check script.js and defer");
+}

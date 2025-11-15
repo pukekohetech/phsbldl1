@@ -399,5 +399,7 @@ function attachProtection() {
   try {
     await loadQuestions();
     initApp();
-  } catch (_) {}
+  } catch (err) {
+    // Error already shown in loadQuestions
+  }
 })();

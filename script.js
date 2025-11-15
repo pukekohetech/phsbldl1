@@ -1,4 +1,4 @@
-/* script.js – US 24355 app: FINAL WORKING VERSION */
+/* script.js – US 24355 app: FINAL + ENHANCED */
 // ------------------------------------------------------------
 // Local storage
 // ------------------------------------------------------------
@@ -43,67 +43,58 @@ const unxor = s => {
 let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
 
 // ------------------------------------------------------------
-// Load JSON
+// DEBUG MODE (toggle on/off)
+// ------------------------------------------------------------
+const DEBUG = true;  // ← Set to false in production
+
+// ------------------------------------------------------------
+// Load questions.json
 // ------------------------------------------------------------
 async function loadQuestions() {
-  const loadingEl = document.getElementById("loading") || createLoadingEl();
+  const loadingEl = document.getElementById("loading");
+  if (loadingEl) loadingEl.textContent = "Loading questions…";
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    const res = await fetch('questions.json?t=' + Date.now(), {
-      signal: controller.signal,
-      cache: 'no-store'
-    });
-    clearTimeout(timeoutId);
-
+    const res = await fetch("questions.json?t=" + Date.now(), { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const json = await res.json();
-    populateGlobals(json);
+    if (DEBUG) console.log("JSON loaded:", json);
+
+    APP_TITLE = json.APP_TITLE;
+    APP_SUBTITLE = json.APP_SUBTITLE;
+    TEACHERS = json.TEACHERS;
+
+    // Build RegExp with JSON flags (e.g. "i") — NO 'g'!
+    ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
+      ...ass,
+      questions: ass.questions.map(q => ({
+        ...q,
+        rubric: (q.rubric || []).map(r => ({
+          ...r,
+          check: new RegExp(r.check, r.flags || "i")  // ← SAFE: uses JSON flags
+        }))
+      }))
+    }));
+
+    if (DEBUG) console.log("ASSESSMENTS ready:", ASSESSMENTS);
   } catch (err) {
-    loadingEl.remove();
-    const errEl = document.createElement('div');
-    errEl.id = 'load-error';
-    errEl.style.cssText = 'margin:2rem;padding:1.5rem;background:#ffebee;color:#c62828;border-radius:8px;text-align:center;';
-    errEl.innerHTML = `<strong>Failed to load questions.json</strong><br>${err.message || err}<br><br>Check file path and use a web server.`;
-    document.body.appendChild(errEl);
+    console.error("Failed to load questions.json:", err);
+    const msg = `
+      <div style="text-align:center;padding:40px;color:#e74c3c;font-family:sans-serif;">
+        <h2>Failed to load assessment</h2>
+        <p><strong>Error:</strong> ${err.message}</p>
+        <p>Check: <code>questions.json</code> exists, valid JSON, and you're using a web server.</p>
+      </div>`;
+    document.body.innerHTML = msg;
     throw err;
   } finally {
-    loadingEl.remove();
+    if (loadingEl) loadingEl.remove();
   }
 }
 
-function populateGlobals(json) {
-  APP_TITLE    = json.APP_TITLE;
-  APP_SUBTITLE = json.APP_SUBTITLE;
-  TEACHERS     = json.TEACHERS;
-
-  ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
-    ...ass,
-    questions: ass.questions.map(q => ({
-      ...q,
-      rubric: (q.rubric || []).map(r => ({
-        ...r,
-        // FIXED: Use only the flags from JSON (e.g. "i") — NO 'g'!
-        check: new RegExp(r.check, r.flags || "")
-      }))
-    }))
-  }));
-}
-
-function createLoadingEl() {
-  const el = document.createElement('div');
-  el.id = 'loading';
-  el.textContent = 'Loading questions…';
-  el.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:1.2rem;z-index:9999;color:#333;';
-  document.body.appendChild(el);
-  return el;
-}
-
 // ------------------------------------------------------------
-// Init
+// initApp
 // ------------------------------------------------------------
 function initApp() {
   document.getElementById("page-title").textContent = APP_TITLE;
@@ -111,9 +102,9 @@ function initApp() {
   document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
 
   const nameEl = document.getElementById("name");
-  const idEl   = document.getElementById("id");
+  const idEl = document.getElementById("id");
   nameEl.value = data.name || "";
-  idEl.value   = data.id   || "";
+  idEl.value = data.id || "";
   if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
   if (data.id) {
@@ -143,8 +134,8 @@ function initApp() {
 // Core
 // ------------------------------------------------------------
 function saveStudentInfo() {
-  data.name    = document.getElementById("name").value.trim();
-  data.id      = document.getElementById("id").value.trim();
+  data.name = document.getElementById("name").value.trim();
+  data.id = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -154,49 +145,30 @@ function loadAssessment() {
   if (idx === "") return;
   saveStudentInfo();
   currentAssessment = ASSESSMENTS[idx];
-  const container = document.getElementById("questions");
-  container.innerHTML = "";
 
-  const headerDiv = document.createElement("div");
-  headerDiv.className = "assessment-header";
-  const h2 = document.createElement("h2");
-  h2.textContent = currentAssessment.title;
-  const p = document.createElement("p");
-  p.textContent = currentAssessment.subtitle;
-  headerDiv.appendChild(h2);
-  headerDiv.appendChild(p);
-  container.appendChild(headerDiv);
+  const container = document.getElementById("questions");
+  container.innerHTML = `
+    <div class="assessment-header">
+      <h2>${currentAssessment.title}</h2>
+      <p>${currentAssessment.subtitle}</p>
+    </div>`;
 
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id]
       ? unxor(data.answers[currentAssessment.id][q.id])
       : "";
-    const qDiv = document.createElement("div");
-    qDiv.className = "q";
+    const field =
+      q.type === "long"
+        ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
+        : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
 
-    const label = document.createElement("strong");
-    label.textContent = `${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? 's' : ''})`;
-    qDiv.appendChild(label);
-    qDiv.appendChild(document.createElement("br"));
-
-    const questionSpan = document.createElement("span");
-    questionSpan.textContent = q.text;
-    qDiv.appendChild(questionSpan);
-    qDiv.appendChild(document.createElement("br"));
-
-    let inputEl;
-    if (q.type === "long") {
-      inputEl = document.createElement("textarea");
-      inputEl.rows = 4;
-    } else {
-      inputEl = document.createElement("input");
-      inputEl.type = "text";
-    }
-    inputEl.id = "a" + q.id;
-    inputEl.className = "answer-field";
-    inputEl.value = saved;
-    qDiv.appendChild(inputEl);
-    container.appendChild(qDiv);
+    const div = document.createElement("div");
+    div.className = "q";
+    div.innerHTML = `
+      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? 's' : ''})</strong><br>
+      ${q.text}<br>
+      ${field}`;
+    container.appendChild(div);
   });
 
   attachProtection();
@@ -217,7 +189,7 @@ function getAnswer(id) {
 }
 
 // ------------------------------------------------------------
-// GRADING — FIXED & ROBUST
+// GRADING — BULLETPROOF
 // ------------------------------------------------------------
 function gradeIt() {
   let total = 0;
@@ -229,10 +201,10 @@ function gradeIt() {
 
     if (q.rubric && ans) {
       q.rubric.forEach(r => {
-        // CRITICAL: Reset lastIndex to avoid 'g' flag issues
-        r.check.lastIndex = 0;
+        r.check.lastIndex = 0;  // ← DEFENSIVE: reset even if no 'g'
         if (r.check.test(ans)) {
           earned += r.points;
+          if (DEBUG) console.log(`Match: ${q.id} → "${ans}" → +${r.points}`);
         }
       });
     }
@@ -262,7 +234,8 @@ function gradeIt() {
 function submitWork() {
   saveStudentInfo();
   const name = data.name;
-  const id   = data.id;
+  const id = data.id;
+
   if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
   if (!currentAssessment) return alert("Select an assessment");
   if (data.id && document.getElementById("id").value !== data.id)
@@ -314,28 +287,28 @@ function back() {
 // Email / PDF
 // ------------------------------------------------------------
 function buildEmailBody(fd) {
-  const lines = [];
-  lines.push(`Pukekohe High School – ${APP_TITLE}`);
-  lines.push(APP_SUBTITLE);
-  lines.push("");
-  lines.push(`Assessment: ${fd.assessment.title} – ${fd.assessment.subtitle}`);
-  lines.push(`Student: ${fd.name} (ID: ${fd.id})`);
-  lines.push(`Teacher: ${fd.teacherName} <${fd.teacherEmail}>`);
-  lines.push(`Submitted: ${fd.submittedAt}`);
-  lines.push("");
-  lines.push(`Score: ${fd.points}/${fd.totalPoints} (${fd.pct}%)`);
-  lines.push("=".repeat(60));
-  lines.push("");
+  const l = [];
+  l.push(`Pukekohe High School – ${APP_TITLE}`);
+  l.push(APP_SUBTITLE);
+  l.push("");
+  l.push(`Assessment: ${fd.assessment.title} – ${fd.assessment.subtitle}`);
+  l.push(`Student: ${fd.name} (ID: ${fd.id})`);
+  l.push(`Teacher: ${fd.teacherName} <${fd.teacherEmail}>`);
+  l.push(`Submitted: ${fd.submittedAt}`);
+  l.push("");
+  l.push(`Score: ${fd.points}/${fd.totalPoints} (${fd.pct}%)`);
+  l.push("=".repeat(60));
+  l.push("");
   fd.results.forEach(r => {
-    lines.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
-    lines.push(`Question: ${r.question}`);
-    lines.push(`Answer: ${r.answer}`);
-    if (r.earned < r.max && r.hint) lines.push(`Tip: ${r.hint}`);
-    lines.push("-".repeat(60));
-    lines.push("");
+    l.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
+    l.push(`Question: ${r.question}`);
+    l.push(`Answer: ${r.answer}`);
+    if (r.earned < r.max && r.hint) l.push(`Tip: ${r.hint}`);
+    l.push("-".repeat(60));
+    l.push("");
   });
-  lines.push("Generated by Pukekohe High School Technology Dept");
-  return lines.join("\n");
+  l.push("Generated by Pukekohe High School Technology Dept");
+  return l.join("\n");
 }
 
 async function sharePDF(file) {
@@ -348,20 +321,16 @@ async function sharePDF(file) {
     try {
       await navigator.share(shareData);
       showToast("Shared");
+      return;
     } catch (err) {
-      console.warn(err);
       if (!String(err).includes("AbortError")) showToast("Share failed", false);
     }
-    return;
   }
 
+  // Fallback: download + mailto
   const url = URL.createObjectURL(file);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = file.name;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
 
   const shortBody = [
@@ -372,9 +341,8 @@ async function sharePDF(file) {
     "", "Full report attached as PDF."
   ].join("\n");
 
-  const mailto = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
-  window.location.href = mailto;
-  showToast("Downloaded");
+  window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
+  showToast("Downloaded + email opened");
 }
 
 async function emailWork() {
@@ -382,8 +350,7 @@ async function emailWork() {
 
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src = src; s.onload = res; s.onerror = rej;
-    document.head.appendChild(s);
+    s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
   });
 
   try {
@@ -407,7 +374,7 @@ async function emailWork() {
   const imgWidth = pageWidth - 28;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  const addHeader = async () => {
+  const addHeader = () => {
     pdf.setFillColor(110, 24, 24);
     pdf.rect(0, 0, pageWidth, 35, "F");
     pdf.setTextColor(255, 255, 255);
@@ -421,12 +388,11 @@ async function emailWork() {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.src = "crest_shield.png?t=" + Date.now();
-      await new Promise(res => { img.onload = img.onerror = res; });
-      if (img.width) pdf.addImage(img, "PNG", pageWidth - 38, 5, 28, 28);
+      img.onload = () => pdf.addImage(img, "PNG", pageWidth - 38, 5, 28, 28);
     } catch (_) {}
   };
 
-  await addHeader();
+  addHeader();
   pdf.setTextColor(0, 0, 0);
   pdf.setFontSize(11);
   pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`, 14, 40);
@@ -455,7 +421,7 @@ async function emailWork() {
       pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yPos, imgWidth, sliceH);
       left -= sliceH;
       srcY += scaledH;
-      if (left > 0) { pdf.addPage(); await addHeader(); yPos = 50; }
+      if (left > 0) { pdf.addPage(); addHeader(); yPos = 50; }
     }
   }
 
@@ -476,14 +442,14 @@ function showToast(text, ok = true) {
   const toast = document.getElementById("toast") || createToastElement();
   toast.textContent = text;
   toast.classList.toggle("error", !ok);
-  toast.style.opacity = "1";
+  toast.style.display = "block";
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => (toast.style.opacity = "0"), 3000);
+  showToast._t = setTimeout(() => (toast.style.display = "none"), 3200);
 }
 function createToastElement() {
   const t = document.createElement("div");
   t.id = "toast";
-  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2c3e50;color:#fff;padding:12px 24px;border-radius:30px;font-size:.95rem;opacity:0;transition:opacity .3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);';
+  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2c3e50;color:#fff;padding:12px 24px;border-radius:30px;font-size:.95rem;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);display:none;';
   document.body.appendChild(t);
   return t;
 }
@@ -501,23 +467,22 @@ async function clearClipboard() {
 function attachProtection() {
   document.querySelectorAll(".answer-field").forEach(f => {
     f.addEventListener("input", () => saveAnswer(f.id.slice(1)));
-    f.addEventListener("paste", e => {
-      e.preventDefault();
-      showToast(PASTE_BLOCKED_MESSAGE, false);
-      clearClipboard();
-    });
+    f.addEventListener("paste", e => { e.preventDefault(); showToast(PASTE_BLOCKED_MESSAGE, false); clearClipboard(); });
     f.addEventListener("copy", e => e.preventDefault());
     f.addEventListener("cut", e => e.preventDefault());
   });
 }
+document.addEventListener("contextmenu", e => {
+  if (!e.target.matches("input, textarea")) e.preventDefault();
+});
 
 // ------------------------------------------------------------
 // Export
 // ------------------------------------------------------------
 window.loadAssessment = loadAssessment;
-window.submitWork     = submitWork;
-window.back           = back;
-window.emailWork      = emailWork;
+window.submitWork = submitWork;
+window.back = back;
+window.emailWork = emailWork;
 
 // ------------------------------------------------------------
 // Start
@@ -527,6 +492,6 @@ window.emailWork      = emailWork;
     await loadQuestions();
     initApp();
   } catch (err) {
-    console.error(err);
+    console.error("App failed to start:", err);
   }
 })();

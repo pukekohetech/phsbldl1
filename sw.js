@@ -30,4 +30,4 @@ self.addEventListener('fetch', e => {
     }).catch(() => cached || caches.match('./index.html'));
     return cached || network;
   }));
-});
+}); 

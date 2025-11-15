@@ -82,7 +82,7 @@ async function loadQuestions() {
   }
 }
 
-/* Helper – copy JSON into globals */
+/* Helper – copy JSON into globals + compile RegExps */
 function populateGlobals(json) {
   APP_TITLE    = json.APP_TITLE;
   APP_SUBTITLE = json.APP_SUBTITLE;
@@ -92,10 +92,11 @@ function populateGlobals(json) {
     ...ass,
     questions: ass.questions.map(q => ({
       ...q,
-      rubric: q.rubric?.map(r => ({
+      rubric: (q.rubric || []).map(r => ({
         ...r,
-        check: new RegExp(r.check, 'i')
-      })) ?? []
+        // Use rule-specific flags (e.g. "i") – fall back to empty string
+        check: new RegExp(r.check, (r.flags || "") + "g")
+      }))
     }))
   }));
 }
@@ -218,7 +219,7 @@ function loadAssessment() {
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);
   if (!el) return;
-  const val = el.value;
+  const val = el.value.trim();
   if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -230,29 +231,33 @@ function getAnswer(id) {
 }
 
 /* --------------------------------------------------------------
-   gradeIt – **FIXED** marking logic
+   gradeIt – **FULLY FIXED** marking logic
    -------------------------------------------------------------- */
 function gradeIt() {
   let total = 0;
   const results = [];
 
   currentAssessment.questions.forEach(q => {
-    const ans = getAnswer(q.id);
+    const ans = getAnswer(q.id).trim();
     let earned = 0;
     const hints = [];
 
-    if (q.rubric) {
+    if (q.rubric && ans) {
       q.rubric.forEach(r => {
+        // RegExp already has 'g' flag – reset lastIndex each time
+        r.check.lastIndex = 0;
         if (r.check.test(ans)) {
-          earned += r.points;               // points when regex matches
+          earned += r.points;
         } else if (r.hint) {
-          hints.push(r.hint);               // optional per-rubric hint
+          hints.push(r.hint);
         }
       });
     }
 
+    // Cap per-question
     earned = Math.min(earned, q.maxPoints);
     total += earned;
+
     const isCorrect = earned === q.maxPoints;
 
     results.push({
@@ -261,12 +266,12 @@ function gradeIt() {
       answer: ans || "(blank)",
       earned,
       max: q.maxPoints,
-      markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
+      markText: isCorrect ? "Correct" : earned > 0 ? "Partial" : "Incorrect",
       hint: hints.length
         ? hints.join(" • ")
         : isCorrect
         ? ""
-        : q.hint || "Check your answer"
+        : q.hint || "Check the booklet"
     });
   });
 
@@ -287,7 +292,7 @@ function submitWork() {
 
   const { total, results } = gradeIt();
   const totalPoints = currentAssessment.questions.reduce(
-    (sum, q) => sum + (q.maxPoints || 0), 0
+    (sum, q) => sum + q.maxPoints, 0
   );
   const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
 
@@ -300,7 +305,7 @@ function submitWork() {
     points: total,
     totalPoints,
     pct,
-    submittedAt: new Date().toLocaleString(),
+    submittedAt: new Date().toLocaleString("en-NZ"),
     results
   };
 

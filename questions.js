@@ -1,17 +1,15 @@
 // questions.js – All 5 Parts of US 24355 + App Title
 
 // === MASTER TITLE (CHANGE HERE TO UPDATE EVERYWHERE) ===
-const APP_TITLE = "US 24355 – Materials Knowledge";
+const APP_TITLE    = "US 24355 – Materials Knowledge";
 const APP_SUBTITLE = "Pukekohe High School – All 5 Parts";
 
-// === TEACHERS ===
 const TEACHERS = [
-  { id: "RY", name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
+  { id: "RY",  name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
   { id: "RNR", name: "Mr Ranford", email: "rnr@pukekohehigh.school.nz" },
   { id: "Other", name: "Other Teacher", email: "technology@pukekohehigh.school.nz" }
 ];
 
-// === ASSESSMENTS ===
 const ASSESSMENTS = [
   {
     id: "24355-part1", title: "US 24355 Materials – Part 1", subtitle: "New Zealand Timbers (11 marks)", totalPoints: 11,
@@ -85,4 +83,7 @@ const ASSESSMENTS = [
   }
 ];
 
-console.log(`${APP_TITLE} – All 5 parts loaded – READY!`);
+// ---------------------------------------------------------------------
+// **IMPORTANT** – call the init function that lives in script.js
+// ---------------------------------------------------------------------
+if (typeof initApp === "function") initApp();

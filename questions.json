@@ -2,62 +2,60 @@
   "APP_TITLE": "US 24355 – Materials Knowledge",
   "APP_SUBTITLE": "Pukekohe High School – All 5 Parts",
   "TEACHERS": [
-    { "id": "RY",  "name": "Mr Reynolds", "email": "ry@pukekohehigh.school.nz" },
-    { "id": "RNR", "name": "Mr Ranford",  "email": "rnr@pukekohehigh.school.nz" },
+    { "id": "RY", "name": "Mr Reynolds", "email": "ry@pukekohehigh.school.nz" },
+    { "id": "RNR", "name": "Mr Ranford", "email": "rnr@pukekohehigh.school.nz" },
     { "id": "Other", "name": "Other Teacher", "email": "technology@pukekohehigh.school.nz" }
   ],
   "ASSESSMENTS": [
     {
       "id": "24355-part1",
       "title": "US 24355 Materials – Part 1",
-      "subtitle": "New Zealand Timbers (11 marks)",
-      "totalPoints": 11,
+      "subtitle": "New Zealand Timbers (4 marks)",
       "questions": [
         {
           "id": "q1",
-          "text": "What is the most common exotic timber that is grown in plantations in New Zealand?",
+          "text": "What is the most common exotic timber grown in plantations in New Zealand?",
           "type": "short",
-          "maxPoints": 2,
-          "hint": "Fast‑growing softwood, name includes 'pine', planted everywhere since the 1930s – check Radiata pine on page 13 of the booklet.",
+          "maxPoints": 1,
+          "hint": "Refer to page 13 of the booklet for the fast-growing softwood planted since the 1930s.",
           "rubric": [
-            { "points": 2, "check": "\\\\b(radiata\\\\s+pine|pinus\\\\s+radiata)\\\\b", "flags": "i" }
+            { "points": 1, "check": "\\\\b(radiata\\\\s+pine|pinus\\\\s+radiata)\\\\b", "flags": "i" }
           ]
         },
         {
           "id": "q2",
-          "text": "Name 2 types of New Zealand native timbers that can be used for high‑quality furniture.",
+          "text": "Name one New Zealand native timber commonly used for high-quality furniture.",
           "type": "short",
-          "maxPoints": 2,
-          "hint": "One starts with R (warm golden colour) on page 12, one with K (light brown, also used for furniture) on page 13.",
+          "maxPoints": 1,
+          "hint": "Look at pages 12–13. Consider warm golden or light brown timbers used in cabinetry.",
           "rubric": [
-            { "points": 1, "check": "\\\\brimu\\\\b", "flags": "i" },
-            { "points": 1, "check": "\\\\bkauri\\\\b", "flags": "i" }
+            { "points": 1, "check": "\\\\b(rimu|kauri)\\\\b", "flags": "i" }
           ]
         },
         {
           "id": "q3",
-          "text": "Name an imported timber that can be used for decking and outdoor furniture.",
+          "text": "Name one imported timber suitable for decking or outdoor furniture.",
           "type": "short",
-          "maxPoints": 2,
-          "hint": "Dense, reddish‑brown Southeast Asian hardwood – see the dot points about imported timbers on page 14.",
+          "maxPoints": 1,
+          "hint": "Check page 14 for dense, durable hardwoods from Southeast Asia.",
           "rubric": [
-            { "points": 2, "check": "\\\\b(kwila|merbau)\\\\b", "flags": "i" }
+            { "points": 1, "check": "\\\\b(kwila|merbau)\\\\b", "flags": "i" }
           ]
         },
         {
           "id": "q4",
-          "text": "List 3 types of timber that are commonly used for woodturning.",
+          "text": "Name one timber commonly used for woodturning.",
           "type": "short",
-          "maxPoints": 3,
-          "hint": "Have another look at the native and swamp timbers (especially swamp kauri) described on pages 12–13.",
+          "maxPoints": 1,
+          "hint": "Review native and swamp timbers on pages 12–13, especially those with fine grain.",
           "rubric": [
-            { "points": 1, "check": "\\\\bkauri\\\\b", "flags": "i" },
-            { "points": 1, "check": "\\\\bmatai\\\\b", "flags": "i" },
-            { "points": 1, "check": "\\\\b(rewarewa|rimu|puriri|totara)\\\\b", "flags": "i" }
+            { "points": 1, "check": "\\\\b(kauri|matai|rewarewa|rimu|puriri|totara)\\\\b", "flags": "i" }
           ]
         }
       ]
-    },
+    }
+  ]
+},
 
     {
       "id": "24355-part2",

@@ -38,11 +38,11 @@
     .partial{border-left:5px solid #f39c12}
     .wrong{border-left:5px solid #e74c3c}
     .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2c3e50;color:#fff;padding:12px 24px;border-radius:30px;font-size:.95rem;opacity:0;transition:opacity .3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    #loading{text-align:center;padding:30px;color:#666;font-size:1.1rem}
     @media(max-width:600px){.form-grid{grid-template-columns:1fr}.btn{width:100%;margin:8px 0}}
   </style>
 </head>
 <body>
-
 <div class="container">
   <header>
     <h1 id="header-title">Loading…</h1>
@@ -50,6 +50,8 @@
   </header>
 
   <section class="form-section" id="form">
+    <div id="loading">Loading assessment data…</div>
+
     <div class="form-grid">
       <div><label for="name">Student Name</label><input type="text" id="name" placeholder="Enter your name" required /></div>
       <div>
@@ -59,8 +61,11 @@
       <div><label for="teacher">Teacher</label><select id="teacher" required><option value="">Select teacher</option></select></div>
       <div><label for="assessmentSelector">Assessment Part</label><select id="assessmentSelector"><option value="">Select part</option></select></div>
     </div>
+
     <div class="btn-group"><button class="btn" onclick="loadAssessment()">Load Assessment</button></div>
+
     <div id="questions"></div>
+
     <div class="btn-group"><button class="btn" onclick="submitWork()">Submit & Grade</button></div>
   </section>
 
@@ -78,10 +83,8 @@
   </section>
 </div>
 
-<!-- Load script.js first (contains initApp) -->
-<script src="script.js"></script>
-<!-- Then questions.js (calls initApp when ready) -->
-<script src="questions.js"></script>
-
+<!-- Load scripts with defer (executed after DOM is ready) -->
+<script src="script.js" defer></script>
+<script src="questions.js" defer></script>
 </body>
 </html>

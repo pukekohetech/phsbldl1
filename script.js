@@ -49,7 +49,6 @@ async function loadQuestions() {
   const loadingEl = document.getElementById("loading") || createLoadingEl();
 
   try {
-    // Cache-busting + 10 s timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
@@ -64,7 +63,6 @@ async function loadQuestions() {
     const json = await res.json();
     populateGlobals(json);
   } catch (err) {
-    // Show a friendly error – the app cannot continue without data
     loadingEl.remove();
     const errEl = document.createElement('div');
     errEl.id = 'load-error';
@@ -78,7 +76,7 @@ async function loadQuestions() {
       Make sure the file is in the same folder and you are using a web server.
     `;
     document.body.appendChild(errEl);
-    throw err;                 // stop further execution
+    throw err;
   } finally {
     loadingEl.remove();
   }
@@ -131,14 +129,12 @@ function initApp() {
   idEl.value   = data.id   || "";
   if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-  // Lock ID if already set
   if (data.id) {
     document.getElementById("locked-msg").classList.remove("hidden");
     document.getElementById("locked-id").textContent = data.id;
     idEl.readOnly = true;
   }
 
-  // Teacher list
   const teacherSel = document.getElementById("teacher");
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
@@ -147,7 +143,6 @@ function initApp() {
     teacherSel.appendChild(o);
   });
 
-  // Assessment selector
   const assSel = document.getElementById("assessmentSelector");
   ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
@@ -175,7 +170,6 @@ function loadAssessment() {
   const container = document.getElementById("questions");
   container.innerHTML = "";
 
-  // Header
   const headerDiv = document.createElement("div");
   headerDiv.className = "assessment-header";
   const h2 = document.createElement("h2");
@@ -186,7 +180,6 @@ function loadAssessment() {
   headerDiv.appendChild(p);
   container.appendChild(headerDiv);
 
-  // Questions
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id]
       ? unxor(data.answers[currentAssessment.id][q.id])
@@ -236,6 +229,9 @@ function getAnswer(id) {
   return raw ? unxor(raw) : "";
 }
 
+/* --------------------------------------------------------------
+   gradeIt – **FIXED** marking logic
+   -------------------------------------------------------------- */
 function gradeIt() {
   let total = 0;
   const results = [];
@@ -248,9 +244,9 @@ function gradeIt() {
     if (q.rubric) {
       q.rubric.forEach(r => {
         if (r.check.test(ans)) {
-          earned += r.points;
+          earned += r.points;               // points when regex matches
         } else if (r.hint) {
-          hints.push(r.hint);
+          hints.push(r.hint);               // optional per-rubric hint
         }
       });
     }
@@ -268,7 +264,9 @@ function gradeIt() {
       markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
       hint: hints.length
         ? hints.join(" • ")
-        : isCorrect ? "" : q.hint || "Check your answer"
+        : isCorrect
+        ? ""
+        : q.hint || "Check your answer"
     });
   });
 
@@ -383,7 +381,6 @@ async function sharePDF(file) {
     return;
   }
 
-  // Fallback – download PDF
   const url = URL.createObjectURL(file);
   const a   = document.createElement("a");
   a.href    = url;
@@ -393,7 +390,6 @@ async function sharePDF(file) {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
 
-  // Short mailto body
   const shortBody = [
     `Assessment: ${finalData.assessment.title}`,
     `Student: ${finalData.name} (ID: ${finalData.id})`,
@@ -572,7 +568,6 @@ window.emailWork      = emailWork;
     await loadQuestions();   // blocks until questions.json is loaded
     initApp();               // safe to build UI now
   } catch (err) {
-    // loadQuestions already displayed an error – nothing more to do
     console.error(err);
   }
 })();

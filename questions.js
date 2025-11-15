@@ -1,18 +1,20 @@
-// questions.js – All 5 Parts of US 24355 + App Title
+/* questions.js – **ONLY EDIT THIS FILE** to change title, teachers or questions */
 
-// === MASTER TITLE (CHANGE HERE TO UPDATE EVERYWHERE) ===
-const APP_TITLE    = "US 24355 – Materials Knowledge";
-const APP_SUBTITLE = "Pukekohe High School – All 5 Parts";
+window.APP_TITLE = "US 24355 – Materials Knowledge";
+window.APP_SUBTITLE = "Pukekohe High School – All 5 Parts";
 
-const TEACHERS = [
-  { id: "RY",  name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
+window.TEACHERS = [
+  { id: "RY", name: "Mr Reynolds", email: "ry@pukekohehigh.school.nz" },
   { id: "RNR", name: "Mr Ranford", email: "rnr@pukekohehigh.school.nz" },
   { id: "Other", name: "Other Teacher", email: "technology@pukekohehigh.school.nz" }
 ];
 
-const ASSESSMENTS = [
+window.ASSESSMENTS = [
   {
-    id: "24355-part1", title: "US 24355 Materials – Part 1", subtitle: "New Zealand Timbers (11 marks)", totalPoints: 11,
+    id: "24355-part1",
+    title: "US 24355 Materials – Part 1",
+    subtitle: "New Zealand Timbers (11 marks)",
+    totalPoints: 11,
     questions: [
       { id: "q1", text: "What is the most common exotic timber that is grown in plantations in New Zealand?", type: "short", maxPoints: 2,
         hint: "Fast-growing softwood, name includes 'pine', planted everywhere since the 1930s – check Radiata pine on page 13 of the booklet.",
@@ -29,7 +31,10 @@ const ASSESSMENTS = [
     ]
   },
   {
-    id: "24355-part2", title: "US 24355 Materials – Part 2", subtitle: "Manufactured Boards & Plastics (9 marks)", totalPoints: 9,
+    id: "24355-part2",
+    title: "US 24355 Materials – Part 2",
+    subtitle: "Manufactured Boards & Plastics (9 marks)",
+    totalPoints: 9,
     questions: [
       { id: "q5", text: "Describe the effects of moisture on MDF.", type: "long", maxPoints: 3,
         hint: "Look at the disadvantages of MDF in the Manufactured Boards section on page 18 – what happens when it gets wet?",
@@ -46,7 +51,10 @@ const ASSESSMENTS = [
     ]
   },
   {
-    id: "24355-part3", title: "US 24355 Materials – Part 3", subtitle: "Metals & Concrete (5 marks)", totalPoints: 5,
+    id: "24355-part3",
+    title: "US 24355 Materials – Part 3",
+    subtitle: "Metals & Concrete (5 marks)",
+    totalPoints: 5,
     questions: [
       { id: "q7", text: "Name a commonly used metal that can be easily joined by welding.", type: "short", maxPoints: 2,
         hint: "Check the first bullet list under Mild steel on page 20 – it says it is easily worked and welded.",
@@ -57,7 +65,10 @@ const ASSESSMENTS = [
     ]
   },
   {
-    id: "24355-part4", title: "US 24355 Materials – Part 4", subtitle: "Paint Finishes (5 marks)", totalPoints: 5,
+    id: "24355-part4",
+    title: "US 24355 Materials – Part 4",
+    subtitle: "Paint Finishes (5 marks)",
+    totalPoints: 5,
     questions: [
       { id: "q12", text: "What is the function of a primer coat when painting?", type: "long", maxPoints: 2,
         hint: "Check the description of Primer in the Paint section on page 26 – it talks about adhesion and protection.",
@@ -68,7 +79,10 @@ const ASSESSMENTS = [
     ]
   },
   {
-    id: "24355-part5", title: "US 24355 Materials – Part 5", subtitle: "Polishes & Varnishes (7 marks)", totalPoints: 7,
+    id: "24355-part5",
+    title: "US 24355 Materials – Part 5",
+    subtitle: "Polishes & Varnishes (7 marks)",
+    totalPoints: 7,
     questions: [
       { id: "q14", text: "Name 2 types of polishes and state an advantage over oil finishes.", type: "long", maxPoints: 3,
         hint: "Compare the Oil section on page 27 with the Polish section on page 28 – look at wax polish and French polish.",
@@ -82,14 +96,3 @@ const ASSESSMENTS = [
     ]
   }
 ];
-
-// ---------------------------------------------------------------------
-// **IMPORTANT** – call the init function that lives in script.js
-// ---------------------------------------------------------------------
-
-// CALL initApp() – this runs AFTER script.js is loaded (thanks to defer)
-if (typeof initApp === "function") {
-  initApp();
-} else {
-  console.error("initApp not found – check script.js and defer");
-}

@@ -1,4 +1,6 @@
-/* script.js – Core logic, init, grading, PDF, protection */
+/* script.js – core logic (ES module) */
+import { APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS } from "./questions.js";
+
 const STORAGE_KEY = "TECH_DATA";
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
 let currentAssessment = null;
@@ -8,69 +10,59 @@ const XOR_KEY = 42;
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join('');
 
-/* --------------------------------------------------------------
-   initApp – called by DOMContentLoaded once questions.js is ready
-   -------------------------------------------------------------- */
-window.initApp = function () {
-  // safety – DOM might not be ready yet
-  if (!document.getElementById("page-title")) {
-    return setTimeout(window.initApp, 50);
-  }
-
-  // remove loading message
+/* ----------  initApp  ---------- */
+function initApp() {
   document.getElementById("loading")?.remove();
 
-  // titles
-  document.getElementById("page-title").textContent = window.APP_TITLE;
-  document.getElementById("header-title").textContent = window.APP_TITLE;
-  document.getElementById("header-subtitle").textContent = window.APP_SUBTITLE;
+  document.getElementById("page-title").textContent = APP_TITLE;
+  document.getElementById("header-title").textContent = APP_TITLE;
+  document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
 
-  // restore saved student info
-  document.getElementById("name").value = data.name || "";
-  document.getElementById("id").value = data.id || "";
+  // restore saved data
+  const nameEl = document.getElementById("name");
+  const idEl   = document.getElementById("id");
+  nameEl.value = data.name || "";
+  idEl.value   = data.id   || "";
   if (data.teacher) document.getElementById("teacher").value = data.teacher;
 
-  // lock ID if already saved
   if (data.id) {
     document.getElementById("locked-msg").classList.remove("hidden");
     document.getElementById("locked-id").textContent = data.id;
-    document.getElementById("id").readOnly = true;
+    idEl.readOnly = true;
   }
 
-  // populate teachers
+  // teachers dropdown
   const teacherSel = document.getElementById("teacher");
-  window.TEACHERS.forEach(t => {
+  TEACHERS.forEach(t => {
     const o = document.createElement("option");
     o.value = t.email; o.textContent = t.name;
     teacherSel.appendChild(o);
   });
 
-  // populate assessment selector
+  // assessment selector
   const assSel = document.getElementById("assessmentSelector");
-  window.ASSESSMENTS.forEach((a, i) => {
+  ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
     o.value = i; o.textContent = `${a.title} – ${a.subtitle}`;
     assSel.appendChild(o);
   });
+}
 
-  console.log("App initialized");
-};
-
-/* --------------------------------------------------------------
-   Core functions
-   -------------------------------------------------------------- */
+/* ----------  Core helpers  ---------- */
 function saveStudentInfo() {
-  data.name = document.getElementById("name").value.trim();
-  data.id = document.getElementById("id").value.trim();
+  data.name    = document.getElementById("name").value.trim();
+  data.id      = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+/* ----------  Load assessment  ---------- */
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
   saveStudentInfo();
-  currentAssessment = window.ASSESSMENTS[idx];
+  currentAssessment = ASSESSMENTS[idx];
+
   const container = document.getElementById("questions");
   container.innerHTML = `<div class="assessment-header"><h2>${currentAssessment.title}</h2><p>${currentAssessment.subtitle}</p></div>`;
 
@@ -79,6 +71,7 @@ function loadAssessment() {
     const field = q.type === "long"
       ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
       : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
+
     const div = document.createElement("div");
     div.className = "q";
     div.innerHTML = `<strong>${q.id.toUpperCase()} (${q.maxPoints} pts)</strong><br>${q.text}<br>${field}`;
@@ -88,18 +81,19 @@ function loadAssessment() {
   attachProtection();
 }
 
+/* ----------  Answer handling  ---------- */
 function saveAnswer(qid) {
   const val = document.getElementById("a" + qid).value;
   if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
 function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw) : "";
 }
 
+/* ----------  Grading  ---------- */
 function gradeIt() {
   let total = 0, results = [];
   currentAssessment.questions.forEach(q => {
@@ -119,8 +113,7 @@ function gradeIt() {
       id: q.id.toUpperCase(),
       question: q.text,
       answer: ans || "(blank)",
-      earned,
-      max: q.maxPoints,
+      earned, max: q.maxPoints,
       markText: isCorrect ? "Correct" : earned > 0 ? "Incorrect (partial)" : "Incorrect",
       hint: hints.length ? hints.join(" • ") : (isCorrect ? "" : q.hint || "Check your answer")
     });
@@ -128,9 +121,7 @@ function gradeIt() {
   return { total, results };
 }
 
-/* --------------------------------------------------------------
-   Submit & show results
-   -------------------------------------------------------------- */
+/* ----------  Submit  ---------- */
 window.submitWork = function () {
   saveStudentInfo();
   const name = data.name, id = data.id;
@@ -146,9 +137,7 @@ window.submitWork = function () {
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
     teacherEmail: data.teacher,
     assessment: currentAssessment,
-    points: total,
-    totalPoints: currentAssessment.totalPoints,
-    pct,
+    points: total, totalPoints: currentAssessment.totalPoints, pct,
     submittedAt: new Date().toLocaleString(),
     results
   };
@@ -175,9 +164,7 @@ window.back = () => {
   document.getElementById("form").classList.remove("hidden");
 };
 
-/* --------------------------------------------------------------
-   Email via PDF + mailto
-   -------------------------------------------------------------- */
+/* ----------  PDF + Email  ---------- */
 window.emailWork = async function () {
   if (!finalData) return alert("Submit first!");
 
@@ -214,9 +201,9 @@ window.emailWork = async function () {
   const drawHeader = (y = 0) => {
     pdf.setFillColor(26, 73, 113); pdf.rect(0, y, pageW, 35, 'F');
     pdf.setTextColor(255, 255, 255); pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
-    pdf.text(window.APP_TITLE, 14, y + 20);
+    pdf.text(APP_TITLE, 14, y + 20);
     pdf.setFontSize(12); pdf.setFont('helvetica', 'normal');
-    pdf.text(window.APP_SUBTITLE, 14, y + 28);
+    pdf.text(APP_SUBTITLE, 14, y + 28);
     if (crestImg) pdf.addImage(crestImg, 'PNG', pageW - 38, y + 5, 28, 28);
   };
   drawHeader();
@@ -247,22 +234,17 @@ window.emailWork = async function () {
   const pdfBlob = pdf.output('blob');
   const fileUrl = URL.createObjectURL(pdfBlob);
 
-  // download
   const a = document.createElement('a');
   a.href = fileUrl; a.download = filename; document.body.appendChild(a); a.click();
   setTimeout(() => {
     document.body.removeChild(a); URL.revokeObjectURL(fileUrl);
-
-    // open mail client
-    const subject = encodeURIComponent(`${window.APP_TITLE} – ${finalData.name} (${finalData.pct}%)`);
+    const subject = encodeURIComponent(`${APP_TITLE} – ${finalData.name} (${finalData.pct}%)`);
     const body = encodeURIComponent(`Hi ${finalData.teacherName},\n\nPlease find the assessment attached.\n\nScore: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)\nSubmitted: ${finalData.submittedAt}\n\nRegards,\nPukekohe High Tech`);
     window.location.href = `mailto:${finalData.teacherEmail}?subject=${subject}&body=${body}`;
   }, 1000);
 };
 
-/* --------------------------------------------------------------
-   Protection (paste/copy/cut block)
-   -------------------------------------------------------------- */
+/* ----------  Protection  ---------- */
 const PASTE_BLOCKED_MESSAGE = 'Pasting blocked!';
 function showToast(msg) {
   const t = document.createElement('div'); t.textContent = msg; t.className = 'toast';
@@ -284,12 +266,11 @@ function attachProtection() {
 }
 document.addEventListener('contextmenu', e => { if (!e.target.matches('input, textarea')) e.preventDefault(); });
 
-/* --------------------------------------------------------------
-   AUTO-INIT when DOM + questions.js are ready
-   -------------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-  if (typeof window.APP_TITLE === "undefined") {
-    console.error("questions.js failed to load – APP_TITLE missing");
-    return;
-  }
-  if (typeof window.initApp === "function
+/* ----------  Export public functions for HTML onclick  ---------- */
+window.loadAssessment = loadAssessment;
+window.submitWork     = submitWork;
+window.back           = back;
+window.emailWork      = emailWork;
+
+/* ----------  Run init after everything is ready  ---------- */
+initApp();

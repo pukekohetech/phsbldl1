@@ -252,58 +252,115 @@ async function sharePDF(file) {
 
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
+
   const load = src => new Promise((res, rej) => {
-    const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
+    const s = document.createElement("script");
+    s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
   });
+
   try {
     await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
     await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
-  } catch (e) { return showToast("Failed to load PDF tools", false); }
+  } catch (e) {
+    return showToast("Failed to load PDF tools", false);
+  }
 
   const { jsPDF } = window.jspdf;
   const resultEl = document.getElementById("result");
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");
+
   const canvas = await html2canvas(resultEl, { scale: 2 });
   btns.forEach(b => b.style.display = "");
 
   const imgData = canvas.toDataURL("image/png");
   const pdf = new jsPDF("p", "mm", "a4");
-  const pageW = pdf.internal.pageSize.getWidth();
-  const pageH = pdf.internal.pageSize.getHeight();
-  const imgW = pageW - 28;
-  const imgH = (canvas.height * imgW) / canvas.width;
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgWidth = pageWidth - 28; // 14mm margin on each side
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  pdf.setFillColor(26, 73, 113); pdf.rect(0, 0, pageW, 35, "F");
-  pdf.setTextColor(255, 255, 255); pdf.setFontSize(18); pdf.setFont("helvetica", "bold");
-  pdf.text(APP_TITLE, 14, 20); pdf.setFontSize(12); pdf.setFont("helvetica", "normal");
-  pdf.text(APP_SUBTITLE, 14, 28);
+  // Header function
+  const addHeader = () => {
+    pdf.setFillColor(26, 73, 113);
+    pdf.rect(0, 0, pageWidth, 35, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(18);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(APP_TITLE, 14, 20);
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(APP_SUBTITLE, 14, 28);
 
-  let crestImg = null;
-  try {
-    const img = new Image(); img.crossOrigin = "anonymous";
-    await new Promise(res => { img.onload = img.onerror = res; img.src = "PHS_Crest.png?t=" + Date.now(); });
-    if (img.width) crestImg = img;
-  } catch (_) {}
-  if (crestImg) pdf.addImage(crestImg, "PNG", pageW - 38, 5, 28, 28);
+    // Optional crest
+    let crestImg = null;
+    try {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = "PHS_Crest.png?t=" + Date.now();
+      // Wait for load (sync in try/catch)
+      const loaded = new Promise(res => { img.onload = img.onerror = res; });
+      await loaded;
+      if (img.width) pdf.addImage(img, "PNG", pageWidth - 38, 5, 28, 28);
+    } catch (_) {}
+  };
 
-  pdf.setTextColor(0, 0, 0); pdf.setFontSize(11);
+  // Add first page header
+  addHeader();
+
+  // Student info
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFontSize(11);
   pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`, 14, 40);
-  pdf.setFillColor(240, 248, 255); pdf.rect(14, 45, 60, 15, "F");
-  pdf.setTextColor(26, 73, 113); pdf.setFontSize(16); pdf.setFont("helvetica", "bold");
+
+  // Grade box
+  pdf.setFillColor(240, 248, 255);
+  pdf.rect(14, 45, 60, 15, "F");
+  pdf.setTextColor(26, 73, 113);
+  pdf.setFontSize(16);
+  pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
 
-  let position = 70; let heightLeft = imgH;
-  pdf.addImage(imgData, "PNG", 14, position, imgW, imgH); heightLeft -= pageH - position - 10;
-  while (heightLeft > 0) {
-    pdf.addPage(); pdf.setFillColor(26, 73, 113); pdf.rect(0, 0, pageW, 35, "F");
-    pdf.setTextColor(255, 255, 255); pdf.setFontSize(18); pdf.text(APP_TITLE, 14, 20);
-    position = 50; pdf.addImage(imgData, "PNG", 14, position, imgW, imgH);
-    heightLeft -= pageH - position - 10;
+  // Image placement
+  let yPosition = 70;
+  const availableHeight = pageHeight - yPosition - 20; // bottom margin
+
+  if (imgHeight <= availableHeight) {
+    // Fits on first page
+    pdf.addImage(imgData, "PNG", 14, yPosition, imgWidth, imgHeight);
+  } else {
+    // Split across pages
+    let heightLeft = imgHeight;
+    let sourceY = 0;
+
+    while (heightLeft > 0) {
+      const sliceHeight = Math.min(availableHeight, heightLeft);
+      const scaledSliceHeight = (sliceHeight * canvas.width) / imgWidth;
+
+      // Create canvas slice
+      const sliceCanvas = document.createElement("canvas");
+      sliceCanvas.width = canvas.width;
+      sliceCanvas.height = scaledSliceHeight;
+      const ctx = sliceCanvas.getContext("2d");
+      ctx.drawImage(canvas, 0, sourceY, canvas.width, scaledSliceHeight, 0, 0, canvas.width, scaledSliceHeight);
+
+      pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yPosition, imgWidth, sliceHeight);
+
+      heightLeft -= sliceHeight;
+      sourceY += scaledSliceHeight;
+
+      if (heightLeft > 0) {
+        pdf.addPage();
+        addHeader();
+        yPosition = 50; // new page start
+      }
+    }
   }
 
-  pdf.setFontSize(9); pdf.setTextColor(100, 100, 100);
-  pdf.text("Generated by Pukekohe High Tech Dept", 14, pageH - 10);
+  // Footer
+  pdf.setFontSize(9);
+  pdf.setTextColor(100, 100, 100);
+  pdf.text("Generated by Pukekohe High Tech Dept", 14, pageHeight - 10);
 
   const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const pdfBlob = pdf.output("blob");

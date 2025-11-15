@@ -1,4 +1,4 @@
-// script.js – Secure, Dynamic, PDF + Default Email
+// script.js – Must load BEFORE questions.js
 
 const STORAGE_KEY = "TECH_DATA";
 let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
@@ -9,16 +9,17 @@ const XOR_KEY = 42;
 const xor = s => btoa([...s].map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
 const unxor = s => atob(s).split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY)).join(''));
 
-// ---------------------------------------------------------------------
-// **INIT – called from questions.js when data is ready**
-// ---------------------------------------------------------------------
-function initApp() {
-  // ---- set titles (from questions.js) ----
+// GLOBAL: initApp is available for questions.js to call
+window.initApp = function() {
+  if (!window.APP_TITLE) {
+    console.error("APP_TITLE not loaded yet");
+    return setTimeout(window.initApp, 50);
+  }
+
   document.getElementById("page-title").textContent   = APP_TITLE;
   document.getElementById("header-title").textContent = APP_TITLE;
   document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
 
-  // ---- restore saved student info ----
   document.getElementById("name").value = data.name || "";
   document.getElementById("id").value   = data.id   || "";
   if (data.teacher) document.getElementById("teacher").value = data.teacher;
@@ -29,20 +30,20 @@ function initApp() {
     document.getElementById("id").readOnly = true;
   }
 
-  // ---- fill teacher dropdown ----
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
     o.value = t.email; o.textContent = t.name;
     document.getElementById("teacher").appendChild(o);
   });
 
-  // ---- fill assessment dropdown ----
   ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
     o.value = i; o.textContent = `${a.title} – ${a.subtitle}`;
     document.getElementById("assessmentSelector").appendChild(o);
   });
-}
+
+  console.log("App initialized!");
+};
 
 // ---------------------------------------------------------------------
 // **CORE FUNCTIONS** (same as before)

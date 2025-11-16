@@ -253,7 +253,15 @@ function submitWork() {
     points: total,
     totalPoints,
     pct,
-    submittedAt: new Date().toLocaleString("en-NZ"),
+        submittedAt: new Date().toLocaleString("en-NZ", {
+      timeZone: "Pacific/Auckland",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    }),
+
     results
   };
 
@@ -346,7 +354,7 @@ async function emailWork() {
 
   pdf.setTextColor(0, 0, 0);
   pdf.setFontSize(11);
-  pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`, 14, 40);
+  pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} <${finalData.teacherEmail}> • ${finalData.submittedAt}`,14,40);
   pdf.setFillColor(240, 248, 255);
   pdf.rect(14, 45, 60, 15, "F");
   pdf.setTextColor(110, 24, 24);

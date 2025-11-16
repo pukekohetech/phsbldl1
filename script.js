@@ -140,12 +140,14 @@ function saveStudentInfo() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+/* ------------------------------------------------------------
+   loadAssessment() – add the hint under the question text
+   ------------------------------------------------------------ */
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
   saveStudentInfo();
   currentAssessment = ASSESSMENTS[idx];
-
   const container = document.getElementById("questions");
   container.innerHTML = `
     <div class="assessment-header">
@@ -162,16 +164,24 @@ function loadAssessment() {
         ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
         : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
 
-  const div = document.createElement("div");
+    const div = document.createElement("div");
     div.className = "q";
+
+    // ---- NEW: hint markup -------------------------------------------------
+    const hintHTML = q.hint
+      ? `<div class="hint"><strong>Hint:</strong> ${q.hint}</div>`
+      : "";
+
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
       ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
+      ${hintHTML}
       ${field}`;
+    // ------------------------------------------------------------------------
+
     container.appendChild(div);
   });
-
   attachProtection();
 }
 

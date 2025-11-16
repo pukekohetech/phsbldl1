@@ -1,7 +1,6 @@
 {
   "APP_TITLE": "US 24355 – Materials Knowledge",
   "APP_SUBTITLE": "PHS - L1 Building – Assessment",
-
   "TEACHERS": [
     {
       "id": "RY",
@@ -19,7 +18,6 @@
       "email": "technology@pukekohehigh.school.nz"
     }
   ],
-
   "ASSESSMENTS": [
     {
       "id": "24355-part1",
@@ -29,7 +27,7 @@
         {
           "id": "q1",
           "text": "What is the most common exotic timber grown in NZ plantations?",
-          "image": "woodq1.jpg",
+          "image": "blank.jpg",
           "hint": "Look at the Exotic softwoods section – which plantation softwood covers large areas of both North and South Islands? (See page 13)",
           "type": "short",
           "maxPoints": 1,
@@ -40,7 +38,7 @@
         {
           "id": "q2",
           "text": "Name a New Zealand native timber commonly used for high-quality furniture.",
-          "image": "woodq2-native-furniture.jpg",
+          "image": "blank.jpg",
           "hint": "Check the Indigenous (native) timbers section – which natives are described as being used for high-quality furniture or recycled furniture? (See pages 12–13)",
           "type": "short",
           "maxPoints": 1,
@@ -51,7 +49,7 @@
         {
           "id": "q3",
           "text": "Name one imported timber suitable for decking or outdoor furniture.",
-          "image": "woodq3-decking-imported.jpg",
+          "image": "blank.jpg",
           "hint": "In the Imported timbers section, which timber is ‘commonly used for decking and outdoor furniture’? (See page 14)",
           "type": "short",
           "maxPoints": 1,
@@ -62,7 +60,7 @@
         {
           "id": "q4",
           "text": "Name a timber commonly used for woodturning.",
-          "image": "woodq4-woodturning.jpg",
+          "image": "blank.jpg",
           "hint": "Look near the description of kauri – which version is ‘prized as a material for high quality woodturning’? (See bottom of page 13) Other common NZ turning timbers are also accepted.",
           "type": "short",
           "maxPoints": 1,
@@ -72,7 +70,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part2",
       "title": "US 24355 Materials – Part 2",
@@ -81,7 +78,7 @@
         {
           "id": "q5",
           "text": "Describe the effects of moisture on MDF.",
-          "image": "boardsq5-mdf-moisture.jpg",
+          "image": "blank.jpg",
           "hint": "Read the comparison of MDF with natural timber – what does it say happens ‘when wet’, and what can happen ‘over time’ if it is not sealed? (See page 18)",
           "type": "long",
           "maxPoints": 3,
@@ -94,7 +91,7 @@
         {
           "id": "q6",
           "text": "Name a lightweight expanded plastic used for insulation or packaging.",
-          "image": "boardsq6-polystyrene.jpg",
+          "image": "blank.jpg",
           "hint": "Check the Plastics – Thermoplastics section. Which expanded foam plastic is described as lightweight, buoyant and used for packaging and insulation? (See page 22)",
           "type": "short",
           "maxPoints": 1,
@@ -105,7 +102,7 @@
         {
           "id": "q7",
           "text": "Name a clear thermoplastic used for safety glazing or machine guards.",
-          "image": "boardsq7-clear-thermoplastic.jpg",
+          "image": "blank.jpg",
           "hint": "Think of clear plastics used instead of glass for guards and safety screens. Look at the Plastics and Other materials (glass) sections and think about strong, clear plastic sheets. (See pages 22 and 24)",
           "type": "short",
           "maxPoints": 1,
@@ -116,7 +113,7 @@
         {
           "id": "q8",
           "text": "Explain one advantage of using MDF instead of solid timber.",
-          "image": "boardsq8-mdf-vs-timber.jpg",
+          "image": "blank.jpg",
           "hint": "Check the ‘Comparison of MDF with natural timber’ table – look at the advantages column. Choose one advantage and explain it in your own words. (See page 18)",
           "type": "long",
           "maxPoints": 2,
@@ -127,7 +124,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part3",
       "title": "US 24355 Materials – Part 3",
@@ -136,7 +132,7 @@
         {
           "id": "q9",
           "text": "Name a non-ferrous metal commonly used for decorative fittings.",
-          "image": "metalsq9-brass-fittings.jpg",
+          "image": "blank.jpg",
           "hint": "Look at the Metals section – which copper alloy is used for common tap fittings and other decorative hardware? (See page 21)",
           "type": "short",
           "maxPoints": 2,
@@ -147,7 +143,7 @@
         {
           "id": "q10",
           "text": "Name a ferrous metal commonly used for nails and screws.",
-          "image": "metalsq10-steel-nails-screws.jpg",
+          "image": "blank.jpg",
           "hint": "Check the description of mild steel – it’s a strong, low-cost material that is easily worked and welded, and widely used in construction. (See page 20)",
           "type": "short",
           "maxPoints": 2,
@@ -157,7 +153,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part4",
       "title": "US 24355 Materials – Part 4",
@@ -166,7 +161,7 @@
         {
           "id": "q11",
           "text": "Explain why a primer coat is applied before painting bare timber.",
-          "image": "finishesq11-primer-coat.jpg",
+          "image": "blank.jpg",
           "hint": "In the Paint section, read what primer does before the undercoat and finish coat. Think about sealing the timber, helping the paint stick, and blocking stains. (See page 26)",
           "type": "long",
           "maxPoints": 4,
@@ -180,7 +175,7 @@
         {
           "id": "q12",
           "text": "Identify 3 methods commonly used to apply paint.",
-          "image": "finishesq12-application-methods.jpg",
+          "image": "blank.jpg",
           "hint": "In the Surface finishes – Paint section, how are paint finishes normally applied on site? Look for three different application methods. (See page 26)",
           "type": "short",
           "maxPoints": 3,
@@ -192,7 +187,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part5",
       "title": "US 24355 Materials – Part 5",
@@ -201,7 +195,7 @@
         {
           "id": "q13",
           "text": "Explain the purpose of applying a stain to timber.",
-          "image": "finishesq13-stain-timber.jpg",
+          "image": "blank.jpg",
           "hint": "Think about stain as a decorative finish under clear coats. What does it do to the colour and grain, and how much protection does it give compared with varnish? Use the Surface finishes section for ideas. (See pages 26–28)",
           "type": "long",
           "maxPoints": 4,
@@ -215,7 +209,7 @@
         {
           "id": "q14",
           "text": "Name 2 types of varnish and state an advantage of each.",
-          "image": "finishesq14-varnish-types.jpg",
+          "image": "blank.jpg",
           "hint": "Read the Varnish section – it lists acrylic varnish, polyurethane, sanding sealer and lacquer, along with their benefits. Choose two and give one advantage for each. (See page 27)",
           "type": "long",
           "maxPoints": 4,

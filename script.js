@@ -335,9 +335,9 @@ async function emailWork() {
   }
   try {
     try {
-      crestImg = await tryLoad("PHS-Crest.png");
+      crestImg = await tryLoad("icon-512.png");
     } catch {
-      crestImg = await tryLoad("crest_shield.png");
+      crestImg = await tryLoad("icon-192.png");
     }
   } catch (e) {
     crestImg = null;

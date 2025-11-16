@@ -336,6 +336,10 @@ async function emailWork() {
     format: "a4"
   });
 
+// Add school crest in the top-left corner
+pdf.addImage('PHS-Crest.png', 'PNG', 10, 10, 25, 25);
+
+  
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const imgWidth = pageWidth - 28;

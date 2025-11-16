@@ -160,7 +160,7 @@ function loadAssessment() {
     const field =
       q.type === "long"
         ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
-        : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
+        : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
 
     const div = document.createElement("div");
     div.className = "q";

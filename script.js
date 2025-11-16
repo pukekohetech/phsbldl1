@@ -269,18 +269,27 @@ function submitWork() {
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
 
-  const ansDiv = document.getElementById("answers");
-  ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
+ const ansDiv = document.getElementById("answers");
+ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
 
-  results.forEach(r => {
-    const d = document.createElement("div");
-    d.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    d.innerHTML = `
-      <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
-      Your answer: <em>${r.answer}</em><br>
-      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
-    ansDiv.appendChild(d);
-  });
+results.forEach(r => {
+  const d = document.createElement("div");
+  const q = currentAssessment.questions.find(q => q.id === r.id);
+
+  d.className = `feedback ${
+    r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
+  }`;
+
+  d.innerHTML = `
+    <strong>${q ? q.id.toUpperCase() : r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
+    <div class="question-text"><em>${q ? q.text : ""}</em></div>
+    Your answer: <em>${r.answer}</em><br>
+    ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}
+  `;
+
+  ansDiv.appendChild(d);
+});
+
 
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");

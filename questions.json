@@ -1,6 +1,7 @@
 {
   "APP_TITLE": "US 24355 – Materials Knowledge",
-  "APP_SUBTITLE": "Pukekohe High School – All 5 Parts",
+  "APP_SUBTITLE": "Pukekohe High School – Assessment Parts 1–5",
+
   "TEACHERS": [
     {
       "id": "RY",
@@ -18,6 +19,7 @@
       "email": "technology@pukekohehigh.school.nz"
     }
   ],
+
   "ASSESSMENTS": [
     {
       "id": "24355-part1",
@@ -26,30 +28,20 @@
       "questions": [
         {
           "id": "q1",
-          "text": "What is the most common exotic timber grown in plantations in New Zealand?",
+          "text": "What is the most common exotic timber grown in NZ plantations?",
           "type": "short",
           "maxPoints": 1,
-          "hint": "Refer to page 13 of the booklet for the fast-growing softwood planted since the 1930s.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(radiata\\\\s+pine|pinus\\\\s+radiata)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "radiata pine|pinus radiata", "flags": "i" }
           ]
         },
         {
           "id": "q2",
-          "text": "Name one New Zealand native timber commonly used for high-quality furniture.",
+          "text": "Name a New Zealand native timber commonly used for high-quality furniture.",
           "type": "short",
           "maxPoints": 1,
-          "hint": "See the native timbers list on pages 12–13, especially those used in premium furniture.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(rimu|kauri)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "rimu|kauri", "flags": "i" }
           ]
         },
         {
@@ -57,31 +49,22 @@
           "text": "Name one imported timber suitable for decking or outdoor furniture.",
           "type": "short",
           "maxPoints": 1,
-          "hint": "Check page 14 for dense, durable hardwoods from Southeast Asia.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(kwila|merbau)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "kwila|merbau", "flags": "i" }
           ]
         },
         {
           "id": "q4",
-          "text": "Name one timber commonly used for woodturning.",
+          "text": "Name a timber commonly used for woodturning.",
           "type": "short",
           "maxPoints": 1,
-          "hint": "Review native and swamp timbers on pages 12–13, especially those with fine grain.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(kauri|matai|rewarewa|rimu|puriri|totara)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "kauri|matai|rewarewa|rimu|puriri|totara", "flags": "i" }
           ]
         }
       ]
     },
+
     {
       "id": "24355-part2",
       "title": "US 24355 Materials – Part 2",
@@ -92,51 +75,28 @@
           "text": "Describe the effects of moisture on MDF.",
           "type": "long",
           "maxPoints": 3,
-          "hint": "Look at the disadvantages of MDF in the Manufactured Boards section on page 18 – what happens when it gets wet?",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(swell|expand)\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "fibre|fiber|break|degrade",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "weak|lose.*strength",
-              "flags": "i"
-            }
+            { "points": 1, "check": "swell|expan", "flags": "i" },
+            { "points": 1, "check": "fibre|fiber|break|degrade", "flags": "i" },
+            { "points": 1, "check": "weak|lose strength", "flags": "i" }
           ]
         },
         {
           "id": "q6",
-          "text": "Name a lightweight expanded plastic used for insulation and packaging.",
+          "text": "Name a lightweight expanded plastic used for insulation or packaging.",
           "type": "short",
           "maxPoints": 1,
-          "hint": "See the plastics section on page 20 for foamed or expanded plastics.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(polystyrene|expanded\\\\s+polystyrene|EPS)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "polystyrene|expanded polystyrene|eps|styrofoam", "flags": "i" }
           ]
         },
         {
           "id": "q7",
-          "text": "Name a clear thermoplastic commonly used for safety glazing or machine guards.",
+          "text": "Name a clear thermoplastic used for safety glazing or machine guards.",
           "type": "short",
           "maxPoints": 1,
-          "hint": "Look for tough, impact-resistant clear plastics on page 20.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(acrylic|perspex|polycarbonate)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "acrylic|perspex|polycarbonate", "flags": "i" }
           ]
         },
         {
@@ -144,22 +104,14 @@
           "text": "Explain one advantage of using MDF instead of solid timber.",
           "type": "long",
           "maxPoints": 2,
-          "hint": "Check the Manufactured Boards section – think about stability, availability, or cost.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "stable|won't\\\\s+warp|does\\\\s+not\\\\s+warp|no\\\\s+warp",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "cheap|cheaper|inexpensive|low\\\\s+cost|available|readily\\\\s+available|large\\\\s+sheets",
-              "flags": "i"
-            }
+            { "points": 1, "check": "stable|warp", "flags": "i" },
+            { "points": 1, "check": "cheap|cost|available|large sheets", "flags": "i" }
           ]
         }
       ]
     },
+
     {
       "id": "24355-part3",
       "title": "US 24355 Materials – Part 3",
@@ -167,16 +119,11 @@
       "questions": [
         {
           "id": "q9",
-          "text": "Name a non-ferrous metal commonly used for decorative fittings (e.g. handles, hinges).",
+          "text": "Name a non-ferrous metal commonly used for decorative fittings.",
           "type": "short",
           "maxPoints": 2,
-          "hint": "See the Non-ferrous Metals table on page 23.",
           "rubric": [
-            {
-              "points": 2,
-              "check": "\\\\b(brass|bronze)\\\\b",
-              "flags": "i"
-            }
+            { "points": 2, "check": "brass|bronze", "flags": "i" }
           ]
         },
         {
@@ -184,17 +131,13 @@
           "text": "Name a ferrous metal commonly used for nails and screws.",
           "type": "short",
           "maxPoints": 2,
-          "hint": "Look at the Ferrous Metals section – think about low-carbon steels used in fasteners.",
           "rubric": [
-            {
-              "points": 2,
-              "check": "\\\\b(mild\\\\s+steel|low\\\\s+carbon)\\\\b",
-              "flags": "i"
-            }
+            { "points": 2, "check": "mild steel|low carbon steel", "flags": "i" }
           ]
         }
       ]
     },
+
     {
       "id": "24355-part4",
       "title": "US 24355 Materials – Part 4",
@@ -202,31 +145,14 @@
       "questions": [
         {
           "id": "q11",
-          "text": "Explain why a primer coat is applied before painting bare timber surfaces.",
+          "text": "Explain why a primer coat is applied before painting bare timber.",
           "type": "long",
           "maxPoints": 4,
-          "hint": "See the section on Primers under Paint on page 26 – think about sealing and adhesion.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\b(seal|sealed|sealing)\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\\\b(pores|grain|absorb|absorption|soak)\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\\\b(adhesion|bond|stick|key)\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "prevent|stop.*\\\\b(resin|stain|tannin)s?\\\\b|block.*stain",
-              "flags": "i"
-            }
+            { "points": 1, "check": "seal|sealed|sealing", "flags": "i" },
+            { "points": 1, "check": "pores|grain|absorb|soak", "flags": "i" },
+            { "points": 1, "check": "adhesion|bond|stick|key", "flags": "i" },
+            { "points": 1, "check": "resin|stain|tannin|block", "flags": "i" }
           ]
         },
         {
@@ -234,27 +160,15 @@
           "text": "Identify 3 methods commonly used to apply paint.",
           "type": "short",
           "maxPoints": 3,
-          "hint": "See the first paragraph under Surface finishes/ Paint on page 26 – three methods are listed there.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\bbrush\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\\\broller\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\\\bspray\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "brush", "flags": "i" },
+            { "points": 1, "check": "roller", "flags": "i" },
+            { "points": 1, "check": "spray", "flags": "i" }
           ]
         }
       ]
     },
+
     {
       "id": "24355-part5",
       "title": "US 24355 Materials – Part 5",
@@ -262,60 +176,26 @@
       "questions": [
         {
           "id": "q13",
-          "text": "Explain the main purpose of applying a stain to timber before a clear finish.",
+          "text": "Explain the purpose of applying a stain to timber.",
           "type": "long",
           "maxPoints": 4,
-          "hint": "Look at the Stains section on page 27 – think about colour and appearance rather than protection.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "colour|color|change.*colour|change.*color|darken",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "enhance|bring.*grain|highlight.*grain|emphasise.*grain|emphasize.*grain",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "match|matching.*existing|blend|blending",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "not.*protect|little.*protection|mainly.*decorative",
-              "flags": "i"
-            }
+            { "points": 1, "check": "colour|color|darken", "flags": "i" },
+            { "points": 1, "check": "grain|enhance|highlight", "flags": "i" },
+            { "points": 1, "check": "match|blend", "flags": "i" },
+            { "points": 1, "check": "decorative|not protect|little protection", "flags": "i" }
           ]
         },
         {
           "id": "q14",
-          "text": "Name 2 types of varnishes and state an advantage of each.",
+          "text": "Name 2 types of varnish and state an advantage of each.",
           "type": "long",
           "maxPoints": 4,
-          "hint": "Read the Varnish section on page 27 – look for acrylic varnish and polyurethane and what each is good at.",
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\\\bpolyurethane\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "polyurethane.*\\\\b(durable|tough|scratch|wear)\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\\\b(water.?based|acrylic)\\\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "water.?based.*\\\\b(quick|fast.*dry|low.*odou?r|clear|non.?yellow)\\\\b",
-              "flags": "i"
-            }
+            { "points": 1, "check": "polyurethane", "flags": "i" },
+            { "points": 1, "check": "durable|tough|scratch|wear", "flags": "i" },
+            { "points": 1, "check": "water based|water-based|acrylic", "flags": "i" },
+            { "points": 1, "check": "quick|fast dry|low odour|low odor|clear|non yellow", "flags": "i" }
           ]
         }
       ]

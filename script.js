@@ -280,12 +280,11 @@ results.forEach(r => {
     r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
   }`;
 
-  d.innerHTML = `
-    <strong>${q ? q.id.toUpperCase() : r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
-    <div class="question-text"><em>${q ? q.text : ""}</em></div>
-    Your answer: <em>${r.answer}</em><br>
-    ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}
-  `;
+ d.innerHTML = `
+      <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
+      <div class="question-text"><em>${r.question}</em></div>
+      Your answer: <em>${r.answer}</em><br>
+      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
 
   ansDiv.appendChild(d);
 });

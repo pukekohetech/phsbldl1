@@ -369,8 +369,8 @@ async function emailWork() {
 
   // --- Header with maroon banner + crest on top of it ---
   const addHeader = () => {
-  const leftMargin = 14;
-  const rightMargin = 10;
+  const leftMargin = 10;
+  const rightMargin = 4;
 
   // Coloured banner
   pdf.setFillColor(110, 24, 24);

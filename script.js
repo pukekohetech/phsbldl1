@@ -1,4 +1,4 @@
-/* script.js – US 24355 app: FINAL + A4 PDF + FLAGS SUPPORT */
+/* script.js – US 24355 app: FINAL + A4 PDF + FLAGS SUPPORT  */
 // ------------------------------------------------------------
 // Local storage
 // ------------------------------------------------------------

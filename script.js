@@ -242,11 +242,13 @@ function gradeIt() {
 // ------------------------------------------------------------
 // Submit
 // ------------------------------------------------------------
+/* ------------------------------------------------------------
+   submitWork() – show hint ONLY when answer is wrong/partial
+   ------------------------------------------------------------ */
 function submitWork() {
   saveStudentInfo();
   const name = data.name;
   const id = data.id;
-
   if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
   if (!currentAssessment) return alert("Select an assessment");
   if (data.id && document.getElementById("id").value !== data.id)
@@ -264,15 +266,11 @@ function submitWork() {
     points: total,
     totalPoints,
     pct,
-        submittedAt: new Date().toLocaleString("en-NZ", {
+    submittedAt: new Date().toLocaleString("en-NZ", {
       timeZone: "Pacific/Auckland",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
     }),
-
     results
   };
 
@@ -280,30 +278,36 @@ function submitWork() {
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
 
- const ansDiv = document.getElementById("answers");
-ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
+  const ansDiv = document.getElementById("answers");
+  ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
 
-results.forEach(r => {
-  const d = document.createElement("div");
-  const q = currentAssessment.questions.find(q => q.id === r.id);
+  results.forEach(r => {
+    const d = document.createElement("div");
+    const q = currentAssessment.questions.find(q => q.id === r.id);
+    d.className = `feedback ${
+      r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
+    }`;
 
-  d.className = `feedback ${
-    r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
-  }`;
+    // ---- ONLY show hint if earned < max ----
+    const hintLine = (r.earned < r.max && q.hint)
+      ? `<div class="hint-result"><strong>Hint:</strong> ${q.hint}</div>`
+      : "";
 
- d.innerHTML = `
+    d.innerHTML = `
       <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       <div class="question-text"><em>${r.question}</em></div>
       Your answer: <em>${r.answer}</em><br>
-      ${r.earned < r.max ? "<strong>Tip:</strong> " + r.hint : "Perfect!"}`;
+      ${hintLine}
+      ${r.earned === r.max ? "Well done!" : "Review the hint above."}`;
+    // -----------------------------------------
 
-  ansDiv.appendChild(d);
-});
-
+    ansDiv.appendChild(d);
+  });
 
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 }
+
 
 function back() {
   document.getElementById("result").classList.add("hidden");

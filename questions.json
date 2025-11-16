@@ -30,40 +30,44 @@
           "id": "q1",
           "text": "What is the most common exotic timber grown in NZ plantations?",
           "image": "woodq1.jpg",
+          "hint": "Look at the Exotic softwoods section – which plantation softwood covers large areas of both North and South Islands? (See page 13)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "radiata pine|pinus radiata|radiata|pine|monterey pine", "flags": "i" }
+            { "points": 1, "check": "radiata( pine)?|pinus radiata", "flags": "i" }
           ]
         },
         {
           "id": "q2",
           "text": "Name a New Zealand native timber commonly used for high-quality furniture.",
           "image": "woodq2-native-furniture.jpg",
+          "hint": "Check the Indigenous (native) timbers section – which natives are described as being used for high-quality furniture or recycled furniture? (See pages 12–13)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "rimu|kauri|swamp kauri|matai|totara|puriri|kahikatea", "flags": "i" }
+            { "points": 1, "check": "rimu|kauri|matai", "flags": "i" }
           ]
         },
         {
           "id": "q3",
           "text": "Name one imported timber suitable for decking or outdoor furniture.",
           "image": "woodq3-decking-imported.jpg",
+          "hint": "In the Imported timbers section, which timber is ‘commonly used for decking and outdoor furniture’? (See page 14)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "kwila|merbau|balau|iroko|teak|garapa|vitex", "flags": "i" }
+            { "points": 1, "check": "kwila|kwilla|merbau", "flags": "i" }
           ]
         },
         {
           "id": "q4",
           "text": "Name a timber commonly used for woodturning.",
           "image": "woodq4-woodturning.jpg",
+          "hint": "Look near the description of kauri – which version is ‘prized as a material for high quality woodturning’? (See bottom of page 13) Other common NZ turning timbers are also accepted.",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "kauri|matai|rewarewa|rimu|puriri|totara|swamp kauri|macrocarpa|beech|ash|oak|walnut", "flags": "i" }
+            { "points": 1, "check": "kauri|swamp kauri|matai|rewarewa|rimu|puriri|totara|macrocarpa|walnut", "flags": "i" }
           ]
         }
       ]
@@ -78,43 +82,47 @@
           "id": "q5",
           "text": "Describe the effects of moisture on MDF.",
           "image": "boardsq5-mdf-moisture.jpg",
+          "hint": "Read the comparison of MDF with natural timber – what does it say happens ‘when wet’, and what can happen ‘over time’ if it is not sealed? (See page 18)",
           "type": "long",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "swell|expand|bulge|distort|warp", "flags": "i" },
-            { "points": 1, "check": "fibre|fiber|break|degrade|disintegrate|rot|mould|mold", "flags": "i" },
-            { "points": 1, "check": "weak|lose strength|soften|sag|collapse", "flags": "i" }
+            { "points": 1, "check": "swell|swelling|expan|bulg|grow", "flags": "i" },
+            { "points": 1, "check": "fibre|fiber|break|degrade|crack|split|crumb|fall apart", "flags": "i" },
+            { "points": 1, "check": "weak|lose strength|weaker|structur|integrit", "flags": "i" }
           ]
         },
         {
           "id": "q6",
           "text": "Name a lightweight expanded plastic used for insulation or packaging.",
           "image": "boardsq6-polystyrene.jpg",
+          "hint": "Check the Plastics – Thermoplastics section. Which expanded foam plastic is described as lightweight, buoyant and used for packaging and insulation? (See page 22)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "polystyrene|expanded polystyrene|eps|styrofoam|foam|extruded polystyrene|xps", "flags": "i" }
+            { "points": 1, "check": "polystyren(e)?|expanded polystyren(e)?|eps|styrofoam|foam board", "flags": "i" }
           ]
         },
         {
           "id": "q7",
           "text": "Name a clear thermoplastic used for safety glazing or machine guards.",
           "image": "boardsq7-clear-thermoplastic.jpg",
+          "hint": "Think of clear plastics used instead of glass for guards and safety screens. Look at the Plastics and Other materials (glass) sections and think about strong, clear plastic sheets. (See pages 22 and 24)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "acrylic|perspex|plexiglass|polycarbonate|lexan|pmma", "flags": "i" }
+            { "points": 1, "check": "acrylic|perspex|plexiglas|polycarbonate|lexan", "flags": "i" }
           ]
         },
         {
           "id": "q8",
           "text": "Explain one advantage of using MDF instead of solid timber.",
           "image": "boardsq8-mdf-vs-timber.jpg",
+          "hint": "Check the ‘Comparison of MDF with natural timber’ table – look at the advantages column. Choose one advantage and explain it in your own words. (See page 18)",
           "type": "long",
           "maxPoints": 2,
           "rubric": [
-            { "points": 1, "check": "stable|warp|twist|shrink|expand|dimensional stability|less movement", "flags": "i" },
-            { "points": 1, "check": "cheap|cost|inexpensive|economical|available|large sheets|big panels|uniform|smooth|no knots|no defects", "flags": "i" }
+            { "points": 1, "check": "less expensive|cheap|cheaper|cost|inexpensive|economic|economical", "flags": "i" },
+            { "points": 1, "check": "consistent|uniform|no knots|fewer knots|easier to work|easy to work|large sheets|big sheet|wide sheets|standard size", "flags": "i" }
           ]
         }
       ]
@@ -129,20 +137,22 @@
           "id": "q9",
           "text": "Name a non-ferrous metal commonly used for decorative fittings.",
           "image": "metalsq9-brass-fittings.jpg",
+          "hint": "Look at the Metals section – which copper alloy is used for common tap fittings and other decorative hardware? (See page 21)",
           "type": "short",
           "maxPoints": 2,
           "rubric": [
-            { "points": 2, "check": "brass|bronze|copper", "flags": "i" }
+            { "points": 2, "check": "brass|bronze", "flags": "i" }
           ]
         },
         {
           "id": "q10",
           "text": "Name a ferrous metal commonly used for nails and screws.",
           "image": "metalsq10-steel-nails-screws.jpg",
+          "hint": "Check the description of mild steel – it’s a strong, low-cost material that is easily worked and welded, and widely used in construction. (See page 20)",
           "type": "short",
           "maxPoints": 2,
           "rubric": [
-            { "points": 2, "check": "mild steel|low carbon steel|carbon steel|steel", "flags": "i" }
+            { "points": 2, "check": "mild steel|low carbon steel|steel nails?|steel screws?", "flags": "i" }
           ]
         }
       ]
@@ -157,25 +167,27 @@
           "id": "q11",
           "text": "Explain why a primer coat is applied before painting bare timber.",
           "image": "finishesq11-primer-coat.jpg",
+          "hint": "In the Paint section, read what primer does before the undercoat and finish coat. Think about sealing the timber, helping the paint stick, and blocking stains. (See page 26)",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "seal|sealed|sealing|close|block pores", "flags": "i" },
-            { "points": 1, "check": "pores|grain|absorb|soak|penetrate|reduce absorption", "flags": "i" },
-            { "points": 1, "check": "adhesion|bond|stick|key|grip|better paint hold", "flags": "i" },
-            { "points": 1, "check": "resin|stain|tannin|bleed|block|prevent bleed|stop discolouration", "flags": "i" }
+            { "points": 1, "check": "seal|sealed|sealing|protect|protection", "flags": "i" },
+            { "points": 1, "check": "pores|grain|absorb|absorption|soak|soaking|stop the timber drinking the paint", "flags": "i" },
+            { "points": 1, "check": "adhesion|adhere|bond|stick|sticking|key|grip", "flags": "i" },
+            { "points": 1, "check": "resin|stain|staining|tannin|block|bleed through|stop.*marks", "flags": "i" }
           ]
         },
         {
           "id": "q12",
           "text": "Identify 3 methods commonly used to apply paint.",
           "image": "finishesq12-application-methods.jpg",
+          "hint": "In the Surface finishes – Paint section, how are paint finishes normally applied on site? Look for three different application methods. (See page 26)",
           "type": "short",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "brush|brushing", "flags": "i" },
-            { "points": 1, "check": "roller|rolling", "flags": "i" },
-            { "points": 1, "check": "spray|spraying|spray gun|airless", "flags": "i" }
+            { "points": 1, "check": "brush", "flags": "i" },
+            { "points": 1, "check": "roller", "flags": "i" },
+            { "points": 1, "check": "spray|sprayed|spraying", "flags": "i" }
           ]
         }
       ]
@@ -190,26 +202,28 @@
           "id": "q13",
           "text": "Explain the purpose of applying a stain to timber.",
           "image": "finishesq13-stain-timber.jpg",
+          "hint": "Think about stain as a decorative finish under clear coats. What does it do to the colour and grain, and how much protection does it give compared with varnish? Use the Surface finishes section for ideas. (See pages 26–28)",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "colour|color|darken|tone|change appearance|alter shade", "flags": "i" },
-            { "points": 1, "check": "grain|enhance|highlight|show|bring out|pop|accentuate", "flags": "i" },
-            { "points": 1, "check": "match|blend|uniform|even|consistent|patch repair", "flags": "i" },
-            { "points": 1, "check": "decorative|beauty|aesthetic|not protect|little protection|no protection|minimal protection", "flags": "i" }
+            { "points": 1, "check": "colour|color|darken|change the colour|tone", "flags": "i" },
+            { "points": 1, "check": "grain|enhance|highlight|bring out|show the grain", "flags": "i" },
+            { "points": 1, "check": "match|blend|even out|make it look the same", "flags": "i" },
+            { "points": 1, "check": "decorative|appearance|looks only|little protection|not protect|doesn't protect much|limited protection", "flags": "i" }
           ]
         },
         {
           "id": "q14",
           "text": "Name 2 types of varnish and state an advantage of each.",
           "image": "finishesq14-varnish-types.jpg",
+          "hint": "Read the Varnish section – it lists acrylic varnish, polyurethane, sanding sealer and lacquer, along with their benefits. Choose two and give one advantage for each. (See page 27)",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "polyurethane|poly|oil based|oil-based", "flags": "i" },
-            { "points": 1, "check": "durable|tough|scratch|wear|hard|resistant|long lasting|protect", "flags": "i" },
-            { "points": 1, "check": "water based|water-based|acrylic|waterborne", "flags": "i" },
-            { "points": 1, "check": "quick|fast dry|low odour|low odor|clear|non yellow|non-yellowing|easy clean|environmentally friendly|less voc", "flags": "i" }
+            { "points": 1, "check": "polyurethane|two pack poly|2[- ]pack poly", "flags": "i" },
+            { "points": 1, "check": "durable|tough|hardwearing|hard wearing|scratch|wear|resilient", "flags": "i" },
+            { "points": 1, "check": "water based|water-based|acrylic", "flags": "i" },
+            { "points": 1, "check": "quick|fast dry|fast-drying|quick drying|low odour|low odor|low smell|clear|non yellow|non-yellowing", "flags": "i" }
           ]
         }
       ]

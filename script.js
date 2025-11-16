@@ -369,34 +369,43 @@ async function emailWork() {
 
   // --- Header with maroon banner + crest on top of it ---
   const addHeader = () => {
-    // maroon banner
-    pdf.setFillColor(110, 24, 24);
-    pdf.rect(0, 0, pageWidth, 35, "F");
+  const leftMargin = 14;
+  const rightMargin = 10;
 
-    // title + subtitle
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(18);
-    pdf.setFont("helvetica", "bold");
-    pdf.text(APP_TITLE, 14, 20);
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(APP_SUBTITLE, 14, 28);
+  // Coloured banner
+  pdf.setFillColor(110, 24, 24);
+  pdf.rect(0, 0, pageWidth, 35, "F");
 
-    // crest in top-right of banner (on top of colour)
-    if (crestImg) {
-    // keep aspect ratio and fit into a 25mm-high box on the right
-    const maxHeight = 25;               // how tall you want it (mm)
+  // --- Crest on the right, keeping aspect ratio ---
+  let textRightLimit = pageWidth - rightMargin; // default if no crest
+
+  if (crestImg) {
+    const maxHeight = 25;                        // crest height in mm
     const aspect = crestImg.width / crestImg.height;
-    const drawHeight = maxHeight;
-    const drawWidth = maxHeight * aspect;
+    const crestHeight = maxHeight;
+    const crestWidth = maxHeight * aspect;
 
-    const marginRight = 10;             // right margin
-    const x = pageWidth - drawWidth - marginRight;
-    const y = 5;                        // a bit down from top
+    const crestX = pageWidth - crestWidth - rightMargin; // as far right as possible
+    const crestY = 5;
 
-    pdf.addImage(crestImg, "PNG", x, y, drawWidth, drawHeight);
+    pdf.addImage(crestImg, "PNG", crestX, crestY, crestWidth, crestHeight);
+
+    // text must wrap before this X
+    textRightLimit = crestX - 3;                 // small gap before image
   }
-  };
+
+  const textMaxWidth = textRightLimit - leftMargin;
+
+  // --- Title + subtitle, wrapped so they don't go under the crest ---
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(18);
+  pdf.text(APP_TITLE, leftMargin, 20, { maxWidth: textMaxWidth });
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(12);
+  pdf.text(APP_SUBTITLE, leftMargin, 28, { maxWidth: textMaxWidth });
+};
 
   addHeader();
 

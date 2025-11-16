@@ -167,10 +167,7 @@ function loadAssessment() {
     const div = document.createElement("div");
     div.className = "q";
 
-    // ---- NEW: hint markup -------------------------------------------------
-    const hintHTML = q.hint
-      ? `<div class="hint"><strong>Hint:</strong> ${q.hint}</div>`
-      : "";
+  
 
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>

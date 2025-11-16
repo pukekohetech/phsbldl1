@@ -39,6 +39,7 @@
         {
           "id": "q2",
           "text": "Name a New Zealand native timber commonly used for high-quality furniture.",
+          "image": "woodq2-native-furniture.jpg",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -48,6 +49,7 @@
         {
           "id": "q3",
           "text": "Name one imported timber suitable for decking or outdoor furniture.",
+          "image": "woodq3-decking-imported.jpg",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -57,6 +59,7 @@
         {
           "id": "q4",
           "text": "Name a timber commonly used for woodturning.",
+          "image": "woodq4-woodturning.jpg",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -74,6 +77,7 @@
         {
           "id": "q5",
           "text": "Describe the effects of moisture on MDF.",
+          "image": "boardsq5-mdf-moisture.jpg",
           "type": "long",
           "maxPoints": 3,
           "rubric": [
@@ -85,6 +89,7 @@
         {
           "id": "q6",
           "text": "Name a lightweight expanded plastic used for insulation or packaging.",
+          "image": "boardsq6-polystyrene.jpg",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -94,6 +99,7 @@
         {
           "id": "q7",
           "text": "Name a clear thermoplastic used for safety glazing or machine guards.",
+          "image": "boardsq7-clear-thermoplastic.jpg",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -103,6 +109,7 @@
         {
           "id": "q8",
           "text": "Explain one advantage of using MDF instead of solid timber.",
+          "image": "boardsq8-mdf-vs-timber.jpg",
           "type": "long",
           "maxPoints": 2,
           "rubric": [
@@ -121,6 +128,7 @@
         {
           "id": "q9",
           "text": "Name a non-ferrous metal commonly used for decorative fittings.",
+          "image": "metalsq9-brass-fittings.jpg",
           "type": "short",
           "maxPoints": 2,
           "rubric": [
@@ -130,6 +138,7 @@
         {
           "id": "q10",
           "text": "Name a ferrous metal commonly used for nails and screws.",
+          "image": "metalsq10-steel-nails-screws.jpg",
           "type": "short",
           "maxPoints": 2,
           "rubric": [
@@ -147,6 +156,7 @@
         {
           "id": "q11",
           "text": "Explain why a primer coat is applied before painting bare timber.",
+          "image": "finishesq11-primer-coat.jpg",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
@@ -159,6 +169,7 @@
         {
           "id": "q12",
           "text": "Identify 3 methods commonly used to apply paint.",
+          "image": "finishesq12-application-methods.jpg",
           "type": "short",
           "maxPoints": 3,
           "rubric": [
@@ -178,6 +189,7 @@
         {
           "id": "q13",
           "text": "Explain the purpose of applying a stain to timber.",
+          "image": "finishesq13-stain-timber.jpg",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
@@ -190,6 +202,7 @@
         {
           "id": "q14",
           "text": "Name 2 types of varnish and state an advantage of each.",
+          "image": "finishesq14-varnish-types.jpg",
           "type": "long",
           "maxPoints": 4,
           "rubric": [

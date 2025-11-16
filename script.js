@@ -1,6 +1,6 @@
 /* script.js – US 24355 app: FINAL + A4 PDF + FLAGS SUPPORT */
 // ------------------------------------------------------------
-// Local storage 
+// Local storage
 // ------------------------------------------------------------
 const STORAGE_KEY = "TECH_DATA";
 let data;

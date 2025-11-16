@@ -384,8 +384,18 @@ async function emailWork() {
 
     // crest in top-right of banner (on top of colour)
     if (crestImg) {
-      pdf.addImage(crestImg, "PNG", pageWidth - 38, 5, 28, 28);
-    }
+    // keep aspect ratio and fit into a 25mm-high box on the right
+    const maxHeight = 25;               // how tall you want it (mm)
+    const aspect = crestImg.width / crestImg.height;
+    const drawHeight = maxHeight;
+    const drawWidth = maxHeight * aspect;
+
+    const marginRight = 10;             // right margin
+    const x = pageWidth - drawWidth - marginRight;
+    const y = 5;                        // a bit down from top
+
+    pdf.addImage(crestImg, "PNG", x, y, drawWidth, drawHeight);
+  }
   };
 
   addHeader();

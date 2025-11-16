@@ -162,11 +162,12 @@ function loadAssessment() {
         ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
         : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
 
-    const div = document.createElement("div");
+  const div = document.createElement("div");
     div.className = "q";
     div.innerHTML = `
-      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? 's' : ''})</strong><br>
+      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
+      ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
       ${field}`;
     container.appendChild(div);
   });

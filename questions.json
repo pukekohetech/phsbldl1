@@ -33,7 +33,7 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "radiata pine|pinus radiata", "flags": "i" }
+            { "points": 1, "check": "radiata pine|pinus radiata|radiata|pine|monterey pine", "flags": "i" }
           ]
         },
         {
@@ -43,7 +43,7 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "rimu|kauri", "flags": "i" }
+            { "points": 1, "check": "rimu|kauri|swamp kauri|matai|totara|puriri|kahikatea", "flags": "i" }
           ]
         },
         {
@@ -53,7 +53,7 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "kwila|merbau", "flags": "i" }
+            { "points": 1, "check": "kwila|merbau|balau|iroko|teak|garapa|vitex", "flags": "i" }
           ]
         },
         {
@@ -63,7 +63,7 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "kauri|matai|rewarewa|rimu|puriri|totara", "flags": "i" }
+            { "points": 1, "check": "kauri|matai|rewarewa|rimu|puriri|totara|swamp kauri|macrocarpa|beech|ash|oak|walnut", "flags": "i" }
           ]
         }
       ]
@@ -81,9 +81,9 @@
           "type": "long",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "swell|expan", "flags": "i" },
-            { "points": 1, "check": "fibre|fiber|break|degrade", "flags": "i" },
-            { "points": 1, "check": "weak|lose strength", "flags": "i" }
+            { "points": 1, "check": "swell|expand|bulge|distort|warp", "flags": "i" },
+            { "points": 1, "check": "fibre|fiber|break|degrade|disintegrate|rot|mould|mold", "flags": "i" },
+            { "points": 1, "check": "weak|lose strength|soften|sag|collapse", "flags": "i" }
           ]
         },
         {
@@ -93,7 +93,7 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "polystyrene|expanded polystyrene|eps|styrofoam", "flags": "i" }
+            { "points": 1, "check": "polystyrene|expanded polystyrene|eps|styrofoam|foam|extruded polystyrene|xps", "flags": "i" }
           ]
         },
         {
@@ -103,7 +103,7 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "acrylic|perspex|polycarbonate", "flags": "i" }
+            { "points": 1, "check": "acrylic|perspex|plexiglass|polycarbonate|lexan|pmma", "flags": "i" }
           ]
         },
         {
@@ -113,8 +113,8 @@
           "type": "long",
           "maxPoints": 2,
           "rubric": [
-            { "points": 1, "check": "stable|warp", "flags": "i" },
-            { "points": 1, "check": "cheap|cost|available|large sheets", "flags": "i" }
+            { "points": 1, "check": "stable|warp|twist|shrink|expand|dimensional stability|less movement", "flags": "i" },
+            { "points": 1, "check": "cheap|cost|inexpensive|economical|available|large sheets|big panels|uniform|smooth|no knots|no defects", "flags": "i" }
           ]
         }
       ]
@@ -132,7 +132,7 @@
           "type": "short",
           "maxPoints": 2,
           "rubric": [
-            { "points": 2, "check": "brass|bronze", "flags": "i" }
+            { "points": 2, "check": "brass|bronze|copper", "flags": "i" }
           ]
         },
         {
@@ -142,7 +142,7 @@
           "type": "short",
           "maxPoints": 2,
           "rubric": [
-            { "points": 2, "check": "mild steel|low carbon steel", "flags": "i" }
+            { "points": 2, "check": "mild steel|low carbon steel|carbon steel|steel", "flags": "i" }
           ]
         }
       ]
@@ -160,10 +160,10 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "seal|sealed|sealing", "flags": "i" },
-            { "points": 1, "check": "pores|grain|absorb|soak", "flags": "i" },
-            { "points": 1, "check": "adhesion|bond|stick|key", "flags": "i" },
-            { "points": 1, "check": "resin|stain|tannin|block", "flags": "i" }
+            { "points": 1, "check": "seal|sealed|sealing|close|block pores", "flags": "i" },
+            { "points": 1, "check": "pores|grain|absorb|soak|penetrate|reduce absorption", "flags": "i" },
+            { "points": 1, "check": "adhesion|bond|stick|key|grip|better paint hold", "flags": "i" },
+            { "points": 1, "check": "resin|stain|tannin|bleed|block|prevent bleed|stop discolouration", "flags": "i" }
           ]
         },
         {
@@ -173,9 +173,9 @@
           "type": "short",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "brush", "flags": "i" },
-            { "points": 1, "check": "roller", "flags": "i" },
-            { "points": 1, "check": "spray", "flags": "i" }
+            { "points": 1, "check": "brush|brushing", "flags": "i" },
+            { "points": 1, "check": "roller|rolling", "flags": "i" },
+            { "points": 1, "check": "spray|spraying|spray gun|airless", "flags": "i" }
           ]
         }
       ]
@@ -193,10 +193,10 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "colour|color|darken", "flags": "i" },
-            { "points": 1, "check": "grain|enhance|highlight", "flags": "i" },
-            { "points": 1, "check": "match|blend", "flags": "i" },
-            { "points": 1, "check": "decorative|not protect|little protection", "flags": "i" }
+            { "points": 1, "check": "colour|color|darken|tone|change appearance|alter shade", "flags": "i" },
+            { "points": 1, "check": "grain|enhance|highlight|show|bring out|pop|accentuate", "flags": "i" },
+            { "points": 1, "check": "match|blend|uniform|even|consistent|patch repair", "flags": "i" },
+            { "points": 1, "check": "decorative|beauty|aesthetic|not protect|little protection|no protection|minimal protection", "flags": "i" }
           ]
         },
         {
@@ -206,10 +206,10 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "polyurethane", "flags": "i" },
-            { "points": 1, "check": "durable|tough|scratch|wear", "flags": "i" },
-            { "points": 1, "check": "water based|water-based|acrylic", "flags": "i" },
-            { "points": 1, "check": "quick|fast dry|low odour|low odor|clear|non yellow", "flags": "i" }
+            { "points": 1, "check": "polyurethane|poly|oil based|oil-based", "flags": "i" },
+            { "points": 1, "check": "durable|tough|scratch|wear|hard|resistant|long lasting|protect", "flags": "i" },
+            { "points": 1, "check": "water based|water-based|acrylic|waterborne", "flags": "i" },
+            { "points": 1, "check": "quick|fast dry|low odour|low odor|clear|non yellow|non-yellowing|easy clean|environmentally friendly|less voc", "flags": "i" }
           ]
         }
       ]

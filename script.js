@@ -300,14 +300,17 @@ function back() {
 }
 
 // ------------------------------------------------------------
-// Email / PDF – ALWAYS A4
+// Email / PDF – ALWAYS A4 + CREST
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
+    s.src = src;
+    s.onload = res;
+    s.onerror = rej;
+    document.head.appendChild(s);
   });
 
   try {
@@ -319,22 +322,28 @@ async function emailWork() {
 
   const { jsPDF } = window.jspdf;
 
-  // Preload crest image so we can add it synchronously to every PDF header
+  // --- Preload crest image (try PHS-Crest.png then crest_shield.png) ---
   let crestImg = null;
-  try {
-    crestImg = await new Promise((resolve, reject) => {
+  async function tryLoad(src) {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.src = "PHS-Crest.png?t=" + Date.now(); // cache-buster
+      img.src = src + "?t=" + Date.now();
       img.onload = () => resolve(img);
       img.onerror = reject;
     });
+  }
+  try {
+    try {
+      crestImg = await tryLoad("PHS-Crest.png");
+    } catch {
+      crestImg = await tryLoad("crest_shield.png");
+    }
   } catch (e) {
+    crestImg = null;
     if (DEBUG) console.warn("Crest image failed to load:", e);
   }
 
-  
-  
   const resultEl = document.getElementById("result");
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");
@@ -353,18 +362,18 @@ async function emailWork() {
     format: "a4"
   });
 
-// Add school crest in the top-left corner
-pdf.addImage('PHS-Crest.png', 'PNG', 10, 10, 25, 25);
-
-  
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const imgWidth = pageWidth - 28;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
+  // --- Header with maroon banner + crest on top of it ---
   const addHeader = () => {
+    // maroon banner
     pdf.setFillColor(110, 24, 24);
     pdf.rect(0, 0, pageWidth, 35, "F");
+
+    // title + subtitle
     pdf.setTextColor(255, 255, 255);
     pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
@@ -372,18 +381,25 @@ pdf.addImage('PHS-Crest.png', 'PNG', 10, 10, 25, 25);
     pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
     pdf.text(APP_SUBTITLE, 14, 28);
-    try {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = "crest_shield.png?t=" + Date.now();
-      img.onload = () => pdf.addImage(img, "PNG", pageWidth - 38, 5, 28, 28);
-    } catch (_) {}
+
+    // crest in top-right of banner (on top of colour)
+    if (crestImg) {
+      pdf.addImage(crestImg, "PNG", pageWidth - 38, 5, 28, 28);
+    }
   };
+
   addHeader();
 
+  // student / teacher line under header
   pdf.setTextColor(0, 0, 0);
   pdf.setFontSize(11);
-  pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} <${finalData.teacherEmail}> • ${finalData.submittedAt}`,14,40);
+  pdf.text(
+    `${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} <${finalData.teacherEmail}> • ${finalData.submittedAt}`,
+    14,
+    40
+  );
+
+  // big score box
   pdf.setFillColor(240, 248, 255);
   pdf.rect(14, 45, 60, 15, "F");
   pdf.setTextColor(110, 24, 24);
@@ -391,6 +407,7 @@ pdf.addImage('PHS-Crest.png', 'PNG', 10, 10, 25, 25);
   pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
 
+  // screenshot of result area
   let yPos = 70;
   const avail = pageHeight - yPos - 20;
   const imgData = canvas.toDataURL("image/png");
@@ -398,23 +415,32 @@ pdf.addImage('PHS-Crest.png', 'PNG', 10, 10, 25, 25);
   if (imgHeight <= avail) {
     pdf.addImage(imgData, "PNG", 14, yPos, imgWidth, imgHeight);
   } else {
+    // multi-page slice
     let left = imgHeight;
     let srcY = 0;
     while (left > 0) {
       const sliceH = Math.min(avail, left);
       const scaledH = (sliceH * canvas.width) / imgWidth;
+
       const sliceCanvas = document.createElement("canvas");
       sliceCanvas.width = canvas.width;
       sliceCanvas.height = scaledH;
       const ctx = sliceCanvas.getContext("2d");
       ctx.drawImage(canvas, 0, srcY, canvas.width, scaledH, 0, 0, canvas.width, scaledH);
+
       pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yPos, imgWidth, sliceH);
       left -= sliceH;
       srcY += scaledH;
-      if (left > 0) { pdf.addPage(); addHeader(); yPos = 50; }
+
+      if (left > 0) {
+        pdf.addPage();
+        addHeader();
+        yPos = 50; // leave space under header on new pages
+      }
     }
   }
 
+  // footer
   pdf.setFontSize(9);
   pdf.setTextColor(100, 100, 100);
   pdf.text("Generated by Pukekohe High Tech Dept", 14, pageHeight - 10);
@@ -424,6 +450,7 @@ pdf.addImage('PHS-Crest.png', 'PNG', 10, 10, 25, 25);
   const file = new File([pdfBlob], filename, { type: "application/pdf" });
   await sharePDF(file);
 }
+
 
 // ------------------------------------------------------------
 // Share / Email

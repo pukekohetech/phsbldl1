@@ -318,6 +318,23 @@ async function emailWork() {
   }
 
   const { jsPDF } = window.jspdf;
+
+  // Preload crest image so we can add it synchronously to every PDF header
+  let crestImg = null;
+  try {
+    crestImg = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = "PHS-Crest.png?t=" + Date.now(); // cache-buster
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+    });
+  } catch (e) {
+    if (DEBUG) console.warn("Crest image failed to load:", e);
+  }
+
+  
+  
   const resultEl = document.getElementById("result");
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");

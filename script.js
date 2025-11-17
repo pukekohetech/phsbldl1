@@ -126,21 +126,35 @@ function initApp() {
   const teacherSel = document.getElementById("teacher");
   const assSel = document.getElementById("assessmentSelector");
 
+  // Restore name + ID from saved data
   nameEl.value = data.name || "";
   idEl.value = data.id || "";
 
   // Build teacher options first
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
-    o.value = t.email;
+    o.value = t.email;      // value = email (matches what we store in data.teacher)
     o.textContent = t.name;
     teacherSel.appendChild(o);
   });
 
-  // NOW restore teacher selection (after options exist)
+  // Now restore the selected teacher (if any was saved)
   if (data.teacher) {
     teacherSel.value = data.teacher;
+
+    // If for some reason it doesn't match an option (old data, typo, etc)
+    if (teacherSel.value !== data.teacher) {
+      // Add a fallback option so we don't silently lose it
+      const o = document.createElement("option");
+      o.value = data.teacher;
+      o.textContent = data.teacher;
+      teacherSel.appendChild(o);
+      teacherSel.value = data.teacher;
+    }
   }
+
+  // Auto-save when teacher is changed
+  teacherSel.addEventListener("change", saveStudentInfo);
 
   // Lock ID if already set
   if (data.id) {
@@ -157,6 +171,7 @@ function initApp() {
     assSel.appendChild(o);
   });
 }
+
 
 
 // ------------------------------------------------------------

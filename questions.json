@@ -1,7 +1,6 @@
 {
   "APP_TITLE": "US 24355 – Materials Knowledge",
   "APP_SUBTITLE": "PHS - L1 Building – Assessment",
-
   "TEACHERS": [
     {
       "id": "RY",
@@ -19,7 +18,6 @@
       "email": "technology@pukekohehigh.school.nz"
     }
   ],
-
   "ASSESSMENTS": [
     {
       "id": "24355-part1",
@@ -28,7 +26,7 @@
       "questions": [
         {
           "id": "q1",
-          "text": "What is the most common exotic timber grown in NZ plantations?",
+          "text": "What is the most common exotic timber that is grown in plantations in New Zealand?",
           "image": "woodq1.jpg",
           "hint": "See Exotic Softwoods – which plantation timber covers large areas of both islands? (Page 13)",
           "type": "short",
@@ -39,20 +37,22 @@
         },
         {
           "id": "q2",
-          "text": "Name a New Zealand native timber commonly used for high-quality furniture.",
-          "image": "woodq2-native-furniture.jpg",
-          "hint": "See Indigenous Timbers – which natives are used for quality furniture or recycled furniture? (Pages 12–13)",
+          "text": "Name 2 types of New Zealand native timbers that can be used for high-quality furniture.",
+          "image": "blank.jpg",
+          "hint": "See Indigenous timbers (native) – look for the three timbers linked to high-quality or recycled furniture. (Pages 12–13)",
           "type": "short",
-          "maxPoints": 1,
+          "maxPoints": 2,
           "rubric": [
-            { "points": 1, "check": "rimu|kauri|matai", "flags": "i" }
+            { "points": 1, "check": "rimu", "flags": "i" },
+            { "points": 1, "check": "kauri", "flags": "i" },
+            { "points": 1, "check": "matai", "flags": "i" }
           ]
         },
         {
           "id": "q3",
-          "text": "Name one imported timber suitable for decking or outdoor furniture.",
-          "image": "woodq3-decking-imported.jpg",
-          "hint": "Which imported timber is listed as commonly used for decking? (Page 14)",
+          "text": "Name an imported timber that can be used for decking and outdoor furniture.",
+          "image": "blank.jpg",
+          "hint": "Look under Imported Hardwoods – which one is listed for decking and outdoor furniture? (Page 14)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -62,8 +62,8 @@
         {
           "id": "q4",
           "text": "List 3 types of timber that are commonly used for woodturning.",
-          "image": "woodq4-woodturning.jpg",
-          "hint": "See Indigenous Timbers – swamp kauri is prized for woodturning. Also common: rimu, rewarewa, matai, totara. (Pages 12–13)",
+          "image": "blank.jpg",
+          "hint": "See Indigenous timbers – one is specifically prized for woodturning; others are commonly used too. (Pages 12–13)",
           "type": "short",
           "maxPoints": 3,
           "rubric": [
@@ -74,7 +74,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part2",
       "title": "US 24355 Materials – Part 2",
@@ -83,8 +82,8 @@
         {
           "id": "q5",
           "text": "Describe the effects of moisture on MDF.",
-          "image": "boardsq5-mdf-moisture.jpg",
-          "hint": "See MDF disadvantages – what happens ‘when wet’ and ‘over time’? (Page 18)",
+          "image": "blank.jpg",
+          "hint": "See MDF disadvantages – focus on the ‘when wet’ and ‘over time’ sections if not sealed. (Page 18)",
           "type": "long",
           "maxPoints": 3,
           "rubric": [
@@ -95,9 +94,9 @@
         },
         {
           "id": "q6",
-          "text": "Name a lightweight expanded plastic used for insulation or packaging.",
-          "image": "boardsq6-polystyrene.jpg",
-          "hint": "See Polystyrene – lightweight, buoyant foam used for packaging and insulation. (Page 22)",
+          "text": "Name a lightweight expanded plastic that is used for insulation in houses as well as for buoyancy in boats.",
+          "image": "blank.jpg",
+          "hint": "See the Plastics section – look for the lightweight, buoyant foam used in construction and boats. (Page 22)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -107,8 +106,8 @@
         {
           "id": "q7",
           "text": "Name a clear thermoplastic used for safety glazing or machine guards.",
-          "image": "boardsq7-clear-thermoplastic.jpg",
-          "hint": "Think clear plastics used instead of glass. (Pages 22 and 24)",
+          "image": "blank.jpg",
+          "hint": "Look for clear plastics used as safer alternatives to glass in guards and screens. (Pages 22 and 24)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -118,8 +117,8 @@
         {
           "id": "q8",
           "text": "Explain one advantage of using MDF instead of solid timber.",
-          "image": "boardsq8-mdf-vs-timber.jpg",
-          "hint": "See MDF advantages – cheaper, consistent, large sheets. (Page 18)",
+          "image": "blank.jpg",
+          "hint": "See ‘Comparison of MDF with natural timber’ – check the advantages column for key points. (Page 18)",
           "type": "long",
           "maxPoints": 2,
           "rubric": [
@@ -129,7 +128,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part3",
       "title": "US 24355 Materials – Part 3",
@@ -138,8 +136,8 @@
         {
           "id": "q9",
           "text": "Name a non-ferrous metal commonly used for decorative fittings.",
-          "image": "metalsq9-brass-fittings.jpg",
-          "hint": "Brass and bronze are non-ferrous and used for decorative hardware. (Page 21)",
+          "image": "blank.jpg",
+          "hint": "Look under Non-ferrous metals – which are used for decorative hardware like taps? (Page 21)",
           "type": "short",
           "maxPoints": 2,
           "rubric": [
@@ -149,8 +147,8 @@
         {
           "id": "q10",
           "text": "Name a ferrous metal commonly used for nails and screws.",
-          "image": "metalsq10-steel-nails-screws.jpg",
-          "hint": "Mild steel is commonly used for construction fasteners. (Page 20)",
+          "image": "blank.jpg",
+          "hint": "See Ferrous metals – which is used for general construction fasteners? (Page 20)",
           "type": "short",
           "maxPoints": 2,
           "rubric": [
@@ -159,7 +157,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part4",
       "title": "US 24355 Materials – Part 4",
@@ -167,9 +164,9 @@
       "questions": [
         {
           "id": "q11",
-          "text": "Explain why a primer coat is applied before painting bare timber.",
-          "image": "finishesq11-primer-coat.jpg",
-          "hint": "See Paint section – primer improves adhesion, seals the timber, blocks stains. (Page 26)",
+          "text": "What is the function of a primer coat when painting?",
+          "image": "blank.jpg",
+          "hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
@@ -181,9 +178,9 @@
         },
         {
           "id": "q12",
-          "text": "Identify 3 methods commonly used to apply paint.",
-          "image": "finishesq12-application-methods.jpg",
-          "hint": "Brush, roller, spray are all listed in the Surface finishes section. (Page 26)",
+          "text": "Identify 3 methods that are commonly used to apply a paint finish.",
+          "image": "blank.jpg",
+          "hint": "Look in the Paint application section for the three main methods. (Page 26)",
           "type": "short",
           "maxPoints": 3,
           "rubric": [
@@ -194,7 +191,6 @@
         }
       ]
     },
-
     {
       "id": "24355-part5",
       "title": "US 24355 Materials – Part 5",
@@ -203,8 +199,8 @@
         {
           "id": "q13",
           "text": "Explain the purpose of applying a stain to timber.",
-          "image": "finishesq13-stain-timber.jpg",
-          "hint": "Stain changes colour, highlights grain, helps matching but gives little protection. (Pages 26–28)",
+          "image": "blank.jpg",
+          "hint": "Compare Stains with Varnish – what does stain mainly affect vs. protection level? (Pages 26–28)",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
@@ -216,16 +212,16 @@
         },
         {
           "id": "q14",
-          "text": "Name 2 types of varnish and state an advantage of each.",
-          "image": "finishesq14-varnish-types.jpg",
-          "hint": "Acrylic varnish (quick drying), Polyurethane (hardwearing). See Varnish section (Page 27).",
+          "text": "Name 2 types of varnishes, briefly stating an advantage of each one.",
+          "image": "blank.jpg",
+          "hint": "See Varnish section – note the two types and their key benefits (drying, durability, etc.). (Page 27)",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "polyurethane", "flags": "i" },
-            { "points": 1, "check": "durable|tough|hardwearing|scratch|wear", "flags": "i" },
+            { "points": 1, "check": "durable|tough|hardwearing|scratch|wear|resilient", "flags": "i" },
             { "points": 1, "check": "acrylic|water based|water-based", "flags": "i" },
-            { "points": 1, "check": "quick|fast dry|low odour|non yellow|clear", "flags": "i" }
+            { "points": 1, "check": "quick|fast dry|low odour|non yellow|non-yellow|clear", "flags": "i" }
           ]
         }
       ]

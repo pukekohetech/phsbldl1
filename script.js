@@ -3,8 +3,7 @@
 // Local storage – now dynamic & versioned
 // ------------------------------------------------------------
 let STORAGE_KEY;               // will be set after questions load
-//let data = { answers: {} };    // default
-let data = { answers: {}, marks: {} };    // default now also tracks per-question status
+let data = { answers: {} };    // default
 
 function initStorage(appId, version = 'noversion') {
   STORAGE_KEY = `${appId}_${version}_DATA`;
@@ -22,17 +21,12 @@ function initStorage(appId, version = 'noversion') {
     } catch (_) {}
   }
   // ---- load current data ----
-   try {
+  try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    data = raw ? JSON.parse(raw) : { answers: {}, marks: {} };
+    data = raw ? JSON.parse(raw) : { answers: {} };
   } catch (_) {
-    data = { answers: {}, marks: {} };
+    data = { answers: {} };
   }
-
-  // make sure both structures exist even in old saved data
-  if (!data.answers) data.answers = {};
-  if (!data.marks)   data.marks   = {};
-
 }
 
 // ------------------------------------------------------------
@@ -161,6 +155,7 @@ function saveStudentInfo() {
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
+
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
@@ -181,18 +176,18 @@ function loadAssessment() {
         ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
         : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
     const div = document.createElement("div");
-div.className = "q";
-div.dataset.qid = q.id; // ← so we can find this question box later
-div.innerHTML = `
-  <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
-  ${q.text}<br>
-  ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
-  ${field}`;
-container.appendChild(div);
+    div.className = "q";
+    div.id = "q-" + q.id; // ← ADDED: tie DOM card to JSON question id (e.g. q-q1, q-mat1_q1)
+    div.innerHTML = `
+      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
+      ${q.text}<br>
+      ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
+      ${field}`;
+    container.appendChild(div);
   });
   attachProtection();
-  applyQuestionStatuses();
 }
+
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);
   if (!el) return;
@@ -201,6 +196,7 @@ function saveAnswer(qid) {
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
+
 function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw).trim() : "";
@@ -241,6 +237,29 @@ function gradeIt() {
 }
 
 // ------------------------------------------------------------
+// Colour question cards on the form based on results
+// ------------------------------------------------------------
+function colourQuestions(results) {
+  results.forEach(r => {
+    // r.id is from gradeIt(): q.id.toUpperCase(), e.g. "Q1" or "MAT1_Q1"
+    const qid = r.id.toLowerCase(); // back to "q1", "mat1_q1"
+    const box = document.getElementById("q-" + qid);
+    if (!box) return;
+
+    // Clear previous state
+    box.classList.remove("correct", "partial", "wrong");
+
+    // Decide status from marks
+    const status =
+      r.earned === r.max ? "correct" :
+      r.earned > 0       ? "partial" :
+                           "wrong";
+
+    box.classList.add(status);
+  });
+}
+
+// ------------------------------------------------------------
 // SUBMIT – HINTS ONLY ON RESULTS + ONLY IF WRONG
 // ------------------------------------------------------------
 function submitWork() {
@@ -252,6 +271,10 @@ function submitWork() {
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
   const { total, results } = gradeIt();
+
+  // NEW: colour the question boxes on the form
+  colourQuestions(results);
+
   const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
   const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
   finalData = {
@@ -294,6 +317,7 @@ function submitWork() {
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 }
+
 function back() {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
@@ -453,6 +477,7 @@ async function sharePDF(file) {
   window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
   showToast("Downloaded + email opened");
 }
+
 function buildEmailBody(fd) {
   const l = [];
   l.push(`Pukekohe High School – ${APP_TITLE}`);
@@ -490,6 +515,7 @@ function showToast(text, ok = true) {
   clearTimeout(showToast._t);
   showToast._t = setTimeout(() => (toast.style.display = "none"), 3200);
 }
+
 function createToastElement() {
   const t = document.createElement("div");
   t.id = "toast";

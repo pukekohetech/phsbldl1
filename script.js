@@ -1,4 +1,4 @@
-/* script.js – US 24355 app: FINAL + A4 PDF + HINTS ON RESULTS ONLY */
+/* script.js – US 24355 app: FINAL + A4 PDF + HINTS ONLY UNDER QUESTIONS */
 // ------------------------------------------------------------
 // Local storage – now dynamic & versioned
 // ------------------------------------------------------------
@@ -27,6 +27,7 @@ function initStorage(appId, version = 'noversion') {
   } catch (_) {
     data = { answers: {} };
   }
+  if (!data.answers) data.answers = {};
 }
 
 // ------------------------------------------------------------
@@ -78,7 +79,7 @@ async function loadQuestions() {
     const json = await res.json();
     if (DEBUG) console.log("JSON loaded:", json);
 
-    // ---- NEW: read APP_ID & VERSION ----
+    // ---- read APP_ID & VERSION ----
     const appId = json.APP_ID;
     const version = json.VERSION || "noversion";
     if (!appId) throw new Error("questions.json missing APP_ID");
@@ -126,25 +127,21 @@ function initApp() {
   const teacherSel = document.getElementById("teacher");
   const assSel = document.getElementById("assessmentSelector");
 
-  // Restore name + ID from saved data
   nameEl.value = data.name || "";
   idEl.value = data.id || "";
 
-  // Build teacher options first
+  // Build teacher options
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
-    o.value = t.email;      // value = email (matches what we store in data.teacher)
+    o.value = t.email;
     o.textContent = t.name;
     teacherSel.appendChild(o);
   });
 
-  // Now restore the selected teacher (if any was saved)
+  // Restore teacher selection if saved
   if (data.teacher) {
     teacherSel.value = data.teacher;
-
-    // If for some reason it doesn't match an option (old data, typo, etc)
     if (teacherSel.value !== data.teacher) {
-      // Add a fallback option so we don't silently lose it
       const o = document.createElement("option");
       o.value = data.teacher;
       o.textContent = data.teacher;
@@ -153,17 +150,15 @@ function initApp() {
     }
   }
 
-  // Auto-save when teacher is changed
+  // Auto-save when teacher changes
   teacherSel.addEventListener("change", saveStudentInfo);
 
-  // Lock ID if already set
   if (data.id) {
     document.getElementById("locked-msg").classList.remove("hidden");
     document.getElementById("locked-id").textContent = data.id;
     idEl.readOnly = true;
   }
 
-  // Build assessment selector
   ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
     o.value = i;
@@ -171,8 +166,6 @@ function initApp() {
     assSel.appendChild(o);
   });
 }
-
-
 
 // ------------------------------------------------------------
 // Core
@@ -183,7 +176,6 @@ function saveStudentInfo() {
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
 
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
@@ -206,7 +198,7 @@ function loadAssessment() {
         : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
     const div = document.createElement("div");
     div.className = "q";
-    div.id = "q-" + q.id; // ← ADDED: tie DOM card to JSON question id (e.g. q-q1, q-mat1_q1)
+    div.id = "q-" + q.id; // tie DOM card to JSON question id (e.g. q-q1, q-mat1_q1)
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
@@ -266,7 +258,7 @@ function gradeIt() {
 }
 
 // ------------------------------------------------------------
-// Colour question cards on the form + show hints under wrong/partial
+// Colour question cards + show hints UNDER questions only
 // ------------------------------------------------------------
 function colourQuestions(results) {
   results.forEach(r => {
@@ -286,7 +278,7 @@ function colourQuestions(results) {
 
     box.classList.add(status);
 
-    // ----- HINT UNDER QUESTION (ON FORM) -----
+    // ----- HINT UNDER QUESTION (ON FORM ONLY) -----
     const hintClass = "hint-inline";
     let hintEl = box.querySelector("." + hintClass);
 
@@ -308,7 +300,7 @@ function colourQuestions(results) {
 }
 
 // ------------------------------------------------------------
-// SUBMIT – HINTS ONLY ON RESULTS + ONLY IF WRONG
+// SUBMIT – HINTS ONLY UNDER QUESTIONS (NOT IN PDF)
 // ------------------------------------------------------------
 function submitWork() {
   saveStudentInfo();
@@ -318,9 +310,10 @@ function submitWork() {
   if (!currentAssessment) return alert("Select an assessment");
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
+
   const { total, results } = gradeIt();
 
-  // NEW: colour the question boxes on the form
+  // Colour question boxes + show inline hints on the form
   colourQuestions(results);
 
   const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
@@ -347,19 +340,15 @@ function submitWork() {
   ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
   results.forEach(r => {
     const d = document.createElement("div");
-    const q = currentAssessment.questions.find(q => q.id === r.id.toLowerCase());
     d.className = `feedback ${
       r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
     }`;
-    const hintLine = (r.earned < r.max && q?.hint)
-      ? `<div class="hint-result"><strong>Hint:</strong> ${q.hint}</div>`
-      : "";
     d.innerHTML = `
       <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       <div class="question-text"><em>${r.question}</em></div>
       Your answer: <em>${r.answer}</em><br>
-      ${hintLine}
-      ${r.earned === r.max ? "Well done!" : "Review the hint above."}`;
+      ${r.earned === r.max ? "Well done!" : "Review this question on the form."}`;
+  // ^ no hint added here, so no hints in result section/PDF
     ansDiv.appendChild(d);
   });
   document.getElementById("form").classList.add("hidden");
@@ -410,7 +399,7 @@ async function emailWork() {
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");
   const canvas = await html2canvas(resultEl, {
-    scale: 1,
+    scale: 2,
     useCORS: true,
     backgroundColor: "#ffffff"
   });
@@ -543,8 +532,7 @@ function buildEmailBody(fd) {
     l.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
     l.push(`Question: ${r.question}`);
     l.push(`Answer: ${r.answer}`);
-    const q = fd.assessment.questions.find(q => q.id.toUpperCase() === r.id);
-    if (r.earned < r.max && q?.hint) l.push(`Hint: ${q.hint}`);
+    // No hint lines here – keep hints only on the form
     l.push("-".repeat(60));
     l.push("");
   });

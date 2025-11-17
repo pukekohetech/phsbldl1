@@ -120,24 +120,36 @@ function initApp() {
   document.getElementById("page-title").textContent = APP_TITLE;
   document.getElementById("header-title").textContent = APP_TITLE;
   document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
+
   const nameEl = document.getElementById("name");
   const idEl = document.getElementById("id");
+  const teacherSel = document.getElementById("teacher");
+  const assSel = document.getElementById("assessmentSelector");
+
   nameEl.value = data.name || "";
   idEl.value = data.id || "";
-  if (data.teacher) document.getElementById("teacher").value = data.teacher;
-  if (data.id) {
-    document.getElementById("locked-msg").classList.remove("hidden");
-    document.getElementById("locked-id").textContent = data.id;
-    idEl.readOnly = true;
-  }
-  const teacherSel = document.getElementById("teacher");
+
+  // Build teacher options first
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
     o.value = t.email;
     o.textContent = t.name;
     teacherSel.appendChild(o);
   });
-  const assSel = document.getElementById("assessmentSelector");
+
+  // NOW restore teacher selection (after options exist)
+  if (data.teacher) {
+    teacherSel.value = data.teacher;
+  }
+
+  // Lock ID if already set
+  if (data.id) {
+    document.getElementById("locked-msg").classList.remove("hidden");
+    document.getElementById("locked-id").textContent = data.id;
+    idEl.readOnly = true;
+  }
+
+  // Build assessment selector
   ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
     o.value = i;
@@ -145,6 +157,7 @@ function initApp() {
     assSel.appendChild(o);
   });
 }
+
 
 // ------------------------------------------------------------
 // Core

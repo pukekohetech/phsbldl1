@@ -190,6 +190,7 @@ function loadAssessment() {
     container.appendChild(div);
   });
   attachProtection();
+  applyQuestionStatuses();
 }
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);

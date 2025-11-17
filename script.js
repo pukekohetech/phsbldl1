@@ -22,12 +22,17 @@ function initStorage(appId, version = 'noversion') {
     } catch (_) {}
   }
   // ---- load current data ----
-  try {
+   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    data = raw ? JSON.parse(raw) : { answers: {} };
+    data = raw ? JSON.parse(raw) : { answers: {}, marks: {} };
   } catch (_) {
-    data = { answers: {} };
+    data = { answers: {}, marks: {} };
   }
+
+  // make sure both structures exist even in old saved data
+  if (!data.answers) data.answers = {};
+  if (!data.marks)   data.marks   = {};
+
 }
 
 // ------------------------------------------------------------

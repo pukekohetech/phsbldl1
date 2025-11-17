@@ -266,7 +266,7 @@ function gradeIt() {
 }
 
 // ------------------------------------------------------------
-// Colour question cards on the form based on results
+// Colour question cards on the form + show hints under wrong/partial
 // ------------------------------------------------------------
 function colourQuestions(results) {
   results.forEach(r => {
@@ -285,6 +285,25 @@ function colourQuestions(results) {
                            "wrong";
 
     box.classList.add(status);
+
+    // ----- HINT UNDER QUESTION (ON FORM) -----
+    const hintClass = "hint-inline";
+    let hintEl = box.querySelector("." + hintClass);
+
+    if (r.earned < r.max && r.hint) {
+      // Needs a hint: create/update the inline hint element
+      if (!hintEl) {
+        hintEl = document.createElement("div");
+        hintEl.className = hintClass;
+        box.appendChild(hintEl);
+      }
+      hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
+    } else {
+      // Fully correct or no hint: remove inline hint if it exists
+      if (hintEl) {
+        hintEl.remove();
+      }
+    }
   });
 }
 

@@ -156,36 +156,19 @@
             { "points": 1, "check": "water", "flags": "i" }
           ]
         },
-        {
-         "id": "q12",
-"text": "What is the function of a primer coat when painting?",
-"image": "blank.jpg",
-"hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
-"type": "long",
-"maxPoints": 4,
-"rubric": [
-  {
-    "points": 1,
-    "check": "better adhesion|improves adhesion|helps paint adhere|adhesion of paint|paint sticks better|good bond|better bond",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "increases durability|more durable|paint lasts longer|durability|longer lasting",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "additional protection|protects the material|provides protection|protection for the material|protects surface|protects substrate",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "preparatory coating|preparatory|prepares the surface|prepares surface|first coat|undercoat",
-    "flags": "i"
-  }
-]
-          
+   {
+          "id": "q12",
+          "text": "What is the function of a primer coat when painting?",
+          "image": "blank.jpg",
+          "hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "seal|sealed|sealing|protect|stop moisture", "flags": "i" },
+            { "points": 1, "check": "grain|pores|absorb|soak|stop soaking|fill holes", "flags": "i" },
+            { "points": 1, "check": "adhesion|adhere|bond|stick|key|grip|hold paint", "flags": "i" },
+            { "points": 1, "check": "stain|tannin|resin|block|bleed|stop bleeding", "flags": "i" }
+          ]
         },
         {
           "id": "q13",

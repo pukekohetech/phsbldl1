@@ -1,19 +1,40 @@
 /* script.js – US 24355 app: FINAL + A4 PDF + HINTS ON RESULTS ONLY */
 // ------------------------------------------------------------
-// Local storage
+// Local storage – now dynamic & versioned
 // ------------------------------------------------------------
-const STORAGE_KEY = "TECH_DATA";
-let data;
-try {
-  data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { answers: {} };
-} catch (_) {
-  data = { answers: {} };
+let STORAGE_KEY;               // will be set after questions load
+let data = { answers: {} };    // default
+
+function initStorage(appId, version = 'noversion') {
+  STORAGE_KEY = `${appId}_${version}_DATA`;
+
+  // ---- migrate old TECH_DATA (run once) ----
+  const OLD_KEY = "TECH_DATA";
+  if (localStorage.getItem(OLD_KEY) && !localStorage.getItem(STORAGE_KEY)) {
+    try {
+      const old = JSON.parse(localStorage.getItem(OLD_KEY));
+      if (old?.answers) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(old));
+        localStorage.removeItem(OLD_KEY);
+        console.info(`Migrated ${OLD_KEY} → ${STORAGE_KEY}`);
+      }
+    } catch (_) {}
+  }
+  // ---- load current data ----
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    data = raw ? JSON.parse(raw) : { answers: {} };
+  } catch (_) {
+    data = { answers: {} };
+  }
 }
+
 // ------------------------------------------------------------
 // State
 // ------------------------------------------------------------
 let currentAssessment = null;
 let finalData = null;
+
 // ------------------------------------------------------------
 // XOR obfuscation
 // ------------------------------------------------------------
@@ -34,16 +55,19 @@ const unxor = s => {
     return "";
   }
 };
+
 // ------------------------------------------------------------
 // Globals
 // ------------------------------------------------------------
 let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
+
 // ------------------------------------------------------------
 // DEBUG MODE
 // ------------------------------------------------------------
 const DEBUG = true; // ← Set to false in production
+
 // ------------------------------------------------------------
-// Load questions.json
+// Load questions.json (now also extracts APP_ID & VERSION)
 // ------------------------------------------------------------
 async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
@@ -53,6 +77,13 @@ async function loadQuestions() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     if (DEBUG) console.log("JSON loaded:", json);
+
+    // ---- NEW: read APP_ID & VERSION ----
+    const appId = json.APP_ID;
+    const version = json.VERSION || "noversion";
+    if (!appId) throw new Error("questions.json missing APP_ID");
+    initStorage(appId, version);   // ← creates STORAGE_KEY & loads data
+
     APP_TITLE = json.APP_TITLE;
     APP_SUBTITLE = json.APP_SUBTITLE;
     TEACHERS = json.TEACHERS;
@@ -81,6 +112,7 @@ async function loadQuestions() {
     if (loadingEl) loadingEl.remove();
   }
 }
+
 // ------------------------------------------------------------
 // initApp
 // ------------------------------------------------------------
@@ -113,6 +145,7 @@ function initApp() {
     assSel.appendChild(o);
   });
 }
+
 // ------------------------------------------------------------
 // Core
 // ------------------------------------------------------------
@@ -133,7 +166,6 @@ function loadAssessment() {
       <h2>${currentAssessment.title}</h2>
       <p>${currentAssessment.subtitle}</p>
     </div>`;
-
   currentAssessment.questions.forEach(q => {
     const saved = data.answers[currentAssessment.id]?.[q.id]
       ? unxor(data.answers[currentAssessment.id][q.id])
@@ -142,17 +174,13 @@ function loadAssessment() {
       q.type === "long"
         ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
         : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
-
     const div = document.createElement("div");
     div.className = "q";
-
-    // NO HINT ON QUESTION PAGE
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
       ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
       ${field}`;
-
     container.appendChild(div);
   });
   attachProtection();
@@ -169,6 +197,7 @@ function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw).trim() : "";
 }
+
 // ------------------------------------------------------------
 // GRADING
 // ------------------------------------------------------------
@@ -202,6 +231,7 @@ function gradeIt() {
   });
   return { total, results };
 }
+
 // ------------------------------------------------------------
 // SUBMIT – HINTS ONLY ON RESULTS + ONLY IF WRONG
 // ------------------------------------------------------------
@@ -213,11 +243,9 @@ function submitWork() {
   if (!currentAssessment) return alert("Select an assessment");
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
-
   const { total, results } = gradeIt();
   const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
   const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
-
   finalData = {
     name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
@@ -233,35 +261,28 @@ function submitWork() {
     }),
     results
   };
-
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
-
   const ansDiv = document.getElementById("answers");
   ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
-
   results.forEach(r => {
     const d = document.createElement("div");
     const q = currentAssessment.questions.find(q => q.id === r.id.toLowerCase());
     d.className = `feedback ${
       r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
     }`;
-
     const hintLine = (r.earned < r.max && q?.hint)
       ? `<div class="hint-result"><strong>Hint:</strong> ${q.hint}</div>`
       : "";
-
     d.innerHTML = `
       <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       <div class="question-text"><em>${r.question}</em></div>
       Your answer: <em>${r.answer}</em><br>
       ${hintLine}
       ${r.earned === r.max ? "Well done!" : "Review the hint above."}`;
-
     ansDiv.appendChild(d);
   });
-
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 }
@@ -269,6 +290,7 @@ function back() {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 }
+
 // ------------------------------------------------------------
 // Email / PDF – A4 + CREST
 // ------------------------------------------------------------
@@ -288,7 +310,6 @@ async function emailWork() {
     return showToast("Failed to load PDF tools", false);
   }
   const { jsPDF } = window.jspdf;
-
   let crestImg = null;
   async function tryLoad(src) {
     return new Promise((resolve, reject) => {
@@ -305,7 +326,6 @@ async function emailWork() {
   } catch (e) {
     crestImg = null;
   }
-
   const resultEl = document.getElementById("result");
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");
@@ -315,13 +335,11 @@ async function emailWork() {
     backgroundColor: "#ffffff"
   });
   btns.forEach(b => b.style.display = "");
-
   const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const imgWidth = pageWidth - 28;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
   const addHeader = () => {
     const leftMargin = 10;
     const rightMargin = 4;
@@ -348,7 +366,6 @@ async function emailWork() {
     pdf.text(APP_SUBTITLE, leftMargin, 28, { maxWidth: textMaxWidth });
   };
   addHeader();
-
   pdf.setTextColor(0, 0, 0);
   pdf.setFontSize(11);
   pdf.text(
@@ -356,14 +373,12 @@ async function emailWork() {
     14,
     40
   );
-
   pdf.setFillColor(240, 248, 255);
   pdf.rect(14, 45, 60, 15, "F");
   pdf.setTextColor(110, 24, 24);
   pdf.setFontSize(16);
   pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
-
   let yPos = 70;
   const avail = pageHeight - yPos - 20;
   const imgData = canvas.toDataURL("image/png");
@@ -390,16 +405,15 @@ async function emailWork() {
       }
     }
   }
-
   pdf.setFontSize(9);
   pdf.setTextColor(100, 100, 100);
   pdf.text("Generated by Pukekohe High Tech Dept", 14, pageHeight - 10);
-
   const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const pdfBlob = pdf.output("blob");
   const file = new File([pdfBlob], filename, { type: "application/pdf" });
   await sharePDF(file);
 }
+
 // ------------------------------------------------------------
 // Share / Email
 // ------------------------------------------------------------
@@ -456,6 +470,7 @@ function buildEmailBody(fd) {
   l.push("Generated by Pukekohe High School Technology Dept");
   return l.join("\n");
 }
+
 // ------------------------------------------------------------
 // Toast
 // ------------------------------------------------------------
@@ -474,6 +489,7 @@ function createToastElement() {
   document.body.appendChild(t);
   return t;
 }
+
 // ------------------------------------------------------------
 // Protection
 // ------------------------------------------------------------
@@ -494,6 +510,7 @@ function attachProtection() {
 document.addEventListener("contextmenu", e => {
   if (!e.target.matches("input, textarea")) e.preventDefault();
 });
+
 // ------------------------------------------------------------
 // Export
 // ------------------------------------------------------------
@@ -501,6 +518,7 @@ window.loadAssessment = loadAssessment;
 window.submitWork = submitWork;
 window.back = back;
 window.emailWork = emailWork;
+
 // ------------------------------------------------------------
 // Start
 // ------------------------------------------------------------

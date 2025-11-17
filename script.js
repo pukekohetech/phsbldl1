@@ -184,6 +184,7 @@ function saveStudentInfo() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;

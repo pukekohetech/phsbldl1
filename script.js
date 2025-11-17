@@ -3,7 +3,8 @@
 // Local storage – now dynamic & versioned
 // ------------------------------------------------------------
 let STORAGE_KEY;               // will be set after questions load
-let data = { answers: {} };    // default
+//let data = { answers: {} };    // default
+let data = { answers: {}, marks: {} };    // default now also tracks per-question status
 
 function initStorage(appId, version = 'noversion') {
   STORAGE_KEY = `${appId}_${version}_DATA`;

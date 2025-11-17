@@ -22,9 +22,9 @@
   ],
   "ASSESSMENTS": [
     {
-      "id": "24355-part1",
-      "title": "US 24355 Materials – Part 1",
-      "subtitle": "New Zealand Timbers (4 marks)",
+      "id": "24355-selfreflection",
+      "title": "Learner Self-reflection – 24355 (v3)",
+      "subtitle": "Demonstrate knowledge of construction and manufacturing materials used in BCATS projects",
       "questions": [
         {
           "id": "q1",
@@ -73,14 +73,7 @@
             { "points": 1, "check": "rimu|rewarewa|matai", "flags": "i" },
             { "points": 1, "check": "totara|puriri|macrocarpa|walnut", "flags": "i" }
           ]
-        }
-      ]
-    },
-    {
-      "id": "24355-part2",
-      "title": "US 24355 Materials – Part 2",
-      "subtitle": "Man-made Boards and Plastics (7 marks)",
-      "questions": [
+        },
         {
           "id": "q5",
           "text": "Describe the effects of moisture on MDF.",
@@ -104,14 +97,7 @@
           "rubric": [
             { "points": 1, "check": "polystyren(e)?|expanded polystyren(e)?|eps|styrofoam|foam", "flags": "i" }
           ]
-        }
-      ]
-    },
-    {
-      "id": "24355-part3",
-      "title": "US 24355 Materials – Part 3",
-      "subtitle": "Metals (1 mark)",
-      "questions": [
+        },
         {
           "id": "q7",
           "text": "Name a commonly used metal that can be easily joined by welding.",
@@ -122,14 +108,7 @@
           "rubric": [
             { "points": 1, "check": "mild steel|low carbon steel|steel", "flags": "i" }
           ]
-        }
-      ]
-    },
-    {
-      "id": "24355-part4",
-      "title": "US 24355 Materials – Part 4",
-      "subtitle": "Other Materials (5 marks)",
-      "questions": [
+        },
         {
           "id": "q8",
           "text": "List 2 materials that could be used for the walls of a dog kennel.",
@@ -176,14 +155,7 @@
             { "points": 1, "check": "cement", "flags": "i" },
             { "points": 1, "check": "water", "flags": "i" }
           ]
-        }
-      ]
-    },
-    {
-      "id": "24355-part5",
-      "title": "US 24355 Materials – Part 5",
-      "subtitle": "Surface Preparation and Application (7 marks)",
-      "questions": [
+        },
         {
           "id": "q12",
           "text": "What is the function of a primer coat when painting?",
@@ -210,14 +182,7 @@
             { "points": 1, "check": "roller", "flags": "i" },
             { "points": 1, "check": "spray|sprayed|spraying", "flags": "i" }
           ]
-        }
-      ]
-    },
-    {
-      "id": "24355-part6",
-      "title": "US 24355 Materials – Part 6",
-      "subtitle": "Polishes and Varnishes (8 marks)",
-      "questions": [
+        },
         {
           "id": "q14",
           "text": "Name 2 types of polishes and state the advantage that polish has over oil finishes.",
@@ -227,7 +192,7 @@
           "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "french polish|shellac", "flags": "i" },
-            { "points": 1, "check": "wax|beeswax", "flags": "i" },
+            { "points": 1, "check": " wax|beeswax", "flags": "i" },
             { "points": 1, "check": "harder|durable|protective|seal", "flags": "i" },
             { "points": 1, "check": "oil|oils", "flags": "i" }
           ]
@@ -244,6 +209,224 @@
             { "points": 1, "check": "durable|tough|hardwearing|scratch|wear|resilient", "flags": "i" },
             { "points": 1, "check": "acrylic|water based|water-based", "flags": "i" },
             { "points": 1, "check": "quick|fast dry|low odour|non yellow|non-yellow|clear", "flags": "i" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "24355-part7",
+      "title": "Assessment Record Sheet – Materials",
+      "subtitle": "US 24355 (v3) - Demonstrate knowledge of construction and manufacturing materials used in BCATS projects (Level 1, Credit 4)",
+      "questions": [
+        {
+          "id": "q_project",
+          "text": "Enter the name of your BCATS project:",
+          "image": "blank.jpg",
+          "type": "short",
+          "maxPoints": 0
+        },
+        {
+          "id": "mat1_q1",
+          "text": "**Radiata Pine Timber 90mm x 19mm** – What is the purpose of this material in your project?",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "structural|frame|sides|box structure|support", "flags": "i" },
+            { "points": 1, "check": "file box|storage|hold files|main body", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat1_q2",
+          "text": "**Radiata Pine Timber 90mm x 19mm** – Describe its properties (appearance, workability, strength, structural stability).",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "appearance|light yellow|reddish brown|straight grain|knots", "flags": "i" },
+            { "points": 1, "check": "workability|easy to machine|cut|drill|nail|glue|soft", "flags": "i" },
+            { "points": 1, "check": "strength|moderate|good for general use|load bearing", "flags": "i" },
+            { "points": 1, "check": "stability|dimensional|low shrinkage|straight", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat1_q3",
+          "text": "**Radiata Pine Timber 90mm x 19mm** – List an alternative material and compare the two.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "alternative|douglas fir|oregon|hardwood|kauri|rimu|mdf", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|expensive", "flags": "i" },
+            { "points": 1, "check": "compare availability|common|plantation|imported", "flags": "i" },
+            { "points": 1, "check": "compare properties|stronger|weaker|durable|workability", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat1_q4",
+          "text": "**Radiata Pine Timber 90mm x 19mm** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 5,
+          "rubric": [
+            { "points": 1, "check": "cost|affordable|cheap", "flags": "i" },
+            { "points": 1, "check": "availability|common|nz grown|easy to get", "flags": "i" },
+            { "points": 1, "check": "jointing|easy to nail|glue|screw", "flags": "i" },
+            { "points": 1, "check": "durability|aesthetics|ergonomics|safety", "flags": "i" },
+            { "points": 1, "check": "explanation|project needs|file box|suitable", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat2_q1",
+          "text": "**Plywood Sheets 4mm** – What is the purpose of this material in your project?",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "panels|bottom|back|dividers|thin sheets", "flags": "i" },
+            { "points": 1, "check": "file box|cover|enclose|lightweight support", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat2_q2",
+          "text": "**Plywood Sheets 4mm** – Describe its properties (appearance, workability, strength, structural stability).",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "appearance|layered|smooth surface|veneer", "flags": "i" },
+            { "points": 1, "check": "workability|easy to cut|sand|drill|lightweight", "flags": "i" },
+            { "points": 1, "check": "strength|high ratio|shear|bend resistant", "flags": "i" },
+            { "points": 1, "check": "stability|dimensional|warp resistant|uniform", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat2_q3",
+          "text": "**Plywood Sheets 4mm** – List an alternative material and compare the two.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "alternative|mdf|particleboard|solid wood|osb", "flags": "i" },
+            { "points": 1, "check": "compare strength|stronger|weaker|weight", "flags": "i" },
+            { "points": 1, "check": "compare moisture|resistant|swell", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|availability", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat2_q4",
+          "text": "**Plywood Sheets 4mm** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 5,
+          "rubric": [
+            { "points": 1, "check": "cost|affordable|inexpensive", "flags": "i" },
+            { "points": 1, "check": "availability|common|sheet form", "flags": "i" },
+            { "points": 1, "check": "durability|moisture resistant|strong", "flags": "i" },
+            { "points": 1, "check": "jointing|aesthetics|ergonomics|safety", "flags": "i" },
+            { "points": 1, "check": "explanation|thin panels|file box", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat3_q1",
+          "text": "**PVA Wood Glue** – What is the purpose of this material in your project?",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "bond|glue|join|adhere|wood parts", "flags": "i" },
+            { "points": 1, "check": "file box|assemble|strengthen joints", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat3_q2",
+          "text": "**PVA Wood Glue** – Describe its properties (appearance, workability, strength, structural stability).",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "appearance|white|dries clear|transparent", "flags": "i" },
+            { "points": 1, "check": "workability|easy apply|water clean|non-toxic", "flags": "i" },
+            { "points": 1, "check": "strength|strong bond|porous|flexible", "flags": "i" },
+            { "points": 1, "check": "stability|non-acidic|durable|not brittle", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat3_q3",
+          "text": "**PVA Wood Glue** – List an alternative material and compare the two.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "alternative|polyurethane|epoxy|hide glue|cyanoacrylate", "flags": "i" },
+            { "points": 1, "check": "compare strength|stronger|weaker|flexible", "flags": "i" },
+            { "points": 1, "check": "compare clean up|water|solvent|toxicity", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|dry time", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat3_q4",
+          "text": "**PVA Wood Glue** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 5,
+          "rubric": [
+            { "points": 1, "check": "cost|cheap|affordable", "flags": "i" },
+            { "points": 1, "check": "safety|non-toxic|safe", "flags": "i" },
+            { "points": 1, "check": "jointing|easy bond|wood", "flags": "i" },
+            { "points": 1, "check": "availability|durability|aesthetics|ergonomics", "flags": "i" },
+            { "points": 1, "check": "explanation|wood project|file box", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat4_q1",
+          "text": "**19mm x 1.6mm Jolt Head Nails** – What is the purpose of this material in your project?",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "fasten|secure|nail|join|hold together", "flags": "i" },
+            { "points": 1, "check": "file box|attach plywood|reinforce", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat4_q2",
+          "text": "**19mm x 1.6mm Jolt Head Nails** – Describe its properties (appearance, workability, strength, structural stability).",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "appearance|metal|galvanised|bright|small head", "flags": "i" },
+            { "points": 1, "check": "workability|easy hammer|punch below surface", "flags": "i" },
+            { "points": 1, "check": "strength|holding power|secure", "flags": "i" },
+            { "points": 1, "check": "stability|corrosion resistant|durable", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat4_q3",
+          "text": "**19mm x 1.6mm Jolt Head Nails** – List an alternative material and compare the two.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "alternative|screw|staple|bolt|clout nail", "flags": "i" },
+            { "points": 1, "check": "compare strength|holding|removable", "flags": "i" },
+            { "points": 1, "check": "compare workability|hammer vs screw|conceal", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|corrosion", "flags": "i" }
+          ]
+        },
+        {
+          "id": "mat4_q4",
+          "text": "**19mm x 1.6mm Jolt Head Nails** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "image": "blank.jpg",
+          "type": "long",
+          "maxPoints": 5,
+          "rubric": [
+            { "points": 1, "check": "cost|inexpensive|cheap", "flags": "i" },
+            { "points": 1, "check": "jointing|fasten|quick|conceal head", "flags": "i" },
+            { "points": 1, "check": "durability|corrosion resistant", "flags": "i" },
+            { "points": 1, "check": "availability|aesthetics|ergonomics|safety", "flags": "i" },
+            { "points": 1, "check": "explanation|light fastening|file box", "flags": "i" }
           ]
         }
       ]

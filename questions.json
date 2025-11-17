@@ -82,9 +82,9 @@
           "type": "long",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "swell|swelling|expand|expansion|bulge", "flags": "i" },
-            { "points": 1, "check": "break|crumble|degrade|fall apart|split|crack|fib(re|er)", "flags": "i" },
-            { "points": 1, "check": "weak|lose strength|weaker|structural integrity", "flags": "i" }
+            { "points": 1, "check": "swell|swelling|expand|expansion|bulge|puff up", "flags": "i" },
+            { "points": 1, "check": "break|crumble|degrade|fall apart|split|crack|fib(re|er)|go soft", "flags": "i" },
+            { "points": 1, "check": "weak|lose strength|weaker|structural integrity|not strong|bend", "flags": "i" }
           ]
         },
         {
@@ -151,7 +151,7 @@
           "type": "short",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "aggregate|gravel|sand", "flags": "i" },
+            { "points": 1, "check": "aggregate|gravel|sand|stones", "flags": "i" },
             { "points": 1, "check": "cement", "flags": "i" },
             { "points": 1, "check": "water", "flags": "i" }
           ]
@@ -164,10 +164,10 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "seal|sealed|sealing|protect", "flags": "i" },
-            { "points": 1, "check": "grain|pores|absorb|soak|stop soaking", "flags": "i" },
-            { "points": 1, "check": "adhesion|adhere|bond|stick|key|grip", "flags": "i" },
-            { "points": 1, "check": "stain|tannin|resin|block|bleed", "flags": "i" }
+            { "points": 1, "check": "seal|sealed|sealing|protect|stop moisture", "flags": "i" },
+            { "points": 1, "check": "grain|pores|absorb|soak|stop soaking|fill holes", "flags": "i" },
+            { "points": 1, "check": "adhesion|adhere|bond|stick|key|grip|hold paint", "flags": "i" },
+            { "points": 1, "check": "stain|tannin|resin|block|bleed|stop bleeding", "flags": "i" }
           ]
         },
         {
@@ -178,9 +178,9 @@
           "type": "short",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "brush", "flags": "i" },
-            { "points": 1, "check": "roller", "flags": "i" },
-            { "points": 1, "check": "spray|sprayed|spraying", "flags": "i" }
+            { "points": 1, "check": "brush|brushing", "flags": "i" },
+            { "points": 1, "check": "roller|rolling", "flags": "i" },
+            { "points": 1, "check": "spray|sprayed|spraying|spray gun", "flags": "i" }
           ]
         },
         {
@@ -192,9 +192,9 @@
           "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "french polish|shellac", "flags": "i" },
-            { "points": 1, "check": " wax|beeswax", "flags": "i" },
-            { "points": 1, "check": "harder|durable|protective|seal", "flags": "i" },
-            { "points": 1, "check": "oil|oils", "flags": "i" }
+            { "points": 1, "check": "wax|beeswax|carnauba", "flags": "i" },
+            { "points": 1, "check": "harder|durable|protective|seal|shiny|last longer", "flags": "i" },
+            { "points": 1, "check": "oil|oils|danish oil|tung oil", "flags": "i" }
           ]
         },
         {
@@ -205,10 +205,10 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "polyurethane", "flags": "i" },
-            { "points": 1, "check": "durable|tough|hardwearing|scratch|wear|resilient", "flags": "i" },
-            { "points": 1, "check": "acrylic|water based|water-based", "flags": "i" },
-            { "points": 1, "check": "quick|fast dry|low odour|non yellow|non-yellow|clear", "flags": "i" }
+            { "points": 1, "check": "polyurethane|poly", "flags": "i" },
+            { "points": 1, "check": "durable|tough|hardwearing|scratch|wear|resilient|strong finish", "flags": "i" },
+            { "points": 1, "check": "acrylic|water based|water-based|waterborne", "flags": "i" },
+            { "points": 1, "check": "quick|fast dry|low odour|non yellow|non-yellow|clear|eco friendly", "flags": "i" }
           ]
         }
       ]
@@ -220,213 +220,220 @@
       "questions": [
         {
           "id": "q_project",
-          "text": "Enter the name of your BCATS project:",
+          "text": "BCATS Project: File Box",
           "image": "blank.jpg",
           "type": "short",
-          "maxPoints": 0
+          "maxPoints": 0,
+          "default": "File Box"
         },
         {
           "id": "mat1_q1",
-          "text": "**Radiata Pine Timber 90mm x 19mm** – What is the purpose of this material in your project?",
+          "text": "Radiata Pine Timber 90mm x 19mm – What is the purpose of this material in your project?",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 2,
+          "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "structural|frame|sides|box structure|support", "flags": "i" },
-            { "points": 1, "check": "file box|storage|hold files|main body", "flags": "i" }
+            { "points": 1, "check": "structural|frame|sides|box structure|support|main frame|legs", "flags": "i" },
+            { "points": 1, "check": "file box|storage|hold files|main body|hold papers", "flags": "i" }
           ]
         },
         {
           "id": "mat1_q2",
-          "text": "**Radiata Pine Timber 90mm x 19mm** – Describe its properties (appearance, workability, strength, structural stability).",
+          "text": "Radiata Pine Timber 90mm x 19mm – Describe its properties (appearance, workability, strength, structural stability).",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "appearance|light yellow|reddish brown|straight grain|knots", "flags": "i" },
-            { "points": 1, "check": "workability|easy to machine|cut|drill|nail|glue|soft", "flags": "i" },
-            { "points": 1, "check": "strength|moderate|good for general use|load bearing", "flags": "i" },
-            { "points": 1, "check": "stability|dimensional|low shrinkage|straight", "flags": "i" }
+            { "points": 1, "check": "appearance|light yellow|reddish brown|straight grain|knots|natural look|wood look", "flags": "i" },
+            { "points": 1, "check": "workability|easy to machine|cut|drill|nail|glue|soft|easy to work with", "flags": "i" },
+            { "points": 1, "check": "strength|moderate|good for general use|load bearing|strong enough|holds weight", "flags": "i" },
+            { "points": 1, "check": "stability|dimensional|low shrinkage|straight|doesn't warp|stays straight", "flags": "i" }
           ]
         },
         {
           "id": "mat1_q3",
-          "text": "**Radiata Pine Timber 90mm x 19mm** – List an alternative material and compare the two.",
+          "text": "Radiata Pine Timber 90mm x 19mm – List an alternative material and compare the two.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "alternative|douglas fir|oregon|hardwood|kauri|rimu|mdf", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|expensive", "flags": "i" },
-            { "points": 1, "check": "compare availability|common|plantation|imported", "flags": "i" },
-            { "points": 1, "check": "compare properties|stronger|weaker|durable|workability", "flags": "i" }
+            { "points": 1, "check": "alternative|douglas fir|oregon|hardwood|kauri|rimu|mdf|particle board", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|expensive|cheap|costs less|more money", "flags": "i" },
+            { "points": 1, "check": "compare availability|common|plantation|imported|easy to get|nz grown|local", "flags": "i" },
+            { "points": 1, "check": "compare properties|stronger|weaker|durable|workability|easier to cut|harder wood", "flags": "i" }
           ]
         },
         {
           "id": "mat1_q4",
-          "text": "**Radiata Pine Timber 90mm x 19mm** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "text": "Radiata Pine Timber 90mm x 19mm – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 5,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "cost|affordable|cheap", "flags": "i" },
-            { "points": 1, "check": "availability|common|nz grown|easy to get", "flags": "i" },
-            { "points": 1, "check": "jointing|easy to nail|glue|screw", "flags": "i" },
-            { "points": 1, "check": "durability|aesthetics|ergonomics|safety", "flags": "i" },
-            { "points": 1, "check": "explanation|project needs|file box|suitable", "flags": "i" }
+            { "points": 1, "check": "cost|affordable|cheap|inexpensive|low cost|budget", "flags": "i" },
+            { "points": 1, "check": "availability|common|nz grown|easy to get|readily available|local timber", "flags": "i" },
+            { "points": 1, "check": "jointing|easy to nail|glue|screw|join|holds nails well", "flags": "i" },
+            { "points": 1, "check": "durability|strong enough|lasts|holds up|doesn't break", "flags": "i" },
+            { "points": 1, "check": "aesthetics|looks good|nice finish|natural wood|pretty|pleasing", "flags": "i" },
+            { "points": 1, "check": "ergonomics|easy to hold|comfortable|lightweight|not heavy", "flags": "i" },
+            { "points": 1, "check": "safety|safe|no splinters|non-toxic", "flags": "i" },
+            { "points": 1, "check": "explanation|project needs|suitable|good for file box|fits purpose", "flags": "i" }
           ]
         },
         {
           "id": "mat2_q1",
-          "text": "**Plywood Sheets 4mm** – What is the purpose of this material in your project?",
+          "text": "Plywood Sheets 4mm – What is the purpose of this material in your project?",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 2,
+          "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "panels|bottom|back|dividers|thin sheets", "flags": "i" },
-            { "points": 1, "check": "file box|cover|enclose|lightweight support", "flags": "i" }
+            { "points": 1, "check": "panels|bottom|back|dividers|thin sheets|sides|top|base", "flags": "i" },
+            { "points": 1, "check": "file box|cover|enclose|lightweight support|hold in place", "flags": "i" }
           ]
         },
         {
           "id": "mat2_q2",
-          "text": "**Plywood Sheets 4mm** – Describe its properties (appearance, workability, strength, structural stability).",
+          "text": "Plywood Sheets 4mm – Describe its properties (appearance, workability, strength, structural stability).",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "appearance|layered|smooth surface|veneer", "flags": "i" },
-            { "points": 1, "check": "workability|easy to cut|sand|drill|lightweight", "flags": "i" },
-            { "points": 1, "check": "strength|high ratio|shear|bend resistant", "flags": "i" },
-            { "points": 1, "check": "stability|dimensional|warp resistant|uniform", "flags": "i" }
+            { "points": 1, "check": "appearance|layered|smooth surface|veneer|flat|even|nice face", "flags": "i" },
+            { "points": 1, "check": "workability|easy to cut|sand|drill|lightweight|light|easy to shape", "flags": "i" },
+            { "points": 1, "check": "strength|high ratio|shear|bend resistant|strong for thin|doesn't snap", "flags": "i" },
+            { "points": 1, "check": "stability|dimensional|warp resistant|uniform|doesn't twist|stays flat", "flags": "i" }
           ]
         },
         {
           "id": "mat2_q3",
-          "text": "**Plywood Sheets 4mm** – List an alternative material and compare the two.",
+          "text": "Plywood Sheets 4mm – List an alternative material and compare the two.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "alternative|mdf|particleboard|solid wood|osb", "flags": "i" },
-            { "points": 1, "check": "compare strength|stronger|weaker|weight", "flags": "i" },
-            { "points": 1, "check": "compare moisture|resistant|swell", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|availability", "flags": "i" }
+            { "points": 1, "check": "alternative|mdf|particleboard|solid wood|osb|hardboard", "flags": "i" },
+            { "points": 1, "check": "compare strength|stronger|weaker|weight|lighter|heavier", "flags": "i" },
+            { "points": 1, "check": "compare moisture|resistant|swell|waterproof|gets wet", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|availability|more expensive|easy to buy", "flags": "i" }
           ]
         },
         {
           "id": "mat2_q4",
-          "text": "**Plywood Sheets 4mm** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "text": "Plywood Sheets 4mm – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 5,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "cost|affordable|inexpensive", "flags": "i" },
-            { "points": 1, "check": "availability|common|sheet form", "flags": "i" },
-            { "points": 1, "check": "durability|moisture resistant|strong", "flags": "i" },
-            { "points": 1, "check": "jointing|aesthetics|ergonomics|safety", "flags": "i" },
-            { "points": 1, "check": "explanation|thin panels|file box", "flags": "i" }
+            { "points": 1, "check": "cost|affordable|inexpensive|cheap|good price", "flags": "i" },
+            { "points": 1, "check": "availability|common|sheet form|easy to buy|in stock", "flags": "i" },
+            { "points": 1, "check": "durability|moisture resistant|strong|doesn't swell|holds up", "flags": "i" },
+            { "points": 1, "check": "jointing|easy to glue|nail|screw|attach", "flags": "i" },
+            { "points": 1, "check": "aesthetics|smooth|nice finish|looks good|flat surface", "flags": "i" },
+            { "points": 1, "check": "explanation|thin panels|file box|lightweight|fits design", "flags": "i" }
           ]
         },
         {
           "id": "mat3_q1",
-          "text": "**PVA Wood Glue** – What is the purpose of this material in your project?",
+          "text": "PVA Wood Glue – What is the purpose of this material in your project?",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 2,
+          "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "bond|glue|join|adhere|wood parts", "flags": "i" },
-            { "points": 1, "check": "file box|assemble|strengthen joints", "flags": "i" }
+            { "points": 1, "check": "bond|glue|join|adhere|wood parts|stick together", "flags": "i" },
+            { "points": 1, "check": "file box|assemble|strengthen joints|hold it together", "flags": "i" }
           ]
         },
         {
           "id": "mat3_q2",
-          "text": "**PVA Wood Glue** – Describe its properties (appearance, workability, strength, structural stability).",
+          "text": "PVA Wood Glue – Describe its properties (appearance, workability, strength, structural stability).",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "appearance|white|dries clear|transparent", "flags": "i" },
-            { "points": 1, "check": "workability|easy apply|water clean|non-toxic", "flags": "i" },
-            { "points": 1, "check": "strength|strong bond|porous|flexible", "flags": "i" },
-            { "points": 1, "check": "stability|non-acidic|durable|not brittle", "flags": "i" }
+            { "points": 1, "check": "appearance|white|dries clear|transparent|invisible when dry", "flags": "i" },
+            { "points": 1, "check": "workability|easy apply|water clean|non-toxic|easy cleanup|spreads well", "flags": "i" },
+            { "points": 1, "check": "strength|strong bond|porous|flexible|holds tight", "flags": "i" },
+            { "points": 1, "check": "stability|non-acidic|durable|not brittle|long lasting", "flags": "i" }
           ]
         },
         {
           "id": "mat3_q3",
-          "text": "**PVA Wood Glue** – List an alternative material and compare the two.",
+          "text": "PVA Wood Glue – List an alternative material and compare the two.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "alternative|polyurethane|epoxy|hide glue|cyanoacrylate", "flags": "i" },
-            { "points": 1, "check": "compare strength|stronger|weaker|flexible", "flags": "i" },
-            { "points": 1, "check": "compare clean up|water|solvent|toxicity", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|dry time", "flags": "i" }
+            { "points": 1, "check": "alternative|polyurethane|epoxy|hide glue|cyanoacrylate|superglue|contact adhesive", "flags": "i" },
+            { "points": 1, "check": "compare strength|stronger|weaker|flexible|more rigid", "flags": "i" },
+            { "points": 1, "check": "compare clean up|water|solvent|toxicity|easy clean|hard to clean", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|dry time|faster|slower", "flags": "i" }
           ]
         },
         {
           "id": "mat3_q4",
-          "text": "**PVA Wood Glue** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "text": "PVA Wood Glue – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 5,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "cost|cheap|affordable", "flags": "i" },
-            { "points": 1, "check": "safety|non-toxic|safe", "flags": "i" },
-            { "points": 1, "check": "jointing|easy bond|wood", "flags": "i" },
-            { "points": 1, "check": "availability|durability|aesthetics|ergonomics", "flags": "i" },
-            { "points": 1, "check": "explanation|wood project|file box", "flags": "i" }
+            { "points": 1, "check": "cost|cheap|affordable|inexpensive", "flags": "i" },
+            { "points": 1, "check": "safety|non-toxic|safe|no fumes|student safe", "flags": "i" },
+            { "points": 1, "check": "jointing|easy bond|wood|strong hold|good for wood", "flags": "i" },
+            { "points": 1, "check": "availability|easy to get|common|in workshop", "flags": "i" },
+            { "points": 1, "check": "aesthetics|dries clear|invisible|clean finish", "flags": "i" },
+            { "points": 1, "check": "explanation|wood project|file box|best for joints", "flags": "i" }
           ]
         },
         {
           "id": "mat4_q1",
-          "text": "**19mm x 1.6mm Jolt Head Nails** – What is the purpose of this material in your project?",
+          "text": "19mm x 1.6mm Jolt Head Nails – What is the purpose of this material in your project?",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 2,
+          "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "fasten|secure|nail|join|hold together", "flags": "i" },
-            { "points": 1, "check": "file box|attach plywood|reinforce", "flags": "i" }
+            { "points": 1, "check": "fasten|secure|nail|join|hold together|attach", "flags": "i" },
+            { "points": 1, "check": "file box|attach plywood|reinforce|hold panels|fix in place", "flags": "i" }
           ]
         },
         {
           "id": "mat4_q2",
-          "text": "**19mm x 1.6mm Jolt Head Nails** – Describe its properties (appearance, workability, strength, structural stability).",
+          "text": "19mm x 1.6mm Jolt Head Nails – Describe its properties (appearance, workability, strength, structural stability).",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "appearance|metal|galvanised|bright|small head", "flags": "i" },
-            { "points": 1, "check": "workability|easy hammer|punch below surface", "flags": "i" },
-            { "points": 1, "check": "strength|holding power|secure", "flags": "i" },
-            { "points": 1, "check": "stability|corrosion resistant|durable", "flags": "i" }
+            { "points": 1, "check": "appearance|metal|galvanised|bright|small head|shiny|silver", "flags": "i" },
+            { "points": 1, "check": "workability|easy hammer|punch below surface|easy to use|goes in easy", "flags": "i" },
+            { "points": 1, "check": "strength|holding power|secure|strong hold|doesn't pull out", "flags": "i" },
+            { "points": 1, "check": "stability|corrosion resistant|durable|rust proof|lasts outside", "flags": "i" }
           ]
         },
         {
           "id": "mat4_q3",
-          "text": "**19mm x 1.6mm Jolt Head Nails** – List an alternative material and compare the two.",
+          "text": "19mm x 1.6mm Jolt Head Nails – List an alternative material and compare the two.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "alternative|screw|staple|bolt|clout nail", "flags": "i" },
-            { "points": 1, "check": "compare strength|holding|removable", "flags": "i" },
-            { "points": 1, "check": "compare workability|hammer vs screw|conceal", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|corrosion", "flags": "i" }
+            { "points": 1, "check": "alternative|screw|staple|bolt|clout nail|panel pin", "flags": "i" },
+            { "points": 1, "check": "compare strength|holding|removable|stronger|can take out", "flags": "i" },
+            { "points": 1, "check": "compare workability|hammer vs screw|conceal|hide head|faster", "flags": "i" },
+            { "points": 1, "check": "compare cost|cheaper|corrosion|rust|cheapest option", "flags": "i" }
           ]
         },
         {
           "id": "mat4_q4",
-          "text": "**19mm x 1.6mm Jolt Head Nails** – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+          "text": "19mm x 1.6mm Jolt Head Nails – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
           "type": "long",
-          "maxPoints": 5,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "cost|inexpensive|cheap", "flags": "i" },
-            { "points": 1, "check": "jointing|fasten|quick|conceal head", "flags": "i" },
-            { "points": 1, "check": "durability|corrosion resistant", "flags": "i" },
-            { "points": 1, "check": "availability|aesthetics|ergonomics|safety", "flags": "i" },
-            { "points": 1, "check": "explanation|light fastening|file box", "flags": "i" }
+            { "points": 1, "check": "cost|inexpensive|cheap|low cost|budget friendly", "flags": "i" },
+            { "points": 1, "check": "jointing|fasten|quick|conceal head|easy to hide|fast to use", "flags": "i" },
+            { "points": 1, "check": "durability|corrosion resistant|rust proof|long lasting", "flags": "i" },
+            { "points": 1, "check": "availability|common|easy to get|in workshop", "flags": "i" },
+            { "points": 1, "check": "aesthetics|small head|can hide|neat finish", "flags": "i" },
+            { "points": 1, "check": "explanation|light fastening|file box|quick assembly", "flags": "i" }
           ]
         }
       ]

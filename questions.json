@@ -165,10 +165,10 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "better adhesion|improves adhesion|helps paint adhere|adhesion of paint|paint sticks better|good bond|better bond", "flags": "i" },
+            { "points": 1, "check": "better adhesion|improves adhesion|helps paint adhere|helps paint stick|adhesion of paint|paint sticks better|good bond|better bond", "flags": "i" },
             { "points": 1, "check": "increases durability|more durable|paint lasts longer|durability|longer lasting", "flags": "i" },
-            { "points": 1, "check": "additional protection|protects the material|provides protection|protection for the material|protects surface|protects substrate", "flags": "i" },
-            { "points": 1, "check": "preparatory coating|preparatory|prepares the surface|prepares surface|first coat|undercoat", "flags": "i" }
+            { "points": 1, "check": "additional protection|protects|provides protection|protects surface", "flags": "i" },
+            { "points": 1, "check": "preparatory coating|preparatory|prepares the surface|prepares surface|for first coat|undercoat", "flags": "i" }
           ]
         },
         {

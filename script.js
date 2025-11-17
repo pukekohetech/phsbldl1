@@ -1,6 +1,6 @@
-/* script.js – US 24355 app: FINAL + A4 PDF + FLAGS SUPPORT */
+/* script.js – US 24355 app: FINAL + A4 PDF + HINTS ON RESULTS ONLY */
 // ------------------------------------------------------------
-// Local storage 
+// Local storage
 // ------------------------------------------------------------
 const STORAGE_KEY = "TECH_DATA";
 let data;
@@ -9,13 +9,11 @@ try {
 } catch (_) {
   data = { answers: {} };
 }
-
 // ------------------------------------------------------------
 // State
 // ------------------------------------------------------------
 let currentAssessment = null;
 let finalData = null;
-
 // ------------------------------------------------------------
 // XOR obfuscation
 // ------------------------------------------------------------
@@ -36,47 +34,38 @@ const unxor = s => {
     return "";
   }
 };
-
 // ------------------------------------------------------------
 // Globals
 // ------------------------------------------------------------
 let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
-
 // ------------------------------------------------------------
 // DEBUG MODE
 // ------------------------------------------------------------
-const DEBUG = true;  // ← Set to false in production
-
+const DEBUG = true; // ← Set to false in production
 // ------------------------------------------------------------
 // Load questions.json
 // ------------------------------------------------------------
 async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
   if (loadingEl) loadingEl.textContent = "Loading questions…";
-
   try {
     const res = await fetch("questions.json?t=" + Date.now(), { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
     const json = await res.json();
     if (DEBUG) console.log("JSON loaded:", json);
-
     APP_TITLE = json.APP_TITLE;
     APP_SUBTITLE = json.APP_SUBTITLE;
     TEACHERS = json.TEACHERS;
-
-    // CRITICAL: Use r.flags from JSON, default to "i"
     ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
       ...ass,
       questions: ass.questions.map(q => ({
         ...q,
         rubric: (q.rubric || []).map(r => ({
           ...r,
-          check: new RegExp(r.check, r.flags || "i")  // ← THIS IS THE FIX
+          check: new RegExp(r.check, r.flags || "i")
         }))
       }))
     }));
-
     if (DEBUG) console.log("ASSESSMENTS ready:", ASSESSMENTS);
   } catch (err) {
     console.error("Failed to load questions.json:", err);
@@ -92,7 +81,6 @@ async function loadQuestions() {
     if (loadingEl) loadingEl.remove();
   }
 }
-
 // ------------------------------------------------------------
 // initApp
 // ------------------------------------------------------------
@@ -100,19 +88,16 @@ function initApp() {
   document.getElementById("page-title").textContent = APP_TITLE;
   document.getElementById("header-title").textContent = APP_TITLE;
   document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
-
   const nameEl = document.getElementById("name");
   const idEl = document.getElementById("id");
   nameEl.value = data.name || "";
   idEl.value = data.id || "";
   if (data.teacher) document.getElementById("teacher").value = data.teacher;
-
   if (data.id) {
     document.getElementById("locked-msg").classList.remove("hidden");
     document.getElementById("locked-id").textContent = data.id;
     idEl.readOnly = true;
   }
-
   const teacherSel = document.getElementById("teacher");
   TEACHERS.forEach(t => {
     const o = document.createElement("option");
@@ -120,7 +105,6 @@ function initApp() {
     o.textContent = t.name;
     teacherSel.appendChild(o);
   });
-
   const assSel = document.getElementById("assessmentSelector");
   ASSESSMENTS.forEach((a, i) => {
     const o = document.createElement("option");
@@ -129,7 +113,6 @@ function initApp() {
     assSel.appendChild(o);
   });
 }
-
 // ------------------------------------------------------------
 // Core
 // ------------------------------------------------------------
@@ -139,10 +122,6 @@ function saveStudentInfo() {
   data.teacher = document.getElementById("teacher").value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
-/* ------------------------------------------------------------
-   loadAssessment() – add the hint under the question text
-   ------------------------------------------------------------ */
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
@@ -167,21 +146,17 @@ function loadAssessment() {
     const div = document.createElement("div");
     div.className = "q";
 
-  
-
+    // NO HINT ON QUESTION PAGE
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
       ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
-      ${hintHTML}
       ${field}`;
-    // ------------------------------------------------------------------------
 
     container.appendChild(div);
   });
   attachProtection();
 }
-
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);
   if (!el) return;
@@ -190,23 +165,19 @@ function saveAnswer(qid) {
   data.answers[currentAssessment.id][qid] = xor(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
 function getAnswer(id) {
   const raw = data.answers[currentAssessment.id]?.[id] || "";
   return raw ? unxor(raw).trim() : "";
 }
-
 // ------------------------------------------------------------
-// GRADING — BULLETPROOF
+// GRADING
 // ------------------------------------------------------------
 function gradeIt() {
   let total = 0;
   const results = [];
-
   currentAssessment.questions.forEach(q => {
     const ans = getAnswer(q.id);
     let earned = 0;
-
     if (q.rubric && ans) {
       q.rubric.forEach(r => {
         r.check.lastIndex = 0;
@@ -216,12 +187,9 @@ function gradeIt() {
         }
       });
     }
-
     earned = Math.min(earned, q.maxPoints);
     total += earned;
-
     const isCorrect = earned === q.maxPoints;
-
     results.push({
       id: q.id.toUpperCase(),
       question: q.text,
@@ -229,19 +197,14 @@ function gradeIt() {
       earned,
       max: q.maxPoints,
       markText: isCorrect ? "Correct" : earned > 0 ? "Partial" : "Incorrect",
-      hint: isCorrect ? "" : q.hint || "Check the booklet."
+      hint: q.hint || ""
     });
   });
-
   return { total, results };
 }
-
 // ------------------------------------------------------------
-// Submit
+// SUBMIT – HINTS ONLY ON RESULTS + ONLY IF WRONG
 // ------------------------------------------------------------
-/* ------------------------------------------------------------
-   submitWork() – show hint ONLY when answer is wrong/partial
-   ------------------------------------------------------------ */
 function submitWork() {
   saveStudentInfo();
   const name = data.name;
@@ -280,13 +243,12 @@ function submitWork() {
 
   results.forEach(r => {
     const d = document.createElement("div");
-    const q = currentAssessment.questions.find(q => q.id === r.id);
+    const q = currentAssessment.questions.find(q => q.id === r.id.toLowerCase());
     d.className = `feedback ${
       r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
     }`;
 
-    // ---- ONLY show hint if earned < max ----
-    const hintLine = (r.earned < r.max && q.hint)
+    const hintLine = (r.earned < r.max && q?.hint)
       ? `<div class="hint-result"><strong>Hint:</strong> ${q.hint}</div>`
       : "";
 
@@ -296,7 +258,6 @@ function submitWork() {
       Your answer: <em>${r.answer}</em><br>
       ${hintLine}
       ${r.earned === r.max ? "Well done!" : "Review the hint above."}`;
-    // -----------------------------------------
 
     ansDiv.appendChild(d);
   });
@@ -304,19 +265,15 @@ function submitWork() {
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 }
-
-
 function back() {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
 }
-
 // ------------------------------------------------------------
-// Email / PDF – ALWAYS A4 + CREST
+// Email / PDF – A4 + CREST
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
-
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
     s.src = src;
@@ -324,17 +281,14 @@ async function emailWork() {
     s.onerror = rej;
     document.head.appendChild(s);
   });
-
   try {
     await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
     await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
   } catch (e) {
     return showToast("Failed to load PDF tools", false);
   }
-
   const { jsPDF } = window.jspdf;
 
-  // --- Preload crest image (try PHS-Crest.png then crest_shield.png) ---
   let crestImg = null;
   async function tryLoad(src) {
     return new Promise((resolve, reject) => {
@@ -346,82 +300,55 @@ async function emailWork() {
     });
   }
   try {
-    try {
-      crestImg = await tryLoad("icon-512.png");
-    } catch {
-      crestImg = await tryLoad("icon-192.png");
-    }
+    try { crestImg = await tryLoad("icon-512.png"); }
+    catch { crestImg = await tryLoad("icon-192.png"); }
   } catch (e) {
     crestImg = null;
-    if (DEBUG) console.warn("Crest image failed to load:", e);
   }
 
   const resultEl = document.getElementById("result");
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");
-
   const canvas = await html2canvas(resultEl, {
     scale: 2,
     useCORS: true,
     backgroundColor: "#ffffff"
   });
-
   btns.forEach(b => b.style.display = "");
 
-  const pdf = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4"
-  });
-
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const imgWidth = pageWidth - 28;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  // --- Header with maroon banner + crest on top of it ---
   const addHeader = () => {
-  const leftMargin = 10;
-  const rightMargin = 4;
-
-  // Coloured banner
-  pdf.setFillColor(110, 24, 24);
-  pdf.rect(0, 0, pageWidth, 35, "F");
-
-  // --- Crest on the right, keeping aspect ratio ---
-  let textRightLimit = pageWidth - rightMargin; // default if no crest
-
-  if (crestImg) {
-    const maxHeight = 25;                        // crest height in mm
-    const aspect = crestImg.width / crestImg.height;
-    const crestHeight = maxHeight;
-    const crestWidth = maxHeight * aspect;
-
-    const crestX = pageWidth - crestWidth - rightMargin; // as far right as possible
-    const crestY = 5;
-
-    pdf.addImage(crestImg, "PNG", crestX, crestY, crestWidth, crestHeight);
-
-    // text must wrap before this X
-    textRightLimit = crestX - 3;                 // small gap before image
-  }
-
-  const textMaxWidth = textRightLimit - leftMargin;
-
-  // --- Title + subtitle, wrapped so they don't go under the crest ---
-  pdf.setTextColor(255, 255, 255);
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(18);
-  pdf.text(APP_TITLE, leftMargin, 20, { maxWidth: textMaxWidth });
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(12);
-  pdf.text(APP_SUBTITLE, leftMargin, 28, { maxWidth: textMaxWidth });
-};
-
+    const leftMargin = 10;
+    const rightMargin = 4;
+    pdf.setFillColor(110, 24, 24);
+    pdf.rect(0, 0, pageWidth, 35, "F");
+    let textRightLimit = pageWidth - rightMargin;
+    if (crestImg) {
+      const maxHeight = 25;
+      const aspect = crestImg.width / crestImg.height;
+      const crestHeight = maxHeight;
+      const crestWidth = maxHeight * aspect;
+      const crestX = pageWidth - crestWidth - rightMargin;
+      const crestY = 5;
+      pdf.addImage(crestImg, "PNG", crestX, crestY, crestWidth, crestHeight);
+      textRightLimit = crestX - 3;
+    }
+    const textMaxWidth = textRightLimit - leftMargin;
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
+    pdf.text(APP_TITLE, leftMargin, 20, { maxWidth: textMaxWidth });
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12);
+    pdf.text(APP_SUBTITLE, leftMargin, 28, { maxWidth: textMaxWidth });
+  };
   addHeader();
 
-  // student / teacher line under header
   pdf.setTextColor(0, 0, 0);
   pdf.setFontSize(11);
   pdf.text(
@@ -430,7 +357,6 @@ async function emailWork() {
     40
   );
 
-  // big score box
   pdf.setFillColor(240, 248, 255);
   pdf.rect(14, 45, 60, 15, "F");
   pdf.setTextColor(110, 24, 24);
@@ -438,40 +364,33 @@ async function emailWork() {
   pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
 
-  // screenshot of result area
   let yPos = 70;
   const avail = pageHeight - yPos - 20;
   const imgData = canvas.toDataURL("image/png");
-
   if (imgHeight <= avail) {
     pdf.addImage(imgData, "PNG", 14, yPos, imgWidth, imgHeight);
   } else {
-    // multi-page slice
     let left = imgHeight;
     let srcY = 0;
     while (left > 0) {
       const sliceH = Math.min(avail, left);
       const scaledH = (sliceH * canvas.width) / imgWidth;
-
       const sliceCanvas = document.createElement("canvas");
       sliceCanvas.width = canvas.width;
       sliceCanvas.height = scaledH;
       const ctx = sliceCanvas.getContext("2d");
       ctx.drawImage(canvas, 0, srcY, canvas.width, scaledH, 0, 0, canvas.width, scaledH);
-
       pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yPos, imgWidth, sliceH);
       left -= sliceH;
       srcY += scaledH;
-
       if (left > 0) {
         pdf.addPage();
         addHeader();
-        yPos = 50; // leave space under header on new pages
+        yPos = 50;
       }
     }
   }
 
-  // footer
   pdf.setFontSize(9);
   pdf.setTextColor(100, 100, 100);
   pdf.text("Generated by Pukekohe High Tech Dept", 14, pageHeight - 10);
@@ -481,8 +400,6 @@ async function emailWork() {
   const file = new File([pdfBlob], filename, { type: "application/pdf" });
   await sharePDF(file);
 }
-
-
 // ------------------------------------------------------------
 // Share / Email
 // ------------------------------------------------------------
@@ -491,7 +408,6 @@ async function sharePDF(file) {
   const subject = `${finalData.assessment.title} – ${finalData.name} (${finalData.id})`;
   const fullBody = buildEmailBody(finalData);
   const shareData = { files: [file], title: subject, text: fullBody };
-
   if (navigator.canShare && navigator.canShare(shareData)) {
     try {
       await navigator.share(shareData);
@@ -501,12 +417,10 @@ async function sharePDF(file) {
       if (!String(err).includes("AbortError")) showToast("Share failed", false);
     }
   }
-
   const url = URL.createObjectURL(file);
   const a = document.createElement("a");
   a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
-
   const shortBody = [
     `Assessment: ${finalData.assessment.title}`,
     `Student: ${finalData.name} (ID: ${finalData.id})`,
@@ -514,11 +428,9 @@ async function sharePDF(file) {
     `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`,
     "", "Full report attached as PDF."
   ].join("\n");
-
   window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
   showToast("Downloaded + email opened");
 }
-
 function buildEmailBody(fd) {
   const l = [];
   l.push(`Pukekohe High School – ${APP_TITLE}`);
@@ -536,14 +448,14 @@ function buildEmailBody(fd) {
     l.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
     l.push(`Question: ${r.question}`);
     l.push(`Answer: ${r.answer}`);
-    if (r.earned < r.max && r.hint) l.push(`Tip: ${r.hint}`);
+    const q = fd.assessment.questions.find(q => q.id.toUpperCase() === r.id);
+    if (r.earned < r.max && q?.hint) l.push(`Hint: ${q.hint}`);
     l.push("-".repeat(60));
     l.push("");
   });
   l.push("Generated by Pukekohe High School Technology Dept");
   return l.join("\n");
 }
-
 // ------------------------------------------------------------
 // Toast
 // ------------------------------------------------------------
@@ -562,7 +474,6 @@ function createToastElement() {
   document.body.appendChild(t);
   return t;
 }
-
 // ------------------------------------------------------------
 // Protection
 // ------------------------------------------------------------
@@ -572,7 +483,6 @@ async function clearClipboard() {
   try { await navigator.clipboard.writeText(""); } catch (_) {}
 }
 (async () => { await clearClipboard(); })();
-
 function attachProtection() {
   document.querySelectorAll(".answer-field").forEach(f => {
     f.addEventListener("input", () => saveAnswer(f.id.slice(1)));
@@ -584,7 +494,6 @@ function attachProtection() {
 document.addEventListener("contextmenu", e => {
   if (!e.target.matches("input, textarea")) e.preventDefault();
 });
-
 // ------------------------------------------------------------
 // Export
 // ------------------------------------------------------------
@@ -592,7 +501,6 @@ window.loadAssessment = loadAssessment;
 window.submitWork = submitWork;
 window.back = back;
 window.emailWork = emailWork;
-
 // ------------------------------------------------------------
 // Start
 // ------------------------------------------------------------

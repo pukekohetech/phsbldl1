@@ -391,7 +391,7 @@ async function emailWork() {
   const btns = document.querySelectorAll(".btn-group");
   btns.forEach(b => b.style.display = "none");
   const canvas = await html2canvas(resultEl, {
-    scale: 1,
+    scale: 0.5,
     useCORS: true,
     backgroundColor: "#ffffff"
   });

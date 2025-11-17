@@ -71,7 +71,8 @@
           "rubric": [
             { "points": 1, "check": "kauri|swamp kauri", "flags": "i" },
             { "points": 1, "check": "rimu|rewarewa|matai", "flags": "i" },
-            { "points": 1, "check": "totara|puriri|macrocarpa|walnut", "flags": "i" }
+            { "points": 1, "check": "totara|puriri|macrocarpa|walnut|beech", "flags": "i" }
+            
           ]
         },
         {

@@ -366,40 +366,60 @@ function back() {
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
-  // 1. Hide buttons only for the print/PDF version
-  document.querySelectorAll(".btn-group").forEach(b => b.style.display = "none");
+  // ==== THIS IS THE MAGIC FIX ====
+  // Create a temporary full-size clone that is ALWAYS 900px wide
+  const original = document.getElementById("result");
+  const clone = original.cloneNode(true);
+  clone.style.position = "absolute";
+  clone.style.left = "-9999px";
+  clone.style.width = "900px";          // ← forces PC layout on every device
+  clone.style.maxWidth = "900px";
+  clone.style.padding = "30px 20px";    // optional: make it look nicer
+  document.body.appendChild(clone);
 
-  // 2. Force A4 portrait + high quality + perfect look
-  const style = document.createElement("style");
-  style.innerHTML = `
-    @page { size: A4 portrait; margin: 15mm; }
-    body { background: white !important; }
-    #result { max-width: none !important; padding: 20mm 15mm; font-size: 13pt; line-height: 1.5; }
-    .btn-group, #form, #toast { display: none !important; }
-    .feedback { margin: 20mm 0; padding: 12mm; border: 1px solid #666; page-break-inside: avoid; }
-    .correct { background: #e6f3e6 !important; }
-    .partial { background: #fff4e6 !important; }
-    .wrong   { background: #fce8e8 !important; }
-  `;
-  document.head.appendChild(style);
+  // Hide buttons in the clone only
+  clone.querySelectorAll(".btn-group").forEach(b => b.style.display = "none");
 
-  // 3. Trigger native print → Save as PDF (this is the magic)
-  window.print();
+  // Load libraries
+  if (!window.html2canvas || !window.jspdf) {
+    const load = src => new Promise(r => {
+      const s = document.createElement("script"); s.src = src; s.onload = r;
+      document.head.appendChild(s);
+    });
+    await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+  }
 
-  // Clean up and open email
-  setTimeout(() => {
-    document.querySelectorAll(".btn-group").forEach(b => b.style.display = "");
-    document.head.removeChild(style);
-  }, 1000);
+  // Render the FIXED-WIDTH clone → always looks identical
+  const canvas = await html2canvas(clone, {
+    scale: 2,                     // crisp but small file
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    logging: false
+  });
 
-  // Open email (no attachment needed — student just saved perfect PDF)
-  const subject = `${finalData.assessment.title} – ${finalData.name} (${finalData.id})`;
-  const body = `Hi,\n\n${finalData.name} has just saved their submission as a perfect-quality A4 PDF.\nScore: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)\n\nThanks!`;
-  setTimeout(() => {
-    window.location.href = `mailto:${finalData.teacherEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  }, 800);
+  // Clean up the clone
+  document.body.removeChild(clone);
+
+  // Create perfect A4 PDF (now always the same proportions)
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+  const imgWidth = 190;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(
+    canvas.toDataURL("image/jpeg", 0.90),  // JPEG = tiny file
+    "JPEG", 10, 10, imgWidth, imgHeight
+  );
+
+  pdf.setFontSize(8);
+  pdf.text("Pukekohe High School Technology Department", 10, 295);
+
+  const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
+  const file = new File([pdf.output("blob")], filename, { type: "application/pdf" });
+
+  await sharePDF(file);
 }
-
 // ------------------------------------------------------------
 // Share / Email
 // ------------------------------------------------------------

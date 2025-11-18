@@ -311,11 +311,28 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "alternative|mdf|particleboard|solid wood|osb|hardboard", "flags": "i" },
-            { "points": 1, "check": "compare strength|stronger|weaker|weight|lighter|heavier", "flags": "i" },
-            { "points": 1, "check": "compare moisture|resistant|swell|waterproof|gets wet", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|availability|more expensive|easy to buy", "flags": "i" }
+         "rubric": [
+    { "points": 1, "check": "MDF|medium density fibreboard|medium-density fiberboard", "flags": "i" },
+    { "points": 1, "check": "particle ?board|chipboard", "flags": "i" },
+    { "points": 1, "check": "solid wood|solid timber|hardwood|softwood|pine|radiata|oak|meranti", "flags": "i" },
+    { "points": 1, "check": "acrylic|perspex|plexiglass|polycarbonate|lexan", "flags": "i" },
+    { "points": 1, "check": "aluminium sheet|aluminum sheet|aluminium composite|ACM|alupanel", "flags": "i" },
+    { "points": 1, "check": "cheaper|less expensive|lower cost|more affordable|cost effective", "flags": "i" },
+    { "points": 1, "check": "more expensive|dearer|higher cost|costs? more", "flags": "i" },
+    { "points": 1, "check": "stronger|more rigid|higher strength|better load bearing|less flex", "flags": "i" },
+    { "points": 1, "check": "weaker|less rigid|lower strength|bends? more|flexes|deflects", "flags": "i" },
+    { "points": 1, "check": "lighter|less weight|lower density|easier to carry", "flags": "i" },
+    { "points": 1, "check": "heavier|greater weight|higher density", "flags": "i" },
+    { "points": 1, "check": "smoother surface|smoother finish|no grain|better for painting", "flags": "i" },
+    { "points": 1, "check": "grain|wood grain|visible grain|natural look", "flags": "i" },
+    { "points": 1, "check": "water resistant|moisture resistant|MR MDF|better in damp|less swelling", "flags": "i" },
+    { "points": 1, "check": "swell|warps?|warping|absorbs water|not waterproof|damaged by moisture", "flags": "i" },
+    { "points": 1, "check": "easier to cut|cuts? cleanly|less splintering|no splinter", "flags": "i" },
+    { "points": 1, "check": "splinter|splinters?|prone to splintering|rough edge", "flags": "i" },
+    { "points": 1, "check": "cross-grained|cross grained|layered|plies|veneer layers|less likely to split", "flags": "i" },
+    { "points": 1, "check": "screw holding|better screw hold|poor screw holding|screws? pull out", "flags": "i" },
+    { "points": 1, "check": "non-toxic|low formaldehyde|zero formaldehyde|E0|E1", "flags": "i" }
+]
           ]
         },
         {

@@ -68,6 +68,12 @@ let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
 const DEBUG = true; // ← Set to false in production
 
 // ------------------------------------------------------------
+// Requirements
+// ------------------------------------------------------------
+const MIN_PCT_FOR_SUBMIT = 100; 
+// Change this to e.g. 80 if you want 80% or better
+
+// ------------------------------------------------------------
 // Load questions.json (now also extracts APP_ID & VERSION)
 // ------------------------------------------------------------
 async function loadQuestions() {
@@ -311,13 +317,19 @@ function submitWork() {
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
 
-  const { total, results } = gradeIt();
+    const { total, results } = gradeIt();
 
   // Colour question boxes + show inline hints on the form
   colourQuestions(results);
 
   const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
   const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
+
+  // Lock / unlock email button based on percentage
+  const emailBtn = document.getElementById("emailBtn");
+  if (emailBtn) {
+    emailBtn.disabled = pct < MIN_PCT_FOR_SUBMIT;
+  }
   finalData = {
     name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
@@ -367,6 +379,10 @@ function back() {
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
+  // Enforce minimum percentage before emailing
+  if (finalData.pct < MIN_PCT_FOR_SUBMIT) {
+    return alert(`You must reach at least ${MIN_PCT_FOR_SUBMIT}% before emailing your work.`);
+  }
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
     s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);

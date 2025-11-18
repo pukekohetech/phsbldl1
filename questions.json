@@ -457,14 +457,16 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "cost|cheap|affordable|inexpensive", "flags": "i" },
-            { "points": 1, "check": "safety|non-toxic|safe|no fumes|student safe", "flags": "i" },
-            { "points": 1, "check": "jointing|easy bond|wood|strong hold|good for wood", "flags": "i" },
-            { "points": 1, "check": "availability|easy to get|common|in workshop", "flags": "i" },
-            { "points": 1, "check": "aesthetics|dries clear|invisible|clean finish", "flags": "i" },
-            { "points": 1, "check": "explanation|wood project|file box|best for joints", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 2, "check": "aesthetic|appearance|clear bond|dries?.*clear|invisible joint|clean finish|no yellow|doesn'?t stain|transparent|neat|professional look", "flags": "i" },
+    { "points": 2, "check": "ergonomic|easy to use|easy to apply|squeez.?bottle|spreads?.*easily|no mess|water.?clean|comfortable|no fumes|pleasant", "flags": "i" },
+    { "points": 2, "check": "cost|cheap|inexpensive|affordable|low cost|budget|cheapest|good value|under.*\\$10", "flags": "i" },
+    { "points": 2, "check": "availab|easy to (get|buy|find)|everywhere|hardware store|Bunnings|school|stocked|common|readily available", "flags": "i" },
+    { "points": 2, "check": "joint|strong bond|stronger than wood|wood failure|perfect for timber|interior joint|good adhesion|holds?.*well|permanent", "flags": "i" },
+    { "points": 2, "check": "durab|strong enough|long.?lasting|permanent|interior use|won't fail indoors|reliable|lasts?.*years", "flags": "i" },
+    { "points": 2, "check": "safety|safe|non.?toxic|food safe|child safe|school safe|low VOC|no fumes|wash.*water|no harm|student.?friendly", "flags": "i" },
+    { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen because|selected because|suitable because|ideal because|good choice because", "flags": "i" }
+]
         },
         {
           "id": "mat4_q1",

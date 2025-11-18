@@ -264,18 +264,14 @@
     { "points": 1, "check": "yacht|spar|marine|exterior varnish|tung oil.*varnish|epifanes|boiled linseed", "flags": "i" },
     { "points": 1, "check": "oil.?based|traditional|alkyd|solvent.?based|harder film|deeper gloss", "flags": "i" },
 
-    // Advantages for polyurethane
     { "points": 1, "check": "very hard|tough|durable|scratch.*resist|wear.*resist|long.?lasting|strong film|best protection", "flags": "i" },
     { "points": 1, "check": "waterproof|water.?resist|good.*moisture|exterior.*ok|spill.*proof", "flags": "i" },
 
-    // Advantages for acrylic / water-based
     { "points": 1, "check": "quick.*dry|fast.*dry|dries?.*fast|low odour|low smell|no fumes|non.?yellow|clearer|easy clean|water clean", "flags": "i" },
     { "points": 1, "check": "non.?yellow|doesn'?t yellow|stays?.*clear|won'?t amber|colourless", "flags": "i" },
 
-    // Advantages for yacht / spar / marine
     { "points": 1, "check": "uv.*resist|sun.*resist|weather.*resist|exterior|outdoor|marine|flexible|won'?t crack|high gloss", "flags": "i" },
 
-    // Advantages for oil-based / traditional
     { "points": 1, "check": "deep.*gloss|rich.*finish|high.*shine|feeds?.*wood|penetrates|traditional look", "flags": "i" }
 ]
         }

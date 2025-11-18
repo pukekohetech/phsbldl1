@@ -244,11 +244,23 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "appearance|light yellow|reddish brown|straight grain|knots|natural look|wood look", "flags": "i" },
-            { "points": 1, "check": "workability|easy to machine|cut|drill|nail|glue|soft|easy to work with", "flags": "i" },
-            { "points": 1, "check": "strength|moderate|good for general use|load bearing|strong enough|holds weight", "flags": "i" },
-            { "points": 1, "check": "stability|dimensional|low shrinkage|straight|doesn't warp|stays straight", "flags": "i" }
+         "rubric": [
+    { "points": 1, "check": "light colour|pale|creamy|yellowish|blonde|light brown|softwood look", "flags": "i" },
+    { "points": 1, "check": "knot|knots|knotty|many knots|visible knots|clear grade|fewer knots", "flags": "i" },
+    { "points": 1, "check": "grain|straight grain|visible grain|softwood grain|pinus|radiata pattern", "flags": "i" },
+    { "points": 1, "check": "soft|softwood|easy to dent|dents? easily|softer than hardwood", "flags": "i" },
+    { "points": 1, "check": "easy to work|easy workability|works? well|cuts? easily|saws? well|planes? well|good workability", "flags": "i" },
+    { "points": 1, "check": "nail|screw|glues? well|holds? nails?|holds? screws?|good holding|takes? fixings?", "flags": "i" },
+    { "points": 1, "check": "splinter|can splinter|splinters?|rough if torn|needs sanding|tear ?out", "flags": "i" },
+    { "points": 1, "check": "light ?weight|lightweight|low density|easy to lift|easy to handle|floats", "flags": "i" },
+    { "points": 1, "check": "strong enough|reasonable strength|good strength.*length|structural grade|construction timber", "flags": "i" },
+    { "points": 1, "check": "bends?|flexible|springy|deflects?|not rigid|low stiffness|low modulus", "flags": "i" },
+    { "points": 1, "check": "warp|twist|cup|bow|movement|shrink|expand|seasoned|kiln ?dried|dry|moisture content", "flags": "i" },
+    { "points": 1, "check": "stable if dry|dimensionally? stable when seasoned|less movement if kiln ?dried", "flags": "i" },
+    { "points": 1, "check": "treated|untreated|H1|H2|LOS P|boric|tan ?e|green tint|blue tint", "flags": "i" },
+    { "points": 1, "check": "paint|takes? paint|good for painting|painted finish|primed|undercoat", "flags": "i" },
+    { "points": 1, "check": "cheap|inexpensive|affordable|low cost|budget timber|plantation grown", "flags": "i" }
+]
           ]
         },
         {

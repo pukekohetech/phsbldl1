@@ -298,11 +298,24 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "appearance|layered|smooth surface|veneer|flat|even|nice face", "flags": "i" },
-            { "points": 1, "check": "workability|easy to cut|sand|drill|lightweight|light|easy to shape", "flags": "i" },
-            { "points": 1, "check": "strength|high ratio|shear|bend resistant|strong for thin|doesn't snap", "flags": "i" },
-            { "points": 1, "check": "stability|dimensional|warp resistant|uniform|doesn't twist|stays flat", "flags": "i" }
+         "rubric": [
+    { "points": 1, "check": "light colour|light colored|pale|natural wood|woody|brown|tan|beige|birch face|radiata", "flags": "i" },
+    { "points": 1, "check": "grain|wood ?grain|visible grain|veneer|layered look|ply layers|laminated|cross-grained|cross grained", "flags": "i" },
+    { "points": 1, "check": "smooth surface|smooth face|flat|even surface|veneered?s|good for painting|paint finishes well", "flags": "i" },
+    { "points": 1, "check": "easy to cut|cuts? well|cuts? cleanly|easy workability|good workability|workable", "flags": "i" },
+    { "points": 1, "check": "splinter|can splinter|splinters?|edge splintering|rough edges?|needs sanding|frays?", "flags": "i" },
+    { "points": 1, "check": "saw|jig ?saw|circular saw|hand saw|laser cuts?|cnc friendly", "flags": "i" },
+    { "points": 1, "check": "screw|glue|nail|fixings?|fasteners?|holds screws?|screw holding|glues? well", "flags": "i" },
+    { "points": 1, "check": "light ?weight|lightweight|low density|easy to handle|easy to lift", "flags": "i" },
+    { "points": 1, "check": "strong|good strength|high strength|strong for thickness|stronger than MDF", "flags": "i" },
+    { "points": 1, "check": "flexible|bends?|flexes?|springy|not rigid|bendy|deflects?|flexural strength", "flags": "i" },
+    { "points": 1, "check": "thin|4 ?mm|only 4 ?mm|flexible because thin|flexes? easily|not stiff", "flags": "i" },
+    { "points": 1, "check": "cross ?grained|alternating grain|layered plies|plies at 90|perpendicular layers|cross laminated", "flags": "i" },
+    { "points": 1, "check": "dimensionally? stable|stable|little movement|does not warp|resists? warping|less warping|low shrinkage", "flags": "i" },
+    { "points": 1, "check": "structural|structurally sound|good stability|stable construction|resists? splitting|less likely to split", "flags": "i" },
+    { "points": 1, "check": "not waterproof|not water ?resistant|swells?|absorbs moisture|interior use|interior grade|needs sealing", "flags": "i" },
+    { "points": 1, "check": "marine|exterior grade|water ?resistant|boil proof|WBP|phenolic|if marine|if exterior", "flags": "i" }
+]
           ]
         },
         {

@@ -269,11 +269,25 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "alternative|douglas fir|oregon|hardwood|kauri|rimu|mdf|particle board", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|expensive|cheap|costs less|more money", "flags": "i" },
-            { "points": 1, "check": "compare availability|common|plantation|imported|easy to get|nz grown|local", "flags": "i" },
-            { "points": 1, "check": "compare properties|stronger|weaker|durable|workability|easier to cut|harder wood", "flags": "i" }
+         "rubric": [
+    { "points": 1, "check": "hardwood|rimu|kwila|jarrah|oak|beech|tasmanian oak|tallowwood|meranti", "flags": "i" },
+    { "points": 1, "check": "LSL|laminated strand|lvl|laminated veneer|hySPAN|engineered timber", "flags": "i" },
+    { "points": 1, "check": "MDF|particle ?board|ply|plywood|hoop pine ply|construction ply", "flags": "i" },
+    { "points": 1, "check": "steel|metal|aluminium|pine.*steel|treated pine.*steel", "flags": "i" },
+    { "points": 1, "check": "cheaper|less expensive|lower cost|more affordable|budget|inexpensive|cheapest", "flags": "i" },
+    { "points": 1, "check": "more expensive|dearer|higher cost|costs? more|premium|expensive", "flags": "i" },
+    { "points": 1, "check": "stronger|higher strength|stiffer|less deflection|better load|greater span", "flags": "i" },
+    { "points": 1, "check": "weaker|lower strength|bends? more|sags?|deflects?|not as strong", "flags": "i" },
+    { "points": 1, "check": "heavier|higher density|harder to lift|more weight", "flags": "i" },
+    { "points": 1, "check": "lighter|less weight|low density|easy to handle", "flags": "i" },
+    { "points": 1, "check": "more stable|less movement|dimensionally? stable|won't warp|less warping|no twist", "flags": "i" },
+    { "points": 1, "check": "less stable|warps?|twists?|cups?|bows?|shrinks?|moves more", "flags": "i" },
+    { "points": 1, "check": "better finish|nicer grain|smoother|no knots|clear grade|premium look", "flags": "i" },
+    { "points": 1, "check": "knotty|knots|rougher|lower grade|construction grade", "flags": "i" },
+    { "points": 1, "check": "lasts? longer|more durable|harder wearing|longer life|rot resistant", "flags": "i" },
+    { "points": 1, "check": "paint|takes? paint|paint.*better|paints? well|good paint finish", "flags": "i" },
+    { "points": 1, "check": "treated|untreated|rott? quickly|needs treatment|boric|LOS P|H3", "flags": "i" }
+
           ]
         },
         {

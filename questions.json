@@ -261,7 +261,7 @@
     { "points": 1, "check": "paint|takes? paint|good for painting|painted finish|primed|undercoat", "flags": "i" },
     { "points": 1, "check": "cheap|inexpensive|affordable|low cost|budget timber|plantation grown", "flags": "i" }
 ]
-          ]
+          
         },
         {
           "id": "mat1_q3",

@@ -364,7 +364,7 @@ function back() {
 // Email / PDF – A4 + CREST
 // ------------------------------------------------------------
 // ------------------------------------------------------------
-// Email / PDF – FINAL + OPTIONAL MULTI-PAGE (only when needed)
+// Email / PDF – FIXED 900px SCREEN-SIZE LAYOUT ON EVERY DEVICE
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
@@ -374,36 +374,60 @@ async function emailWork() {
     const s = document.createElement("script");
     s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
   });
+
   try {
     if (!window.html2canvas) await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
-    if (!window.jspdf)       await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    if (!window.jspdf) await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
   } catch (e) {
     return showToast("Failed to load PDF tools", false);
   }
+
   const { jsPDF } = window.jspdf;
 
-  // 1. Create perfect 900px-wide off-screen clone
+  // ------------------------------------------------------------
+  // 1. Create a fixed-size off-screen clone (900 px wide)
+  // ------------------------------------------------------------
   const original = document.getElementById("result");
+
   const clone = original.cloneNode(true);
+  const FIXED_WIDTH = 900;                                 // ← your desired standard width
   Object.assign(clone.style, {
-    position: "absolute", left: "-9999px", top: "0",
-    width: "900px", maxWidth: "900px", background: "#fff",
-    padding: "30px 20px", boxShadow: "0 4px 20px rgba(0,0,0,.1)", borderRadius: "12px"
+    position: "absolute",
+    left: "-9999px",
+    top: "0",
+    width: `${FIXED_WIDTH}px`,
+    maxWidth: `${FIXED_WIDTH}px`,
+    background: "#fff",
+    padding: "40px 30px",
+    boxSizing: "border-box",
+    fontSize: "16px",               // ensures readable text on all devices
+    lineHeight: "1.5",
   });
-  clone.querySelectorAll(".btn-group").forEach(b => b.style.display = "none");
+
+  // Hide buttons that should not appear in the PDF
+  clone.querySelectorAll(".btn-group, button").forEach(el => el.style.display = "none");
+
   document.body.appendChild(clone);
 
-  // 2. Render at high quality
+  // ------------------------------------------------------------
+  // 2. Render with html2canvas at high quality
+  // ------------------------------------------------------------
   const canvas = await html2canvas(clone, {
     scale: 2,
     useCORS: true,
     backgroundColor: "#ffffff",
     logging: false,
-    windowWidth: 900
+    width: FIXED_WIDTH,
+    height: clone.scrollHeight,
+    windowWidth: FIXED_WIDTH,
+    windowHeight: clone.scrollHeight
   });
+
   document.body.removeChild(clone);
 
-  // 3. Load crest
+  // ------------------------------------------------------------
+  // 3. Load crest (optional)
+  // ------------------------------------------------------------
   let crestImg = null;
   const tryLoad = src => new Promise(r => {
     const img = new Image(); img.crossOrigin = "anonymous";
@@ -413,7 +437,9 @@ async function emailWork() {
   });
   crestImg = await tryLoad("crest_shield.png") || await tryLoad("icon-512.png");
 
-  // 4. Create PDF
+  // ------------------------------------------------------------
+  // 4. Create A4 PDF from the fixed-size canvas
+  // ------------------------------------------------------------
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = 210;
   const pageHeight = 297;
@@ -442,40 +468,44 @@ async function emailWork() {
   pdf.setTextColor(110,24,24); pdf.setFontSize(16); pdf.setFont("helvetica","bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 14, 55);
 
-  // 5. MULTI-PAGE RENDERING (only adds pages when really needed)
-  const imgData = canvas.toDataURL("image/jpeg", 0.92);
-  const imgWidth = pageWidth - 20;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  const contentTop = 65;
-  const availableHeight = pageHeight - contentTop - 15;
+  // ------------------------------------------------------------
+  // 5. Add the fixed-size image (multi-page if needed)
+  // ------------------------------------------------------------
+  const imgData = canvas.toDataURL("image/jpeg", 0.95);
+  const imgWidthMm = pageWidth - 20;                                   // 190 mm usable width
+  const ratio = canvas.width / canvas.height;
+  const imgHeightMm = imgWidthMm / ratio;
 
-  let yPos = contentTop;
-  let remainingHeight = imgHeight;
+  let yPos = 65;
+  let remainingHeight = imgHeightMm;
 
   while (remainingHeight > 0) {
-    const sliceHeight = Math.min(availableHeight, remainingHeight);
-
-    pdf.addImage(imgData, "JPEG", 10, yPos, imgWidth, sliceHeight);
+    const sliceHeight = Math.min(pageHeight - yPos - 15, remainingHeight);
+    pdf.addImage(imgData, "JPEG", 10, yPos, imgWidthMm, sliceHeight);
 
     remainingHeight -= sliceHeight;
 
     if (remainingHeight > 0) {
       pdf.addPage();
       addHeader();
-      yPos = 45;  // slightly smaller top margin on extra pages
+      yPos = 45;   // smaller top margin on additional pages
     }
   }
 
-  // Footer on last page
+  // Footer
   pdf.setFontSize(9);
   pdf.setTextColor(100);
   pdf.text("Generated by Pukekohe High School Technology Department", 10, pageHeight - 8);
 
-  // Save & share
+  // ------------------------------------------------------------
+  // 6. Save & share
+  // ------------------------------------------------------------
   const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const file = new File([pdf.output("blob")], filename, { type: "application/pdf" });
   await sharePDF(file);
 }
+
+
 // ------------------------------------------------------------
 // Share / Email
 // ------------------------------------------------------------

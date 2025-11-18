@@ -360,16 +360,13 @@ function back() {
   document.getElementById("form").classList.remove("hidden");
 }
 
+
 // ------------------------------------------------------------
-// Email / PDF – A4 + CREST
-// ------------------------------------------------------------
-// ------------------------------------------------------------
-// Email / PDF – FIXED 900px SCREEN-SIZE LAYOUT ON EVERY DEVICE
+// Email / PDF – FIXED 900px LAYOUT + CORRECT MULTI-PAGE SLICING
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
-  // Load libraries
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
     s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
@@ -384,50 +381,33 @@ async function emailWork() {
 
   const { jsPDF } = window.jspdf;
 
-  // ------------------------------------------------------------
-  // 1. Create a fixed-size off-screen clone (900 px wide)
-  // ------------------------------------------------------------
+  // 1. Create fixed 900px-wide clone
   const original = document.getElementById("result");
-
   const clone = original.cloneNode(true);
-  const FIXED_WIDTH = 900;                                 // ← your desired standard width
+  const FIXED_WIDTH = 900;
+
   Object.assign(clone.style, {
-    position: "absolute",
-    left: "-9999px",
-    top: "0",
-    width: `${FIXED_WIDTH}px`,
-    maxWidth: `${FIXED_WIDTH}px`,
-    background: "#fff",
-    padding: "40px 30px",
-    boxSizing: "border-box",
-    fontSize: "16px",               // ensures readable text on all devices
-    lineHeight: "1.5",
+    position: "absolute", left: "-9999px", top: "0",
+    width: `${FIXED_WIDTH}px`, maxWidth: "none",
+    background: "#fff", padding: "40px 30px", boxSizing: "border-box",
+    fontSize: "16px", lineHeight: "1.5"
   });
-
-  // Hide buttons that should not appear in the PDF
-  clone.querySelectorAll(".btn-group, button").forEach(el => el.style.display = "none");
-
+  clone.querySelectorAll(".btn-group, button").forEach(b => b.remove());
   document.body.appendChild(clone);
 
-  // ------------------------------------------------------------
-  // 2. Render with html2canvas at high quality
-  // ------------------------------------------------------------
+  // 2. Render canvas
   const canvas = await html2canvas(clone, {
     scale: 2,
     useCORS: true,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fff",
     logging: false,
     width: FIXED_WIDTH,
     height: clone.scrollHeight,
-    windowWidth: FIXED_WIDTH,
-    windowHeight: clone.scrollHeight
+    windowWidth: FIXED_WIDTH
   });
-
   document.body.removeChild(clone);
 
-  // ------------------------------------------------------------
   // 3. Load crest (optional)
-  // ------------------------------------------------------------
   let crestImg = null;
   const tryLoad = src => new Promise(r => {
     const img = new Image(); img.crossOrigin = "anonymous";
@@ -437,12 +417,12 @@ async function emailWork() {
   });
   crestImg = await tryLoad("crest_shield.png") || await tryLoad("icon-512.png");
 
-  // ------------------------------------------------------------
-  // 4. Create A4 PDF from the fixed-size canvas
-  // ------------------------------------------------------------
+  // 4. Create PDF
   const pdf = new jsPDF("p", "mm", "a4");
-  const pageWidth = 210;
+  const pageWidth = 210;   // A4 = 210 × 297 mm
   const pageHeight = 297;
+  const margin = 10;
+  const usableWidth = pageWidth - 2 * margin;
 
   const addHeader = () => {
     pdf.setFillColor(110, 24, 24);
@@ -461,45 +441,57 @@ async function emailWork() {
 
   addHeader();
 
-  // Student info + score box
+  // Student info + score
   pdf.setTextColor(0,0,0); pdf.setFontSize(11);
   pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`, 10, 42);
   pdf.setFillColor(240,248,255); pdf.rect(10,47,60,12,"F");
   pdf.setTextColor(110,24,24); pdf.setFontSize(16); pdf.setFont("helvetica","bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 14, 55);
 
-  // ------------------------------------------------------------
-  // 5. Add the fixed-size image (multi-page if needed)
-  // ------------------------------------------------------------
-  const imgData = canvas.toDataURL("image/jpeg", 0.95);
-  const imgWidthMm = pageWidth - 20;                                   // 190 mm usable width
-  const ratio = canvas.width / canvas.height;
-  const imgHeightMm = imgWidthMm / ratio;
+  // 5. CORRECT multi-page slicing (the fix!)
+  const imgWidth = usableWidth;
+  const imgHeight = canvas.height * (imgWidth / canvas.width);   // correct height in mm
 
-  let yPos = 65;
-  let remainingHeight = imgHeightMm;
+  const pageContentHeight = pageHeight - 65 - 15;  // top 65mm + bottom 15mm margin
+
+  let positionY = 65;   // start below header + student info
+
+  let remainingHeight = imgHeight;
+  let sourceY = 0;      // where we are cropping from the original canvas (in mm)
 
   while (remainingHeight > 0) {
-    const sliceHeight = Math.min(pageHeight - yPos - 15, remainingHeight);
-    pdf.addImage(imgData, "JPEG", 10, yPos, imgWidthMm, sliceHeight);
+    const currentSliceHeight = Math.min(pageContentHeight, remainingHeight);
 
-    remainingHeight -= sliceHeight;
+    // Crop the correct portion of the canvas
+    const sourceSliceHeightPx = (currentSliceHeight / imgHeight) * canvas.height;
+
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = sourceSliceHeightPx;
+    const ctx = tempCanvas.getContext("2d");
+    ctx.drawImage(canvas, 0, (sourceY / imgHeight) * canvas.height, canvas.width, sourceSliceHeightPx,
+                        0, 0, canvas.width, sourceSliceHeightPx);
+
+    const sliceDataUrl = tempCanvas.toDataURL("image/jpeg", 0.95);
+
+    pdf.addImage(sliceDataUrl, "JPEG", margin, positionY, imgWidth, currentSliceHeight);
+
+    remainingHeight -= currentSliceHeight;
+    sourceY += currentSliceHeight;
 
     if (remainingHeight > 0) {
       pdf.addPage();
       addHeader();
-      yPos = 45;   // smaller top margin on additional pages
+      positionY = 45;
     }
   }
 
-  // Footer
+  // Footer on last page
   pdf.setFontSize(9);
   pdf.setTextColor(100);
   pdf.text("Generated by Pukekohe High School Technology Department", 10, pageHeight - 8);
 
-  // ------------------------------------------------------------
   // 6. Save & share
-  // ------------------------------------------------------------
   const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const file = new File([pdf.output("blob")], filename, { type: "application/pdf" });
   await sharePDF(file);

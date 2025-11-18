@@ -128,9 +128,10 @@
           "hint": "See the Plastics section – look for the lightweight, buoyant foam used in construction and boats. (Page 22)",
           "type": "short",
           "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "polystyren(e)?|expanded polystyren(e)?|eps|styrofoam|foam", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "polystyrene|styrofoam|expanded polystyrene|EPS|expol", "flags": "i" },
+    { "points": 1, "check": "expanded.*poly|EPS|expol.*(pink|grey|white)", "flags": "i" }
+]
         },
         {
           "id": "q7",
@@ -140,8 +141,9 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "mild steel|low carbon steel|steel", "flags": "i" }
-          ]
+    { "points": 1, "check": "mild steel|steel|low carbon steel|bright mild steel|BMS", "flags": "i" },
+    { "points": 1, "check": "steel.*mild|mild.*steel|structural steel", "flags": "i" }
+]
         },
         {
           "id": "q8",
@@ -150,10 +152,18 @@
           "hint": "Think of common exterior-grade sheet or cladding materials suitable for outdoor structures. (Pages 17–19)",
           "type": "short",
           "maxPoints": 2,
-          "rubric": [
-            { "points": 1, "check": "plywood|ply", "flags": "i" },
-            { "points": 1, "check": "weatherboard|weather board|timber cladding", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "plywood|ply|marine ply|exterior ply|construction ply", "flags": "i" },
+    { "points": 1, "check": "weatherboard|timber weatherboard|pine weatherboard|rusticated|bevel.?back", "flags": "i" },
+    { "points": 1, "check": "treated pine|treated timber|H3.*|H3.2|LOS.?P|macrocarpa", "flags": "i" },
+    { "points": 1, "check": "colour.?steel|corrugated iron|colorsteel|iron", "flags": "i" },
+    { "points": 1, "check": "fibre cement|hardies|james hardie|hardiflex|villaboard", "flags": "i" },
+    { "points": 1, "check": "particleboard.*exterior|shadow.?clad|shadowclad|grooved plywood", "flags": "i" },
+    { "points": 1, "check": "concrete|concrete block|hebel|brick", "flags": "i" },
+    { "points": 1, "check": "plastic|polythene|polycarbonate|twin.?wall", "flags": "i" },
+    { "points": 1, "check": "radiata|radiata pine|treated radiata", "flags": "i" },
+    { "points": 1, "check": "tanalised.*ply|tanalised.*timber", "flags": "i" }
+]
         },
         {
           "id": "q9",

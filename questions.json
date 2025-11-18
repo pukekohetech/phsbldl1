@@ -485,12 +485,20 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "appearance|metal|galvanised|bright|small head|shiny|silver", "flags": "i" },
-            { "points": 1, "check": "workability|easy hammer|punch below surface|easy to use|goes in easy", "flags": "i" },
-            { "points": 1, "check": "strength|holding power|secure|strong hold|doesn't pull out", "flags": "i" },
-            { "points": 1, "check": "stability|corrosion resistant|durable|rust proof|lasts outside", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "bright|shiny|silver|steel|zinc plated|galvani(s|z)ed|plain shank", "flags": "i" },
+    { "points": 1, "check": "jolt head|flat head|large head|wide head|bigger head|good bearing", "flags": "i" },
+    { "points": 1, "check": "small|short|19 ?mm|1.6 ?mm|thin gauge|fine|light.?duty", "flags": "i" },
+    { "points": 1, "check": "easy to drive|drives?.*easily|goes?.*in quick|hammer|hand nail|brad nail", "flags": "i" },
+    { "points": 1, "check": "panel pin|brad|fine nail|small hole|less visible|discreet|neat", "flags": "i" },
+    { "points": 1, "check": "hold.*light|good for thin|fixing.*ply|fixing.*mdf|fixing.*hardboard|temporary.*hold", "flags": "i" },
+    { "points": 1, "check": "low strength|not structural|pull.*out easily|shear.*easily|light.?duty only", "flags": "i" },
+    { "points": 1, "check": "rust|rusts?.*indoors|corrode|bright.*rust|needs paint|not exterior", "flags": "i" },
+    { "points": 1, "check": "countersink|head.*flush|head.*below surface|punch|dome head|fill.*putty", "flags": "i" },
+    { "points": 1, "check": "bend|bends?.*easily|flexible shank|clinches?|bends?.*over|not rigid", "flags": "i" },
+    { "points": 1, "check": "minimal splitting|less splitting|fine.*split|safe.*thin timber|won't split", "flags": "i" },
+    { "points": 1, "check": "cheap|inexpensive|low cost|packet.*cheap|common nail", "flags": "i" }
+]
         },
         {
           "id": "mat4_q3",
@@ -498,12 +506,24 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "alternative|screw|staple|bolt|clout nail|panel pin", "flags": "i" },
-            { "points": 1, "check": "compare strength|holding|removable|stronger|can take out", "flags": "i" },
-            { "points": 1, "check": "compare workability|hammer vs screw|conceal|hide head|faster", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|corrosion|rust|cheapest option", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "brad|brads|18 ?ga|brad nail|air brad|finish nail", "flags": "i" },
+    { "points": 1, "check": "panel ?pin|pin|lost head|fine pin|escutcheon", "flags": "i" },
+    { "points": 1, "check": "staple|narrow crown|18 ?gauge|fine wire|air staple", "flags": "i" },
+    { "points": 1, "check": "screw|wood screw|chipboard screw|pocket screw|pre.?drill", "flags": "i" },
+    { "points": 1, "check": "glue| PVA|superglue|hot glue|no nail|adhesive only", "flags": "i" },
+    { "points": 1, "check": "stronger|higher hold|better shear|less pull.?out|won't come loose", "flags": "i" },
+    { "points": 1, "check": "weaker|lower hold|pulls?.*out|shears?.*easily|light duty", "flags": "i" },
+    { "points": 1, "check": "neater|less visible|no head|headless|smaller hole|invisible joint", "flags": "i" },
+    { "points": 1, "check": "visible head|jolt head|flat head|large head|shows?.*mark|needs putty", "flags": "i" },
+    { "points": 1, "check": "faster|quicker|rapid|power tool|air nailer|no hammer", "flags": "i" },
+    { "points": 1, "check": "slower|hammer|manual|hand nail|more time|effort", "flags": "i" },
+    { "points": 1, "check": "rust|corrode|bright.*rust|not exterior|indoor only", "flags": "i" },
+    { "points": 1, "check": "stainless|galvani(s|z)ed|won't rust|exterior|weatherproof", "flags": "i" },
+    { "points": 1, "check": "cheaper|cheapest|low cost|few cents|inexpensive", "flags": "i" },
+    { "points": 1, "check": "more expensive|dearer|higher cost|brads?.*cost|power tool", "flags": "i" },
+    { "points": 1, "check": "no power|no tool|hand tool|hammer only|manual", "flags": "i" }
+]
         },
         {
           "id": "mat4_q4",
@@ -511,14 +531,16 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "cost|inexpensive|cheap|low cost|budget friendly", "flags": "i" },
-            { "points": 1, "check": "jointing|fasten|quick|conceal head|easy to hide|fast to use", "flags": "i" },
-            { "points": 1, "check": "durability|corrosion resistant|rust proof|long lasting", "flags": "i" },
-            { "points": 1, "check": "availability|common|easy to get|in workshop", "flags": "i" },
-            { "points": 1, "check": "aesthetics|small head|can hide|neat finish", "flags": "i" },
-            { "points": 1, "check": "explanation|light fastening|file box|quick assembly", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 2, "check": "aesthetic|neat|tidy|small hole|punched?.*putty|filled?.*putty|clean finish|flat head.*fill|almost invisible|professional look|head.*countersunk", "flags": "i" },
+    { "points": 2, "check": "ergonomic|easy to (hammer|drive|use)|hand nail|no power tool|light hammer|quick|fast|one hand|simple|no compressor", "flags": "i" },
+    { "points": 2, "check": "cost|cheap|cheapest|inexpensive|low cost|few cents|packet.*cheap|budget|affordable|under.*\\$5", "flags": "i" },
+    { "points": 2, "check": "availab|everywhere|hardware store|Bunnings|classroom|stocked|common|easy to (get|buy|find)|always.*stock", "flags": "i" },
+    { "points": 2, "check": "joint|hold.*thin|fixing.*ply|fixing.*mdf|fixing.*hardboard|good for thin material|large head.*pull|quick joint|temporary fix|light duty", "flags": "i" },
+    { "points": 2, "check": "durab|strong enough|holds?.*well|won't pull through|good shear|lasts?.*indoors|sufficient strength|permanent.*indoors", "flags": "i" },
+    { "points": 2, "check": "safety|safe|no power tool|no compressor|manual|hammer only|low risk|student safe|school safe|no flying nail", "flags": "i" },
+    { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen because|selected because|suitable because|ideal because|good choice because", "flags": "i" }
+]
         }
       ]
     }

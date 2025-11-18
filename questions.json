@@ -1,5 +1,5 @@
 {
-  "APP_ID": "US24355_MATERIALS",
+ "APP_ID": "US24355_MATERIALS",
   "VERSION": "2025",
   "APP_TITLE": "US 24355 – Materials Knowledge",
   "APP_SUBTITLE": "PHS - L1 Building – Assessment",
@@ -57,20 +57,20 @@
           "hint": "Look under Imported Hardwoods – which one is listed for decking and outdoor furniture? (Page 14)",
           "type": "short",
           "maxPoints": 1,
-         "rubric": [
-    { "points": 1, "check": "kwila|merbau", "flags": "i" },
-    { "points": 1, "check": "garapa", "flags": "i" },
-    { "points": 1, "check": "iroko", "flags": "i" },
-    { "points": 1, "check": "balau", "flags": "i" },
-    { "points": 1, "check": "teak", "flags": "i" },
-    { "points": 1, "check": "purple ?heart|purpleheart", "flags": "i" },
-    { "points": 1, "check": "jarrah", "flags": "i" },
-    { "points": 1, "check": "spotted gum", "flags": "i" },
-    { "points": 1, "check": "karri", "flags": "i" },
-    { "points": 1, "check": "fijian.*mahogany|plantation mahogany", "flags": "i" },
-    { "points": 1, "check": "vitex", "flags": "i" },
-    { "points": 1, "check": "bangkirai", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "kwila|merbau", "flags": "i" },
+            { "points": 1, "check": "garapa", "flags": "i" },
+            { "points": 1, "check": "iroko", "flags": "i" },
+            { "points": 1, "check": "balau", "flags": "i" },
+            { "points": 1, "check": "teak", "flags": "i" },
+            { "points": 1, "check": "purple ?heart|purpleheart", "flags": "i" },
+            { "points": 1, "check": "jarrah", "flags": "i" },
+            { "points": 1, "check": "spotted gum", "flags": "i" },
+            { "points": 1, "check": "karri", "flags": "i" },
+            { "points": 1, "check": "fijian.*mahogany|plantation mahogany", "flags": "i" },
+            { "points": 1, "check": "vitex", "flags": "i" },
+            { "points": 1, "check": "bangkirai", "flags": "i" }
+          ]
         },
         {
           "id": "q4",
@@ -79,28 +79,28 @@
           "hint": "See Indigenous timbers – one is specifically prized for woodturning; others are commonly used too. (Pages 12–13)",
           "type": "short",
           "maxPoints": 3,
-         "rubric": [
-    { "points": 1, "check": "rimu", "flags": "i" },
-    { "points": 1, "check": "kauri", "flags": "i" },
-    { "points": 1, "check": "swamp kauri|ancient kauri", "flags": "i" },
-    { "points": 1, "check": "rewarewa", "flags": "i" },
-    { "points": 1, "check": "matai", "flags": "i" },
-    { "points": 1, "check": "puriri", "flags": "i" },
-    { "points": 1, "check": "totara", "flags": "i" },
-    { "points": 1, "check": "beech|red beech|silver beech|hard beech", "flags": "i" },
-    { "points": 1, "check": "tawa", "flags": "i" },
-    { "points": 1, "check": "macrocarpa", "flags": "i" },
-    { "points": 1, "check": "blackwood|tasmanian blackwood|australian blackwood", "flags": "i" },
-    { "points": 1, "check": "rosewood", "flags": "i" },
-    { "points": 1, "check": "padauk", "flags": "i" },
-    { "points": 1, "check": "jarrah", "flags": "i" },
-    { "points": 1, "check": "mahogany", "flags": "i" },
-    { "points": 1, "check": "walnut", "flags": "i" },
-    { "points": 1, "check": "olive|nz olive", "flags": "i" },
-    { "points": 1, "check": "eucalyptus|salmon gum|gum", "flags": "i" },
-    { "points": 1, "check": "mallee", "flags": "i" },
-    { "points": 1, "check": "pohutukawa", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "rimu", "flags": "i" },
+            { "points": 1, "check": "kauri", "flags": "i" },
+            { "points": 1, "check": "swamp kauri|ancient kauri", "flags": "i" },
+            { "points": 1, "check": "rewarewa", "flags": "i" },
+            { "points": 1, "check": "matai", "flags": "i" },
+            { "points": 1, "check": "puriri", "flags": "i" },
+            { "points": 1, "check": "totara", "flags": "i" },
+            { "points": 1, "check": "beech|red beech|silver beech|hard beech", "flags": "i" },
+            { "points": 1, "check": "tawa", "flags": "i" },
+            { "points": 1, "check": "macrocarpa", "flags": "i" },
+            { "points": 1, "check": "blackwood|tasmanian blackwood|australian blackwood", "flags": "i" },
+            { "points": 1, "check": "rosewood", "flags": "i" },
+            { "points": 1, "check": "padauk", "flags": "i" },
+            { "points": 1, "check": "jarrah", "flags": "i" },
+            { "points": 1, "check": "mahogany", "flags": "i" },
+            { "points": 1, "check": "walnut", "flags": "i" },
+            { "points": 1, "check": "olive|nz olive", "flags": "i" },
+            { "points": 1, "check": "eucalyptus|salmon gum|gum", "flags": "i" },
+            { "points": 1, "check": "mallee", "flags": "i" },
+            { "points": 1, "check": "pohutukawa", "flags": "i" }
+          ]
         },
         {
           "id": "q5",
@@ -108,18 +108,18 @@
           "image": "blank.jpg",
           "hint": "See MDF disadvantages – focus on the ‘when wet’ and ‘over time’ sections if not sealed. (Page 18)",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 6,
           "rubric": [
-    { "points": 1, "check": "swell|swells|expands|expansion|bulge|thicken", "flags": "i" },
-    { "points": 1, "check": "edge.*swell|edges?.*swell|edges?.*expand|edges?.*puff", "flags": "i" },
-    { "points": 1, "check": "absorb|soaks?.*up|takes?.*in water|not resistant", "flags": "i" },
-    { "points": 1, "check": "warp|warps|twist|cup|bend|distort", "flags": "i" },
-    { "points": 1, "check": "disintegrate|fall.*apart|break down|crumble|go soft|degrade", "flags": "i" },
-    { "points": 1, "check": "not waterproof|not water.?resistant|poor moisture resistance|interior only", "flags": "i" },
-    { "points": 1, "check": "moisture.?resistant.*MR|MR.*MDF|better.*moisture|less swelling", "flags": "i" },
-    { "points": 1, "check": "seal|paint|varnish|edge.?seal|laminate|protect.*edges", "flags": "i" },
-    { "points": 1, "check": "ruin|damage|destroy|spoil|fail.*wet", "flags": "i" }
-]
+            { "points": 1, "check": "swell|swells|expands|expansion|bulge|thicken", "flags": "i" },
+            { "points": 1, "check": "edge.*swell|edges?.*swell|edges?.*expand|edges?.*puff", "flags": "i" },
+            { "points": 1, "check": "absorb|soaks?.*up|takes?.*in water|not resistant", "flags": "i" },
+            { "points": 1, "check": "warp|warps|twist|cup|bend|distort", "flags": "i" },
+            { "points": 1, "check": "disintegrate|fall.*apart|break down|crumble|go soft|degrade", "flags": "i" },
+            { "points": 1, "check": "not waterproof|not water.?resistant|poor moisture resistance|interior only", "flags": "i" },
+            { "points": 1, "check": "moisture.?resistant.*MR|MR.*MDF|better.*moisture|less swelling", "flags": "i" },
+            { "points": 1, "check": "seal|paint|varnish|edge.?seal|laminate|protect.*edges", "flags": "i" },
+            { "points": 1, "check": "ruin|damage|destroy|spoil|fail.*wet", "flags": "i" }
+          ]
         },
         {
           "id": "q6",
@@ -128,10 +128,10 @@
           "hint": "See the Plastics section – look for the lightweight, buoyant foam used in construction and boats. (Page 22)",
           "type": "short",
           "maxPoints": 1,
-         "rubric": [
-    { "points": 1, "check": "polystyrene|styrofoam|expanded polystyrene|EPS|expol", "flags": "i" },
-    { "points": 1, "check": "expanded.*poly|EPS|expol.*(pink|grey|white)", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "polystyrene|styrofoam|expanded polystyrene|EPS|expol", "flags": "i" },
+            { "points": 1, "check": "expanded.*poly|EPS|expol.*(pink|grey|white)", "flags": "i" }
+          ]
         },
         {
           "id": "q7",
@@ -141,9 +141,9 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-    { "points": 1, "check": "mild steel|steel|low carbon steel|bright mild steel|BMS", "flags": "i" },
-    { "points": 1, "check": "steel.*mild|mild.*steel|structural steel", "flags": "i" }
-]
+            { "points": 1, "check": "mild steel|steel|low carbon steel|bright mild steel|BMS", "flags": "i" },
+            { "points": 1, "check": "steel.*mild|mild.*steel|structural steel", "flags": "i" }
+          ]
         },
         {
           "id": "q8",
@@ -152,18 +152,18 @@
           "hint": "Think of common exterior-grade sheet or cladding materials suitable for outdoor structures. (Pages 17–19)",
           "type": "short",
           "maxPoints": 2,
-         "rubric": [
-    { "points": 1, "check": "plywood|ply|marine ply|exterior ply|construction ply", "flags": "i" },
-    { "points": 1, "check": "weatherboard|timber weatherboard|pine weatherboard|rusticated|bevel.?back", "flags": "i" },
-    { "points": 1, "check": "treated pine|treated timber|H3.*|H3.2|LOS.?P|macrocarpa", "flags": "i" },
-    { "points": 1, "check": "colour.?steel|corrugated iron|colorsteel|iron", "flags": "i" },
-    { "points": 1, "check": "fibre cement|hardies|james hardie|hardiflex|villaboard", "flags": "i" },
-    { "points": 1, "check": "particleboard.*exterior|shadow.?clad|shadowclad|grooved plywood", "flags": "i" },
-    { "points": 1, "check": "concrete|concrete block|hebel|brick", "flags": "i" },
-    { "points": 1, "check": "plastic|polythene|polycarbonate|twin.?wall", "flags": "i" },
-    { "points": 1, "check": "radiata|radiata pine|treated radiata", "flags": "i" },
-    { "points": 1, "check": "tanalised.*ply|tanalised.*timber", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "plywood|ply|marine ply|exterior ply|construction ply", "flags": "i" },
+            { "points": 1, "check": "weatherboard|timber weatherboard|pine weatherboard|rusticated|bevel.?back", "flags": "i" },
+            { "points": 1, "check": "treated pine|treated timber|H3.*|H3.2|LOS.?P|macrocarpa", "flags": "i" },
+            { "points": 1, "check": "colour.?steel|corrugated iron|colorsteel|iron", "flags": "i" },
+            { "points": 1, "check": "fibre cement|hardies|james hardie|hardiflex|villaboard", "flags": "i" },
+            { "points": 1, "check": "particleboard.*exterior|shadow.?clad|shadowclad|grooved plywood", "flags": "i" },
+            { "points": 1, "check": "concrete|concrete block|hebel|brick", "flags": "i" },
+            { "points": 1, "check": "plastic|polythene|polycarbonate|twin.?wall", "flags": "i" },
+            { "points": 1, "check": "radiata|radiata pine|treated radiata", "flags": "i" },
+            { "points": 1, "check": "tanalised.*ply|tanalised.*timber", "flags": "i" }
+          ]
         },
         {
           "id": "q9",
@@ -172,10 +172,10 @@
           "hint": "See clear thermoplastics – which one is tough and used for safety screens? (Page 24)",
           "type": "short",
           "maxPoints": 1,
-         "rubric": [
-    { "points": 1, "check": "polycarbonate|lexan|makrolon|makroclear|bullet.?proof.*glass|laminated.*polycarbonate", "flags": "i" },
-    { "points": 1, "check": "acrylic|perspex|plexiglass|pmma", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "polycarbonate|lexan|makrolon|makroclear|bullet.?proof.*glass|laminated.*polycarbonate", "flags": "i" },
+            { "points": 1, "check": "acrylic|perspex|plexiglass|pmma", "flags": "i" }
+          ]
         },
         {
           "id": "q10",
@@ -184,9 +184,9 @@
           "hint": "Look under construction plastics – what sheet is used as a DPM? (Page 23)",
           "type": "short",
           "maxPoints": 1,
-         "rubric": [
-    { "points": 1, "check": "polythene|polyethylene|plastic sheet|DPM|damp.?proof.?membrane|black plastic|200.?micron|250.?micron", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "polyth  ene|polyethylene|plastic sheet|DPM|damp.?proof.?membrane|black plastic|200.?micron|250.?micron", "flags": "i" }
+          ]
         },
         {
           "id": "q11",
@@ -195,29 +195,29 @@
           "hint": "See Concrete section – list the three core components. (Page 25)",
           "type": "short",
           "maxPoints": 3,
-         "rubric": [
-    { "points": 1, "check": "cement|portland cement|gp cement|general purpose cement", "flags": "i" },
-    { "points": 1, "check": "aggregate|stone|gravel|rocks?|metal|coarse aggregate|10 ?mm|20 ?mm", "flags": "i" },
-    { "points": 1, "check": "sand|fine aggregate|sharp sand|building sand|plaster sand", "flags": "i" },
-    { "points": 1, "check": "water", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "cement|portland cement|gp cement|general purpose cement", "flags": "i" },
+            { "points": 1, "check": "aggregate|stone|gravel|rocks?|metal|coarse aggregate|10 ?mm|20 ?mm", "flags": "i" },
+            { "points": 1, "check": "sand|fine aggregate|sharp sand|building sand|plaster sand", "flags": "i" },
+            { "points": 1, "check": "water", "flags": "i" }
+          ]
         },
-   {
+        {
           "id": "q12",
           "text": "What is the function of a primer coat when painting?",
           "image": "blank.jpg",
           "hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
           "type": "long",
-          "maxPoints": 4,
-         "rubric": [
-    { "points": 1, "check": "seal|seals?.*surface|close.*pores|stop.*absorption|seal.*timber|seal.*mdf|seal.*plaster", "flags": "i" },
-    { "points": 1, "check": "adhesion|stick|bond|grip|top.?coat.*stick|better adhesion|promote.*adhesion", "flags": "i" },
-    { "points": 1, "check": "even.*finish|uniform.*surface|smooth.*base|consistent.*absorption|stop.*patchy|even.*colour", "flags": "i" },
-    { "points": 1, "check": "block.*stain|stop.*bleed|stain.*block|stop.*tannin|prevent.*tannin|knot.*bleed", "flags": "i" },
-    { "points": 1, "check": "rust.*inhib|stop.*rust|corrosion.*resist|metal primer|protect.*steel", "flags": "i" },
-    { "points": 1, "check": "under.?coat|base.?coat|first coat|prepar|prime.*surface", "flags": "i" },
-    { "points": 1, "check": "save.*paint|less top.?coat|reduce.*topcoat|economical|use.*less", "flags": "i" }
-]
+          "maxPoints": 5,
+          "rubric": [
+            { "points": 1, "check": "seal|se-cancel|seals?.*surface|close.*pores|stop.*absorption|seal.*timber|seal.*mdf|seal.*plaster", "flags": "i" },
+            { "points": 1, "check": "adhesion|stick|bond|grip|top.?coat.*stick|better adhesion|promote.*adhesion", "flags": "i" },
+            { "points": 1, "check": "even.*finish|uniform.*surface|smooth.*base|consistent.*absorption|stop.*patchy|even.*colour", "flags": "i" },
+            { "points": 1, "check": "block.*stain|stop.*bleed|stain.*block|stop.*tannin|prevent.*tannin|knot.*bleed", "flags": "i" },
+            { "points": 1, "check": "rust.*inhib|stop.*rust|corrosion.*resist|metal primer|protection.*steel", "flags": "i" },
+            { "points": 1, "check": "under.?coat|base.?coat|first coat|prepar|prime.*surface", "flags": "i" },
+            { "points": 1, "check": "save.*paint|less top.?coat|reduce.*topcoat|economical|use.*less", "flags": "i" }
+          ]
         },
         {
           "id": "q13",
@@ -227,12 +227,12 @@
           "type": "short",
           "maxPoints": 3,
           "rubric": [
-    { "points": 1, "check": "brush|brush.*paint|brushing|paint ?brush", "flags": "i" },
-    { "points": 1, "check": "roller|roll.*on|rolling|paint ?roller", "flags": "i" },
-    { "points": 1, "check": "spray|spray.*paint|spraying|spray ?gun|airless|HVL P", "flags": "i" },
-    { "points": 1, "check": "pad|paint ?pad|applicator ?pad|mohair pad", "flags": "i" },
-    { "points": 1, "check": "cloth|rag|rag.*on|wiping|wipe.*on", "flags": "i" }
-]
+            { "points": 1, "check": "brush|brush.*paint|brushing|paint ?brush", "flags": "i" },
+            { "points": 1, "check": "roller|roll.*on|rolling|paint ?roller", "flags": "i" },
+            { "points": 1, "check": "spray|spray.*paint|spraying|spray ?gun|airless|HVL P", "flags": "i" },
+            { "points": 1, "check": "pad|paint ?pad|applicator ?pad|mohair pad", "flags": "i" },
+            { "points": 1, "check": "cloth|rag|rag.*on|wiping|wipe.*on", "flags": "i" }
+          ]
         },
         {
           "id": "q14",
@@ -241,15 +241,15 @@
           "hint": "See Polishes – name two types and compare durability to oil. (Page 28)",
           "type": "long",
           "maxPoints": 4,
-         "rubric": [
-    { "points": 1, "check": "french polish|shellac|button polish|garnet polish", "flags": "i" },
-    { "points": 1, "check": "wax|wax polish|briwax|beezwax|paste wax|furniture wax|carnauba", "flags": "i" },
-    { "points": 1, "check": "oil.*polish|liber.*wax|liber.*polish|antique.*wax", "flags": "i" },
-    { "points": 1, "check": "harder|more durable|longer.?lasting|better wear|harder surface|scratch.*resist|more protective|higher protection", "flags": "i" },
-    { "points": 1, "check": "gloss|shine|mirror|deep.*shine|high.*gloss|glossier|brighter finish|more lustre", "flags": "i" },
-    { "points": 1, "check": "water.*resist|spill.*proof|water.?proof|alcohol.*resist|ring.*resist|mark.*resist|better stain resist", "flags": "i" },
-    { "points": 1, "check": "build.*film|film.*finish|builds?.*thickness|hard film|surface coat", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "french polish|shellac|button polish|garnet polish", "flags": "i" },
+            { "points": 1, "check": "wax|wax polish|briwax|beezwax|paste wax|furniture wax|carnauba", "flags": "i" },
+            { "points": 1, "check": "oil.*polish|liber.*wax|liber.*polish|antique.*wax", "flags": "i" },
+            { "points": 1, "check": "harder|more durable|longer.?lasting|better wear|harder surface|scratch.*resist|more protective|higher protection", "flags": "i" },
+            { "points": 1, "check": "gloss|shine|mirror|deep.*shine|high.*gloss|glossier|brighter finish|more lustre", "flags": "i" },
+            { "points": 1, "check": "water.*resist|spill.*proof|water.?proof|alcohol.*resist|ring.*resist|mark.*resist|better stain resist", "flags": "i" },
+            { "points": 1, "check": "build.*film|film.*finish|builds?.*thickness|hard film|surface coat", "flags": "i" }
+          ]
         },
         {
           "id": "q15",
@@ -258,141 +258,141 @@
           "hint": "See Varnish section – note the two types and their key benefits (drying, durability, etc.). (Page 27)",
           "type": "long",
           "maxPoints": 4,
-         "rubric": [
-    { "points": 1, "check": "polyurethane|poly|polyurethane varnish|two.?pack|2.?pack|clear polyurethane|dulux.*poly|resene.*poly", "flags": "i" },
-    { "points": 1, "check": "acrylic|water.?based|water.?borne|aqua.*varnish|resene.*aqua|low odour|quick.?dry", "flags": "i" },
-    { "points": 1, "check": "yacht|spar|marine|exterior varnish|tung oil.*varnish|epifanes|boiled linseed", "flags": "i" },
-    { "points": 1, "check": "oil.?based|traditional|alkyd|solvent.?based|harder film|deeper gloss", "flags": "i" },
-
-    { "points": 1, "check": "very hard|tough|durable|scratch.*resist|wear.*resist|long.?lasting|strong film|best protection", "flags": "i" },
-    { "points": 1, "check": "waterproof|water.?resist|good.*moisture|exterior.*ok|spill.*proof", "flags": "i" },
-
-    { "points": 1, "check": "quick.*dry|fast.*dry|dries?.*fast|low odour|low smell|no fumes|non.?yellow|clearer|easy clean|water clean", "flags": "i" },
-    { "points": 1, "check": "non.?yellow|doesn'?t yellow|stays?.*clear|won'?t amber|colourless", "flags": "i" },
-
-    { "points": 1, "check": "uv.*resist|sun.*resist|weather.*resist|exterior|outdoor|marine|flexible|won'?t crack|high gloss", "flags": "i" },
-
-    { "points": 1, "check": "deep.*gloss|rich.*finish|high.*shine|feeds?.*wood|penetrates|traditional look", "flags": "i" }
-]
+          "rubric": [
+            { "points": 1, "check": "polyurethane|poly|polyurethane varnish|two.?pack|2.?pack|clear polyurethane|dulux.*poly|resene.*poly", "flags": "i" },
+            { "points": 1, "check": "acrylic|water.?based|water.?borne|aqua.*varnish|resene.*aqua|low odour|quick.?dry", "flags": "i" },
+            { "points": 1, "check": "yacht|spar|marine|exterior varnish|tung oil.*varnish|epifanes|boiled linseed", "flags": "i" },
+            { "points": 1, "check": "oil.?based|traditional|alkyd|solvent.?based|harder film|deeper gloss", "flags": "i" },
+            { "points": 1, "check": "very hard|tough|durable|scratch.*resist|wear.*resist|long.?lasting|strong film|best protection", "flags": "i" },
+            { "points": 1, "check": "waterproof|water.?resist|good.*moisture|exterior.*ok|spill.*proof", "flags": "i" },
+            { "points": 1, "check": "quick.*dry|fast.*dry|dries?.*fast|low odour|low smell|no fumes|non.?yellow|clearer|easy clean|water clean", "flags": "i" },
+            { "points": 1, "check": "non.?yellow|doesn'?t yellow|stays?.*clear|won'?t amber|colourless", "flags": "i" },
+            { "points": 1, "check": "uv.*resist|sun.*resist|weather.*resist|exterior|outdoor|marine|flexible|won'?t crack|high gloss", "flags": "i" },
+            { "points": 1, "check": "deep.*gloss|rich.*finish|high.*shine|feeds?.*wood|penetrates|traditional look", "flags": "i" }
+          ]
         }
       ]
     },
+   {
+  "id": "24355-part7",
+  "title": "Assessment Record Sheet – Materials",
+  "subtitle": "US 24355 (v3) - Demonstrate knowledge of construction and manufacturing materials used in BCATS projects (Level 1, Credit 4)",
+  "questions": [
     {
-      "id": "24355-part7",
-      "title": "Assessment Record Sheet – Materials",
-      "subtitle": "US 24355 (v3) - Demonstrate knowledge of construction and manufacturing materials used in BCATS projects (Level 1, Credit 4)",
-      "questions": [
-        {
-          "id": "q_project",
-          "text": "BCATS Project: File Box",
-          "image": "blank.jpg",
-          "type": "short",
-          "maxPoints": 0,
-          "default": "File Box"
-        },
-        {
-          "id": "mat1_q1",
-          "text": "Radiata Pine Timber 90mm x 19mm – What is the purpose of this material in your project?",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "structural|frame|sides|box structure|support|main frame|legs", "flags": "i" },
-            { "points": 1, "check": "file box|storage|hold files|main body|hold papers", "flags": "i" }
-          ]
-        },
-        {
-          "id": "mat1_q2",
-          "text": "Radiata Pine Timber 90mm x 19mm – Describe its properties (appearance, workability, strength, structural stability).",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 3,
-         "rubric": [
-    { "points": 1, "check": "light colour|pale|creamy|yellowish|blonde|light brown|softwood look", "flags": "i" },
-    { "points": 1, "check": "knot|knots|knotty|many knots|visible knots|clear grade|fewer knots", "flags": "i" },
-    { "points": 1, "check": "grain|straight grain|visible grain|softwood grain|pinus|radiata pattern", "flags": "i" },
-    { "points": 1, "check": "soft|softwood|easy to dent|dents? easily|softer than hardwood", "flags": "i" },
-    { "points": 1, "check": "easy to work|easy workability|works? well|cuts? easily|saws? well|planes? well|good workability", "flags": "i" },
-    { "points": 1, "check": "nail|screw|glues? well|holds? nails?|holds? screws?|good holding|takes? fixings?", "flags": "i" },
-    { "points": 1, "check": "splinter|can splinter|splinters?|rough if torn|needs sanding|tear ?out", "flags": "i" },
-    { "points": 1, "check": "light ?weight|lightweight|low density|easy to lift|easy to handle|floats", "flags": "i" },
-    { "points": 1, "check": "strong enough|reasonable strength|good strength.*length|structural grade|construction timber", "flags": "i" },
-    { "points": 1, "check": "bends?|flexible|springy|deflects?|not rigid|low stiffness|low modulus", "flags": "i" },
-    { "points": 1, "check": "warp|twist|cup|bow|movement|shrink|expand|seasoned|kiln ?dried|dry|moisture content", "flags": "i" },
-    { "points": 1, "check": "stable if dry|dimensionally? stable when seasoned|less movement if kiln ?dried", "flags": "i" },
-    { "points": 1, "check": "treated|untreated|H1|H2|LOS P|boric|tan ?e|green tint|blue tint", "flags": "i" },
-    { "points": 1, "check": "paint|takes? paint|good for painting|painted finish|primed|undercoat", "flags": "i" },
-    { "points": 1, "check": "cheap|inexpensive|affordable|low cost|budget timber|plantation grown", "flags": "i" }
-]
-          
-        },
-        {
-          "id": "mat1_q3",
-          "text": "Radiata Pine Timber 90mm x 19mm – List an alternative material and compare the two.",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 3,
-         "rubric": [
-    { "points": 1, "check": "hardwood|rimu|kwila|jarrah|oak|beech|tasmanian oak|tallowwood|meranti", "flags": "i" },
-    { "points": 1, "check": "LSL|laminated strand|lvl|laminated veneer|hySPAN|engineered timber", "flags": "i" },
-    { "points": 1, "check": "MDF|particle ?board|ply|plywood|hoop pine ply|construction ply", "flags": "i" },
-    { "points": 1, "check": "steel|metal|aluminium|pine.*steel|treated pine.*steel", "flags": "i" },
-    { "points": 1, "check": "cheaper|less expensive|lower cost|more affordable|budget|inexpensive|cheapest", "flags": "i" },
-    { "points": 1, "check": "more expensive|dearer|higher cost|costs? more|premium|expensive", "flags": "i" },
-    { "points": 1, "check": "stronger|higher strength|stiffer|less deflection|better load|greater span", "flags": "i" },
-    { "points": 1, "check": "weaker|lower strength|bends? more|sags?|deflects?|not as strong", "flags": "i" },
-    { "points": 1, "check": "heavier|higher density|harder to lift|more weight", "flags": "i" },
-    { "points": 1, "check": "lighter|less weight|low density|easy to handle", "flags": "i" },
-    { "points": 1, "check": "more stable|less movement|dimensionally? stable|won't warp|less warping|no twist", "flags": "i" },
-    { "points": 1, "check": "less stable|warps?|twists?|cups?|bows?|shrinks?|moves more", "flags": "i" },
-    { "points": 1, "check": "better finish|nicer grain|smoother|no knots|clear grade|premium look", "flags": "i" },
-    { "points": 1, "check": "knotty|knots|rougher|lower grade|construction grade", "flags": "i" },
-    { "points": 1, "check": "lasts? longer|more durable|harder wearing|longer life|rot resistant", "flags": "i" },
-    { "points": 1, "check": "paint|takes? paint|paint.*better|paints? well|good paint finish", "flags": "i" },
-    { "points": 1, "check": "treated|untreated|rott? quickly|needs treatment|boric|LOS P|H3", "flags": "i" }
-
-          ]
-        },
-        {
-          "id": "mat1_q4",
-          "text": "Radiata Pine Timber 90mm x 19mm – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 3,
-          "rubric": [
-    { "points": 2, "check": "aesthetic|appearance|look|natural|warm|wood.*look|grain|knots|rustic|painted finish|traditional|timber look|nice when stained", "flags": "i" },
-    { "points": 2, "check": "ergonomic|light ?weight|lightweight|easy to (handle|lift|carry|move|work with)|low weight|not heavy|easy for one person", "flags": "i" },
-    { "points": 2, "check": "cost|cheap|inexpensive|affordable|low cost|budget|cheapest|good value|price|plantation|economical", "flags": "i" },
-    { "points": 2, "check": "availab|easy to (get|buy|source)|stocked|common|readily available|Bunnings|Mitre 10|hardware store|local|standard size|in stock", "flags": "i" },
-    { "points": 2, "check": "joint|fixing|joining|nail|screw|glue|butt|housing|easy to nail|screws? well|glues? well|good holding|takes? fixings?|dowel|biscuit", "flags": "i" },
-    { "points": 2, "check": "durab|strong enough|structural|last|long ?lasting|treated.*rot|won't rot|H1|H2|H3|boric|LOS P|hard ?wearing|construction grade", "flags": "i" },
-    { "points": 2, "check": "safety|safe|non ?toxic|no chemicals|untreated.*safe|low VOC|food safe|child safe|smooth|no splinters? when finished|softwood.*dent", "flags": "i" },
-    { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen because|selected for|suitable because|ideal because|good choice because", "flags": "i" }
-]
-        },
-        {
-          "id": "mat2_q1",
-          "text": "Plywood Sheets 4mm – What is the purpose of this material in your project?",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "panels|bottom|back|dividers|thin sheets|sides|top|base", "flags": "i" },
-            { "points": 1, "check": "file box|cover|enclose|lightweight support|hold in place", "flags": "i" }
-          ]
-        },
-        {
-          "id": "mat2_q2",
-          "text": "Plywood Sheets 4mm – Describe its properties (appearance, workability, strength, structural stability).",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 3,
-         "rubric": [
-    { "points": 1, "check": "light colour|light colored|pale|natural wood|woody|brown|tan|beige|birch face|radiata", "flags": "i" },
-    { "points": 1, "check": "grain|wood ?grain|visible grain|veneer|layered look|ply layers|laminated|cross-grained|cross grained", "flags": "i" },
-    { "points": 1, "check": "smooth surface|smooth face|flat|even surface|veneered?s|good for painting|paint finishes well", "flags": "i" },
-    { "points": 1, "check": "easy to cut|cuts? well|cuts? cleanly|easy workability|good workability|workable", "flags": "i" },
-    { "points": 1, "check": "splinter|can splinter|splinters?|edge splintering|rough edges?|needs sanding|frays?", "flags": "i" },
+      "id": "q_project",
+      "text": "BCATS Project: File Box",
+      "image": "blank.jpg",
+      "type": "short",
+      "maxPoints": 0,
+      "default": "File Box"
+    },
+    {
+      "id": "mat1_q1",
+      "text": "Radiata Pine Timber 90mm x 19mm – What is the purpose of this material in your project?",
+      "image": "blank.jpg",
+      "hint": "Think about what the 90×19 timber actually does in the file box – is it the main frame, sides, legs, or something else?",
+      "type": "long",
+      "maxPoints": 1,
+      "rubric": [
+        { "points": 1, "check": "structural|frame|sides|box structure|support|main frame|legs", "flags": "i" },
+        { "points": 1, "check": "file box|storage|hold files|main body|hold papers", "flags": "i" }
+      ]
+    },
+    {
+      "id": "mat1_q2",
+      "text": "Radiata Pine Timber 90mm x 19mm – Describe its properties (appearance, workability, strength, structural stability).",
+      "image": "blank.jpg",
+      "hint": "Refer to Exotic Softwoods (page 13) – colour, knots, how easy it is to cut/nail/screw, weight, strength, and movement when dry or wet.",
+      "type": "long",
+      "maxPoints": 8,
+      "rubric": [
+        { "points": 1, "check": "light colour|pale|creamy|yellowish|blonde|light brown|softwood look", "flags": "i" },
+        { "points": 1, "check": "knot|knots|knotty|many knots|visible knots|clear grade|fewer knots", "flags": "i" },
+        { "points": 1, "check": "grain|straight grain|visible grain|softwood grain|pinus|radiata pattern", "flags": "i" },
+        { "points": 1, "check": "soft|softwood|easy to dent|dents? easily|softer than hardwood", "flags": "i" },
+        { "points": 1, "check": "easy to work|easy workability|works? well|cuts? easily|saws? well|planes? well|good workability", "flags": "i" },
+        { "points": 1, "check": "nail|screw|glues? well|holds? nails?|holds? screws?|good holding|takes? fixings?", "flags": "i" },
+        { "points": 1, "check": "splinter|can splinter|splinters?|rough if torn|needs sanding|tear ?out", "flags": "i" },
+        { "points": 1, "check": "light ?weight|lightweight|low density|easy to lift|easy to handle|floats", "flags": "i" },
+        { "points": 1, "check": "strong enough|reasonable strength|good strength.*length|structural grade|construction timber", "flags": "i" },
+        { "points": 1, "check": "bends?|flexible|springy|deflects?|not rigid|low stiffness|low modulus", "flags": "i" },
+        { "points": 1, "check": "warp|twist|cup|bow|movement|shrink|expand|seasoned|kiln ?dried|dry|moisture content", "flags": "i" },
+        { "points": 1, "check": "stable if dry|dimensionally? stable when seasoned|less movement if kiln ?dried", "flags": "i" },
+        { "points": 1, "check": "treated|untreated|H1|H2|LOS P|boric|tan ?e|green tint|blue tint", "flags": "i" },
+        { "points": 1, "check": "paint|takes? paint|good for painting|painted finish|primed|undercoat", "flags": "i" },
+        { "points": 1, "check": "cheap|inexpensive|affordable|low cost|budget timber|plantation grown", "flags": "i" }
+      ]
+    },
+    {
+      "id": "mat1_q3",
+      "text": "Radiata Pine Timber 90mm x 19mm – List an alternative material and compare the two.",
+      "image": "blank.jpg",
+      "hint": "Common alternatives: hardwood (rimu, kwila), MDF, plywood, LVL, or steel. Compare cost, strength, weight, stability, finish, etc.",
+      "type": "long",
+      "maxPoints": 8,
+      "rubric": [
+        { "points": 1, "check": "hardwood|rimu|kwila|jarrah|oak|beech|tasmanian oak|tallowwood|meranti", "flags": "i" },
+        { "points": 1, "check": "LSL|laminated strand|lvl|laminated veneer|hySPAN|engineered timber", "flags": "i" },
+        { "points": 1, "check": "MDF|particle ?board|ply|plywood|hoop pine ply|construction ply", "flags": "i" },
+        { "points": 1, "check": "steel|metal|aluminium|pine.*steel|treated pine.*steel", "flags": "i" },
+        { "points": 1, "check": "cheaper|less expensive|lower cost|more affordable|budget|inexpensive|cheapest", "flags": "i" },
+        { "points": 1, "check": "more expensive|dearer|higher cost|costs? more|premium|expensive", "flags": "i" },
+        { "points": 1, "check": "stronger|higher strength|stiffer|less deflection|better load|greater span", "flags": "i" },
+        { "points": 1, "check": "weaker|lower strength|bends? more|sags?|deflects?|not as strong", "flags": "i" },
+        { "points": 1, "check": "heavier|higher density|harder to lift|more weight", "flags": "i" },
+        { "points": 1, "check": "lighter|less weight|low density|easy to handle", "flags": "i" },
+        { "points": 1, "check": "more stable|less movement|dimensionally? stable|won't warp|less warping|no twist", "flags": "i" },
+        { "points": 1, "check": "less stable|warps?|twists?|cups?|bows?|shrinks?|moves more", "flags": "i" },
+        { "points": 1, "check": "better finish|nicer grain|smoother|no knots|clear grade|premium look", "flags": "i" },
+        { "points": 1, "check": "knotty|knots|rougher|lower grade|construction grade", "flags": "i" },
+        { "points": 1, "check": "lasts? longer|more durable|harder wearing|longer life|rot resistant", "flags": "i" },
+        { "points": 1, "check": "paint|takes? paint|paint.*better|paints? well|good paint finish", "flags": "i" },
+        { "points": 1, "check": "treated|untreated|rott? quickly|needs treatment|boric|LOS P|H3", "flags": "i" }
+      ]
+    },
+    {
+      "id": "mat1_q4",
+      "text": "Radiata Pine Timber 90mm x 19mm – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
+      "image": "blank.jpg",
+      "hint": "Pick any 3 reasons from the list and say why radiata works well for a school file box project.",
+      "type": "long",
+      "maxPoints": 7,
+      "rubric": [
+        { "points": 2, "check": "aesthetic|appearance|look|natural|warm|wood.*look|grain|knots|rustic|painted finish|traditional|timber look|nice when stained", "flags": "i" },
+        { "points": 2, "check": "ergonomic|light ?weight|lightweight|easy to (handle|lift|carry|move|work with)|low weight|not heavy|easy for one person", "flags": "i" },
+        { "points": 2, "check": "cost|cheap|inexpensive|affordable|low cost|budget|cheapest|good value|price|plantation|economical", "flags": "i" },
+        { "points": 2, "check": "availab|easy to (get|buy|source)|stocked|common|readily available|Bunnings|Mitre 10|hardware store|local|standard size|in stock", "flags": "i" },
+        { "points": 2, "check": "joint|fixing|joining|nail|screw|glue|butt|housing|easy to nail|screws? well|glues? well|good holding|takes? fixings?|dowel|biscuit", "flags": "i" },
+        { "points": 2, "check": "durab|strong enough|structural|last|long ?lasting|treated.*rot|won't rot|H1|H2|H3|boric|LOS P|hard ?wearing|construction grade", "flags": "i" },
+        { "points": 2, "check": "safety|safe|non ?toxic|no chemicals|untreated.*safe|low VOC|food safe|child safe|smooth|no splinters? when finished|softwood.*dent", "flags": "i" },
+        { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen because|selected for|suitable because|ideal because|good choice because", "flags": "i" }
+      ]
+    },
+    {
+      "id": "mat2_q1",
+      "text": "Plywood Sheets 4mm – What is the purpose of this material in your project?",
+      "image": "blank.jpg",
+      "hint": "Where did you use the thin 4 mm plywood? Back panel, bottom, dividers, sides, etc.?",
+      "type": "long",
+      "maxPoints": 1,
+      "rubric": [
+        { "points": 1, "check": "panels|bottom|back|dividers|thin sheets|sides|top|base", "flags": "i" },
+        { "points": 1, "check": "file box|cover|enclose|lightweight support|hold in place", "flags": "i" }
+      ]
+    },
+    {
+      "id": "mat2_q2",
+      "text": "Plywood Sheets 4mm – Describe its properties (appearance, workability, strength, structural stability).",
+      "image": "blank.jpg",
+      "hint": "See Manufactured Boards – Plywood (page 17). Think layers, cross-grain, smooth face, screw-holding, stability, flexibility at 4 mm thickness.",
+      "type": "long",
+      "maxPoints": 8,
+      "rubric": [
+        { "points": 1, "check": "light colour|light colored|pale|natural wood|woody|brown|tan|beige|birch face|radiata", "flags": "i" },
+        { "points": 1, "check": "grain|wood ?grain|visible grain|veneer|layered look|ply layers|laminated|cross-grained|cross grained", "flags": "i" },
+        { "points": 1, "check": "smooth surface|smooth face|flat|even surface|veneered?s|good for painting|paint finishes well", "flags": "i" },
+        { "points": 1, "check": "easy to cut|cuts? well|cuts? cleanly|easy workability|good workability|workable", "flags": "i" },
+        { "points": 1, "check": "splinter|can splinter|splinters?|edge splintering|rough edges?|needs sanding|frays?", "flags": "i" },
     { "points": 1, "check": "saw|jig ?saw|circular saw|hand saw|laser cuts?|cnc friendly", "flags": "i" },
     { "points": 1, "check": "screw|glue|nail|fixings?|fasteners?|holds screws?|screw holding|glues? well", "flags": "i" },
     { "points": 1, "check": "light ?weight|lightweight|low density|easy to handle|easy to lift", "flags": "i" },
@@ -411,6 +411,7 @@
           "id": "mat2_q3",
           "text": "Plywood Sheets 4mm – List an alternative material and compare the two.",
           "image": "blank.jpg",
+          "hint": "Alternatives: MDF, particleboard, solid timber, acrylic, or aluminium sheet. Compare strength, weight, finish, screw-holding, moisture behaviour.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [
@@ -441,6 +442,7 @@
           "id": "mat2_q4",
           "text": "Plywood Sheets 4mm – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
+          "hint": "Why did we choose thin plywood instead of MDF or solid wood for the panels? Pick any 3 reasons from the list.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [
@@ -456,20 +458,22 @@
           
         },
         {
-          "id": "mat3_q1",
-          "text": "PVA Wood Glue – What is the purpose of this material in your project?",
-          "image": "blank.jpg",
-          "type": "long",
-          "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "bond|glue|join|adhere|wood parts|stick together", "flags": "i" },
-            { "points": 1, "check": "file box|assemble|strengthen joints|hold it together", "flags": "i" }
-          ]
-        },
+      "id": "mat3_q1",
+      "text": "PVA Wood Glue – What is the purpose of this material in your project?",
+      "image": "blank.jpg",
+      "hint": "How does PVA hold the file box together? Think joints and assembly.",
+      "type": "long",
+      "maxPoints": 1,
+      "rubric": [
+        { "points": 1, "check": "bond|glue|join|adhere|wood parts|stick together", "flags": "i" },
+        { "points": 1, "check": "file box|assemble|strengthen joints|hold it together", "flags": "i" }
+      ]
+    },
         {
           "id": "mat3_q2",
           "text": "PVA Wood Glue – Describe its properties (appearance, workability, strength, structural stability).",
           "image": "blank.jpg",
+          "hint": "See Adhesives section (page 29) – colour when wet/dry, clean-up, clamping, strength, interior only, etc.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [
@@ -494,6 +498,7 @@
           "id": "mat3_q3",
           "text": "PVA Wood Glue – List an alternative material and compare the two.",
           "image": "blank.jpg",
+          "hint": "See Adhesives section (page 29) – colour when wet/dry, clean-up, clamping, strength, interior only, etc.",
           "type": "long",
           "maxPoints": 3,
           "rubric": [
@@ -518,6 +523,7 @@
           "id": "mat3_q4",
           "text": "PVA Wood Glue – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
+          "hint": "Why PVA instead of PU or epoxy for a school project? Think safety, cost, ease of use.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [
@@ -535,6 +541,7 @@
           "id": "mat4_q1",
           "text": "19mm x 1.6mm Jolt Head Nails – What is the purpose of this material in your project?",
           "image": "blank.jpg",
+          "hint": "What do the jolt-head nails actually fix? Plywood panels to the frame? Reinforce joints?",
           "type": "long",
           "maxPoints": 1,
           "rubric": [
@@ -546,6 +553,7 @@
           "id": "mat4_q2",
           "text": "19mm x 1.6mm Jolt Head Nails – Describe its properties (appearance, workability, strength, structural stability).",
           "image": "blank.jpg",
+          "hint": "See Fasteners (page 30) – bright steel, jolt/flat head, fine gauge, holding power in thin ply, rust, countersinking, etc.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [
@@ -567,6 +575,7 @@
           "id": "mat4_q3",
           "text": "19mm x 1.6mm Jolt Head Nails – List an alternative material and compare the two.",
           "image": "blank.jpg",
+          "hint": "Alternatives: brads, panel pins, staples, screws, or just glue. Compare speed, neatness, strength, cost, tools needed.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [
@@ -592,6 +601,7 @@
           "id": "mat4_q4",
           "text": "19mm x 1.6mm Jolt Head Nails – Explain why this material was selected. Include any three of: aesthetics, ergonomics, cost, availability, jointing method, durability, safety.",
           "image": "blank.jpg",
+          "hint": "Why hand-nail with jolt heads instead of using a brad nailer or screws? Think school workshop, cost, no power tools, neat finish after putty.",
           "type": "long",
           "maxPoints": 3,
          "rubric": [

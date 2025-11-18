@@ -342,7 +342,7 @@
     { "points": 1, "check": "not waterproof|not water ?resistant|swells?|absorbs moisture|interior use|interior grade|needs sealing", "flags": "i" },
     { "points": 1, "check": "marine|exterior grade|water ?resistant|boil proof|WBP|phenolic|if marine|if exterior", "flags": "i" }
 ]
-          ]
+          
         },
         {
           "id": "mat2_q3",
@@ -372,7 +372,7 @@
     { "points": 1, "check": "screw holding|better screw hold|poor screw holding|screws? pull out", "flags": "i" },
     { "points": 1, "check": "non-toxic|low formaldehyde|zero formaldehyde|E0|E1", "flags": "i" }
 ]
-          ]
+          
         },
         {
           "id": "mat2_q4",
@@ -390,7 +390,7 @@
     { "points": 2, "check": "safety|safe|no sharp edges|smooth|non ?toxic|low formaldehyde|E0|E1|food safe|child safe|splinters? sealed|no harmful|doesn't splinter when finished", "flags": "i" },
     { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen for|selected because|good choice because|suitable because|ideal because", "flags": "i" }
 ]
-          ]
+          
         },
         {
           "id": "mat3_q1",
@@ -425,7 +425,7 @@
     { "points": 1, "check": "non ?toxic|safe|food safe|PVA safe|school safe|low VOC|no fumes", "flags": "i" },
     { "points": 1, "check": "sandable|paintable|stainable|takes? stain|does not stain|clear bond line", "flags": "i" }
 ]
-          ]
+          
         },
         {
           "id": "mat3_q3",
@@ -434,11 +434,22 @@
           "type": "long",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "alternative|polyurethane|epoxy|hide glue|cyanoacrylate|superglue|contact adhesive", "flags": "i" },
-            { "points": 1, "check": "compare strength|stronger|weaker|flexible|more rigid", "flags": "i" },
-            { "points": 1, "check": "compare clean up|water|solvent|toxicity|easy clean|hard to clean", "flags": "i" },
-            { "points": 1, "check": "compare cost|cheaper|dry time|faster|slower", "flags": "i" }
-          ]
+    { "points": 1, "check": "polyurethane|PU glue|gorilla glue|expanding foam|foams?.*up", "flags": "i" },
+    { "points": 1, "check": "epoxy|two.?part|resin|araldite|west system", "flags": "i" },
+    { "points": 1, "check": "contact adhesive|evostik|spray adhesive|thixotropic", "flags": "i" },
+    { "points": 1, "check": "aliphatic|yellow glue|titebond|carpenter.?s glue|cross.?link", "flags": "i" },
+    { "points": 1, "check": "hot glue|hot.?melt|glue gun", "flags": "i" },
+    { "points": 1, "check": "waterproof|water.?resistant|exterior|type I|type II|boil proof|marine|won't fail.*wet", "flags": "i" },
+    { "points": 1, "check": "not waterproof|interior only|fails?.*water|breaks?.*moisture|swells?.*wet", "flags": "i" },
+    { "points": 1, "check": "stronger|higher strength|ultimate bond|structural|gap.?filling|fills gaps?", "flags": "i" },
+    { "points": 1, "check": "weaker|lower strength|wood failure|stronger than wood|not structural", "flags": "i" },
+    { "points": 1, "check": "longer open time|shorter open time|quick set|fast grab|instant|slow cure", "flags": "i" },
+    { "points": 1, "check": "clean.*water|water clean|easy clean|washes?.*water|messy|hard to clean|solvent", "flags": "i" },
+    { "points": 1, "check": "cheaper|less expensive|lower cost|budget|inexpensive", "flags": "i" },
+    { "points": 1, "check": "more expensive|dearer|higher cost|premium|costs?.*more", "flags": "i" },
+    { "points": 1, "check": "clamp|no clamp|clamp.?free|needs clamping|clamping time", "flags": "i" },
+    { "points": 1, "check": "toxic|fumes|ventilation|harmful|non.?toxic|safe|food safe|school safe", "flags": "i" }
+]
         },
         {
           "id": "mat3_q4",

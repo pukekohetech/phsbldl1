@@ -312,6 +312,130 @@ function colourQuestions(results) {
 }
 
 // ------------------------------------------------------------
+// DEADLINE / COUNTDOWN LOGIC
+// ------------------------------------------------------------
+// Returns an object describing deadline vs "this run" of the app.
+//
+// Uses:
+//
+// - DEADLINE.day, DEADLINE.month (no year)
+// - data.firstSeen to pick which year the deadline belongs to
+//
+// Output example:
+// {
+//   status: "upcoming" | "today" | "overdue",
+//   daysLeft: number,       // for upcoming; 0 for today/overdue
+//   overdueDays: number,    // for overdue; 0 otherwise
+//   deadlineDate: Date,     // with a concrete year
+//   label: string,          // DEADLINE.label or default
+//   dateStr: "dd/mm/yyyy"
+// }
+function getDeadlineStatus(today = new Date()) {
+  if (!DEADLINE || typeof DEADLINE.day !== "number" || typeof DEADLINE.month !== "number") {
+    return null;
+  }
+
+  const day = DEADLINE.day;
+  const monthIndex = DEADLINE.month - 1; // JS months 0–11
+
+  // Decide which year this deadline belongs to:
+  // use the year the student first opened the app
+  let baseYear;
+  if (data.firstSeen) {
+    const fs = new Date(data.firstSeen);
+    baseYear = isNaN(fs.getTime()) ? today.getFullYear() : fs.getFullYear();
+  } else {
+    baseYear = today.getFullYear();
+  }
+
+  const deadlineDate = new Date(baseYear, monthIndex, day);
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const deadlineMid = new Date(deadlineDate.getFullYear(), deadlineDate.getMonth(), deadlineDate.getDate());
+
+  const dayDiff = Math.floor((deadlineMid - todayMid) / MS_PER_DAY);
+  let status, daysLeft = 0, overdueDays = 0;
+
+  if (dayDiff > 0) {
+    status = "upcoming";
+    daysLeft = dayDiff;
+  } else if (dayDiff === 0) {
+    status = "today";
+  } else {
+    status = "overdue";
+    overdueDays = -dayDiff;
+  }
+
+  const label = DEADLINE.label || "Deadline";
+  const dateStr = `${String(day).padStart(2, "0")}/${String(DEADLINE.month).padStart(2, "0")}/${deadlineDate.getFullYear()}`;
+
+  return { status, daysLeft, overdueDays, deadlineDate: deadlineMid, label, dateStr };
+}
+
+function setupDeadlineBanner() {
+  const banner = document.getElementById("deadline-banner");
+  if (!banner || !DEADLINE) return;
+
+  // Ensure we have a "firstSeen" date for this run
+  if (!data.firstSeen) {
+    const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    data.firstSeen = todayStr;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  const today = new Date();
+  const status = getDeadlineStatus(today);
+  if (!status) {
+    banner.classList.add("hidden");
+    return;
+  }
+
+  const { status: st, daysLeft, overdueDays, label, dateStr } = status;
+
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  let daysSinceStart = null;
+  if (data.firstSeen) {
+    const fs = new Date(data.firstSeen);
+    if (!isNaN(fs.getTime())) {
+      const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const fsMid = new Date(fs.getFullYear(), fs.getMonth(), fs.getDate());
+      daysSinceStart = Math.floor((todayMid - fsMid) / MS_PER_DAY);
+    }
+  }
+
+  let text = "";
+  let cls = "info";
+
+  if (st === "upcoming") {
+    if (daysLeft <= 7) cls = "hot";
+    else if (daysLeft <= 28) cls = "warn";
+    else cls = "info";
+
+    text = `${label}: ${dateStr} – ${daysLeft} day${daysLeft === 1 ? "" : "s"} left.`;
+    if (daysSinceStart !== null && daysSinceStart >= 0) {
+      text += ` You started ${daysSinceStart} day${daysSinceStart === 1 ? "" : "s"} ago.`;
+    }
+
+    // Popup / toast in final week
+    if (daysLeft > 0 && daysLeft <= 7) {
+      showToast(`Only ${daysLeft} day${daysLeft === 1 ? "" : "s"} left to complete this assessment.`, false);
+    }
+  } else if (st === "today") {
+    cls = "hot";
+    text = `${label}: ${dateStr} – Deadline is today!`;
+    showToast("Deadline is today – make sure you submit your work.", false);
+  } else if (st === "overdue") {
+    cls = "over";
+    text = `${label}: ${dateStr} – Deadline has passed. You are ${overdueDays} day${overdueDays === 1 ? "" : "s"} late.`;
+  }
+
+  banner.textContent = text;
+  banner.className = `deadline-banner ${cls}`;
+  banner.classList.remove("hidden");
+}
+
+// ------------------------------------------------------------
 // SUBMIT – HINTS ONLY UNDER QUESTIONS (NOT IN PDF)
 // ------------------------------------------------------------
 function submitWork() {
@@ -337,6 +461,9 @@ function submitWork() {
     emailBtn.disabled = pct < MIN_PCT_FOR_SUBMIT;
   }
 
+  // Compute deadline status at time of submission
+  const deadlineInfo = getDeadlineStatus(new Date());
+
   finalData = {
     name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
@@ -350,7 +477,8 @@ function submitWork() {
       day: "2-digit", month: "2-digit", year: "numeric",
       hour: "2-digit", minute: "2-digit"
     }),
-    results
+    results,
+    deadlineInfo: deadlineInfo || null
   };
   document.getElementById("student").textContent = name;
   document.getElementById("teacher-name").textContent = finalData.teacherName;
@@ -377,83 +505,6 @@ function submitWork() {
 function back() {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
-}
-
-// ------------------------------------------------------------
-// DEADLINE / COUNTDOWN LOGIC
-// ------------------------------------------------------------
-function getNextDeadlineDate(today) {
-  if (!DEADLINE || typeof DEADLINE.day !== "number" || typeof DEADLINE.month !== "number") {
-    return null;
-  }
-  const day = DEADLINE.day;
-  const monthIndex = DEADLINE.month - 1; // JS months 0–11
-  const year = today.getFullYear();
-
-  let candidate = new Date(year, monthIndex, day);
-  // If deadline already passed this year, use next year
-  if (candidate < today.setHours(0,0,0,0)) {
-    candidate = new Date(year + 1, monthIndex, day);
-  }
-  return candidate;
-}
-
-function setupDeadlineBanner() {
-  const banner = document.getElementById("deadline-banner");
-  if (!banner || !DEADLINE) return;
-
-  // Ensure we have a "firstSeen" date
-  if (!data.firstSeen) {
-    const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    data.firstSeen = todayStr;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-
-  const today = new Date();
-  const deadlineDate = getNextDeadlineDate(new Date());
-  if (!deadlineDate) {
-    banner.classList.add("hidden");
-    return;
-  }
-
-  const MS_PER_DAY = 24 * 60 * 60 * 1000;
-  const daysLeft = Math.ceil((deadlineDate - today) / MS_PER_DAY);
-
-  const firstSeenDate = new Date(data.firstSeen);
-  const daysSinceStart = !isNaN(firstSeenDate.getTime())
-    ? Math.floor((today - firstSeenDate) / MS_PER_DAY)
-    : null;
-
-  const label = DEADLINE.label || "Deadline";
-  const day = DEADLINE.day;
-  const month = DEADLINE.month;
-  const dateStr = `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}`;
-
-  let text;
-  let cls = "info";
-
-  if (daysLeft < 0) {
-    cls = "over";
-    text = `${label}: ${dateStr} – Deadline has passed.`;
-  } else {
-    if (daysLeft <= 7) cls = "hot";
-    else if (daysLeft <= 28) cls = "warn";
-    else cls = "info";
-
-    text = `${label}: ${dateStr} – ${daysLeft} day${daysLeft === 1 ? "" : "s"} left.`;
-    if (daysSinceStart !== null && daysSinceStart >= 0) {
-      text += ` You started ${daysSinceStart} day${daysSinceStart === 1 ? "" : "s"} ago.`;
-    }
-
-    // Popup / toast in final week
-    if (daysLeft > 0 && daysLeft <= 7) {
-      showToast(`Only ${daysLeft} day${daysLeft === 1 ? "" : "s"} left to complete this assessment.`, false);
-    }
-  }
-
-  banner.textContent = text;
-  banner.className = `deadline-banner ${cls}`;
-  banner.classList.remove("hidden");
 }
 
 // ------------------------------------------------------------
@@ -568,6 +619,33 @@ async function emailWork() {
   pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 14, 55);
 
+  // NEW: indicate if deadline was missed (late)
+  let infoY = 62;
+  if (finalData.deadlineInfo && finalData.deadlineInfo.status === "overdue" && finalData.deadlineInfo.overdueDays > 0) {
+    pdf.setTextColor(231, 76, 60); // red
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(
+      `Late submission: ${finalData.deadlineInfo.overdueDays} day${finalData.deadlineInfo.overdueDays === 1 ? "" : "s"} after deadline (${finalData.deadlineInfo.dateStr}).`,
+      10,
+      infoY
+    );
+  } else if (finalData.deadlineInfo && finalData.deadlineInfo.status === "today") {
+    pdf.setTextColor(243, 156, 18); // amber
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Submitted on the deadline date (${finalData.deadlineInfo.dateStr}).`, 10, infoY);
+  } else if (finalData.deadlineInfo && finalData.deadlineInfo.status === "upcoming") {
+    pdf.setTextColor(52, 152, 219);
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(
+      `Submitted ${finalData.deadlineInfo.daysLeft} day${finalData.deadlineInfo.daysLeft === 1 ? "" : "s"} before deadline (${finalData.deadlineInfo.dateStr}).`,
+      10,
+      infoY
+    );
+  }
+
   // 5. CORRECT multi-page slicing
   const imgWidth = usableWidth;
   const imgHeight = canvas.height * (imgWidth / canvas.width);   // height in mm
@@ -672,6 +750,15 @@ function buildEmailBody(fd) {
   l.push(`Student: ${fd.name} (ID: ${fd.id})`);
   l.push(`Teacher: ${fd.teacherName} <${fd.teacherEmail}>`);
   l.push(`Submitted: ${fd.submittedAt}`);
+  if (fd.deadlineInfo) {
+    if (fd.deadlineInfo.status === "overdue" && fd.deadlineInfo.overdueDays > 0) {
+      l.push(`Deadline: ${fd.deadlineInfo.dateStr} – submitted ${fd.deadlineInfo.overdueDays} day(s) late.`);
+    } else if (fd.deadlineInfo.status === "today") {
+      l.push(`Deadline: ${fd.deadlineInfo.dateStr} – submitted on the deadline date.`);
+    } else if (fd.deadlineInfo.status === "upcoming") {
+      l.push(`Deadline: ${fd.deadlineInfo.dateStr} – submitted ${fd.deadlineInfo.daysLeft} day(s) early.`);
+    }
+  }
   l.push("");
   l.push(`Score: ${fd.points}/${fd.totalPoints} (${fd.pct}%)`);
   l.push("=".repeat(60));

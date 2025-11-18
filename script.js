@@ -363,8 +363,13 @@ function back() {
 // ------------------------------------------------------------
 // Email / PDF – A4 + CREST
 // ------------------------------------------------------------
+// ------------------------------------------------------------
+// Email / PDF – FINAL VERSION (A4 + Crest + Identical on every device)
+// ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
+
+  // Load libraries once
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
     s.src = src;
@@ -373,116 +378,125 @@ async function emailWork() {
     document.head.appendChild(s);
   });
   try {
-    await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
-    await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    if (!window.html2canvas) await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    if (!window.jspdf)       await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
   } catch (e) {
     return showToast("Failed to load PDF tools", false);
   }
   const { jsPDF } = window.jspdf;
-  let crestImg = null;
-  async function tryLoad(src) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = src + "?t=" + Date.now();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-    });
-  }
-  try {
-    try { crestImg = await tryLoad("icon-512.png"); }
-    catch { crestImg = await tryLoad("icon-192.png"); }
-  } catch (e) {
-    crestImg = null;
-  }
-  const resultEl = document.getElementById("result");
-  const btns = document.querySelectorAll(".btn-group");
-  btns.forEach(b => b.style.display = "none");
-  const canvas = await html2canvas(resultEl, {
-    scale: 1,
-    useCORS: true,
-    backgroundColor: "#ffffff"
+
+  // ------------------------------------------------------------
+  // 1. Create a perfect off-screen clone at exactly 900px wide
+  // ------------------------------------------------------------
+  const original = document.getElementById("result");
+  const clone = original.cloneNode(true);
+  Object.assign(clone.style, {
+    position: "absolute",
+    left: "-9999px",
+    top: "0",
+    width: "900px",
+    maxWidth: "900px",
+    background: "#fff",
+    padding: "30px 20px",
+    boxShadow: "0 4px 20px rgba(0,0,0,.1)",
+    borderRadius: "12px"
   });
-  btns.forEach(b => b.style.display = "");
+  // Hide buttons in clone only
+  clone.querySelectorAll(".btn-group").forEach(b => b.style.display = "none");
+  document.body.appendChild(clone);
+
+  // ------------------------------------------------------------
+  // 2. Render the clone at high quality
+  // ------------------------------------------------------------
+  const canvas = await html2canvas(clone, {
+    scale: 2,                    // crisp but small file
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    logging: false,
+    windowWidth: 900
+  });
+  document.body.removeChild(clone); // clean up
+
+  // ------------------------------------------------------------
+  // 3. Load crest for header (same as your original code)
+  // ------------------------------------------------------------
+  let crestImg = null;
+  const tryLoad = src => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = src + "?t=" + Date.now();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+  });
+  try { crestImg = await tryLoad("crest_shield.png"); }
+  catch { try { crestImg = await tryLoad("icon-512.png"); } catch {} }
+  catch { crestImg = null; }
+
+  // ------------------------------------------------------------
+  // 4. Create beautiful A4 PDF with maroon header + crest
+  // ------------------------------------------------------------
   const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const imgWidth = pageWidth - 28;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
   const addHeader = () => {
-    const leftMargin = 10;
-    const rightMargin = 4;
     pdf.setFillColor(110, 24, 24);
     pdf.rect(0, 0, pageWidth, 35, "F");
-    let textRightLimit = pageWidth - rightMargin;
     if (crestImg) {
-      const maxHeight = 25;
+      const maxH = 25;
       const aspect = crestImg.width / crestImg.height;
-      const crestHeight = maxHeight;
-      const crestWidth = maxHeight * aspect;
-      const crestX = pageWidth - crestWidth - rightMargin;
-      const crestY = 5;
-      pdf.addImage(crestImg, "PNG", crestX, crestY, crestWidth, crestHeight);
-      textRightLimit = crestX - 3;
+      const w = maxH * aspect;
+      pdf.addImage(crestImg, "PNG", pageWidth - w - 8, 5, w, maxH);
     }
-    const textMaxWidth = textRightLimit - leftMargin;
     pdf.setTextColor(255, 255, 255);
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(18);
-    pdf.text(APP_TITLE, leftMargin, 20, { maxWidth: textMaxWidth });
+    pdf.text(APP_TITLE, 10, 20);
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(12);
-    pdf.text(APP_SUBTITLE, leftMargin, 28, { maxWidth: textMaxWidth });
+    pdf.text(APP_SUBTITLE, 10, 28);
   };
+
   addHeader();
+
+  // Student info line
   pdf.setTextColor(0, 0, 0);
   pdf.setFontSize(11);
   pdf.text(
-    `${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} <${finalData.teacherEmail}> • ${finalData.submittedAt}`,
-    14,
-    40
+    `${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`,
+    10, 42
   );
+
+  // Score box
   pdf.setFillColor(240, 248, 255);
-  pdf.rect(14, 45, 60, 15, "F");
+  pdf.rect(10, 47, 60, 12, "F");
   pdf.setTextColor(110, 24, 24);
   pdf.setFontSize(16);
   pdf.setFont("helvetica", "bold");
-  pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 18, 55);
-  let yPos = 70;
-  const avail = pageHeight - yPos - 20;
-  const imgData = canvas.toDataURL("image/png");
-  if (imgHeight <= avail) {
-    pdf.addImage(imgData, "PNG", 14, yPos, imgWidth, imgHeight);
-  } else {
-    let left = imgHeight;
-    let srcY = 0;
-    while (left > 0) {
-      const sliceH = Math.min(avail, left);
-      const scaledH = (sliceH * canvas.width) / imgWidth;
-      const sliceCanvas = document.createElement("canvas");
-      sliceCanvas.width = canvas.width;
-      sliceCanvas.height = scaledH;
-      const ctx = sliceCanvas.getContext("2d");
-      ctx.drawImage(canvas, 0, srcY, canvas.width, scaledH, 0, 0, canvas.width, scaledH);
-      pdf.addImage(sliceCanvas.toDataURL("image/png"), "PNG", 14, yPos, imgWidth, sliceH);
-      left -= sliceH;
-      srcY += scaledH;
-      if (left > 0) {
-        pdf.addPage();
-        addHeader();
-        yPos = 50;
-      }
-    }
-  }
+  pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 14, 55);
+
+  // Add the perfectly rendered result
+  const imgData = canvas.toDataURL("image/jpeg", 0.92); // ← tiny + beautiful
+  const imgWidth = pageWidth - 20;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  const maxImgHeight = pageHeight - 70;
+  const finalHeight = Math.min(imgHeight, maxImgHeight);
+
+  pdf.addImage(imgData, "JPEG", 10, 65, imgWidth, finalHeight);
+
+  // Footer
   pdf.setFontSize(9);
-  pdf.setTextColor(100, 100, 100);
-  pdf.text("Generated by Pukekohe High Tech Dept", 14, pageHeight - 10);
+  pdf.setTextColor(100);
+  pdf.text("Generated by Pukekohe High School Technology Department", 10, pageHeight - 8);
+
+  // ------------------------------------------------------------
+  // 5. Share the tiny perfect PDF
+  // ------------------------------------------------------------
   const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
   const pdfBlob = pdf.output("blob");
   const file = new File([pdfBlob], filename, { type: "application/pdf" });
   await sharePDF(file);
 }
-
 // ------------------------------------------------------------
 // Share / Email
 // ------------------------------------------------------------

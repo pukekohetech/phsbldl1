@@ -307,7 +307,7 @@
           "image": "blank.jpg",
           "hint": "Refer to Exotic Softwoods (page 13) – colour, knots, how easy it is to cut/nail/screw, weight, strength, and movement when dry or wet.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "light colour|pale|creamy|yellowish|blonde|light brown|softwood look", "flags": "i" },
             { "points": 1, "check": "knot|knots|knotty|many knots|visible knots|clear grade|fewer knots", "flags": "i" },
@@ -332,7 +332,7 @@
           "image": "blank.jpg",
           "hint": "Common alternatives: hardwood (rimu, kwila), MDF, plywood, LVL, or steel. Compare cost, strength, weight, stability, finish, etc.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "hardwood|rimu|kwila|jarrah|oak|beech|tasmanian oak|tallowwood|meranti", "flags": "i" },
             { "points": 1, "check": "LSL|laminated strand|lvl|laminated veneer|hySPAN|engineered timber", "flags": "i" },
@@ -359,7 +359,7 @@
           "image": "blank.jpg",
           "hint": "Pick any 3 reasons from the list and say why radiata works well for a school file box project.",
           "type": "long",
-          "maxPoints": 7,
+          "maxPoints": 8,
           "rubric": [
             { "points": 2, "check": "aesthetic|appearance|look|natural|warm|wood.*look|grain|knots|rustic|painted finish|traditional|timber look|nice when stained", "flags": "i" },
             { "points": 2, "check": "ergonomic|light ?weight|lightweight|easy to (handle|lift|carry|move|work with)|low weight|not heavy|easy for one person", "flags": "i" },
@@ -389,7 +389,7 @@
           "image": "blank.jpg",
           "hint": "See Manufactured Boards – Plywood (page 17). Think layers, cross-grain, smooth face, screw-holding, stability, flexibility at 4 mm thickness.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "light colour|light colored|pale|natural wood|woody|brown|tan|beige|birch face|radiata", "flags": "i" },
             { "points": 1, "check": "grain|wood ?grain|visible grain|veneer|layered look|ply layers|laminated|cross-grained|cross grained", "flags": "i" },
@@ -415,7 +415,7 @@
           "image": "blank.jpg",
           "hint": "Alternatives: MDF, particleboard, solid timber, acrylic, or aluminium sheet. Compare strength, weight, finish, screw-holding, moisture behaviour.",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "MDF|medium density fibreboard|medium-density fiberboard", "flags": "i" },
             { "points": 1, "check": "particle ?board|chipboard", "flags": "i" },
@@ -445,7 +445,7 @@
           "image": "blank.jpg",
           "hint": "Why did we choose thin plywood instead of MDF or solid wood for the panels? Pick any 3 reasons from the list.",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 8,
           "rubric": [
             { "points": 2, "check": "aesthetic|appearance|look|nice|attractive|natural|wood ?grain|warm|smooth finish|paint|varnish|modern|clean|professional|visually? appealing", "flags": "i" },
             { "points": 2, "check": "ergonomic|light ?weight|lightweight|easy to (handle|carry|lift|move)|low weight|comfortable|not heavy|portable|easy for user", "flags": "i" },
@@ -475,7 +475,7 @@
           "image": "blank.jpg",
           "hint": "Think about the PVA glue you used in class – colour when wet/dry, clean-up, clamping, strength, interior-only use, etc. (Not covered in this booklet.)",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "white|creamy|milky|opaque|turns? clear|dries? clear|dries? transparent", "flags": "i" },
             { "points": 1, "check": "liquid|runny|viscous|thick|creamy consistency|water ?based|water ?soluble", "flags": "i" },
@@ -499,7 +499,7 @@
           "image": "blank.jpg",
           "hint": "Use your knowledge of other glues from class (polyurethane, epoxy, hot-melt, etc.) to compare with PVA.",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "polyurethane|PU glue|gorilla glue|expanding foam|foams?.*up", "flags": "i" },
             { "points": 1, "check": "epoxy|two.?part|resin|araldite|west system", "flags": "i" },
@@ -524,7 +524,7 @@
           "image": "blank.jpg",
           "hint": "Why PVA instead of PU or epoxy for a school project? Think safety, cost, ease of use.",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 8,
           "rubric": [
             { "points": 2, "check": "aesthetic|appearance|clear bond|dries?.*clear|invisible joint|clean finish|no yellow|doesn'?t stain|transparent|neat|professional look", "flags": "i" },
             { "points": 2, "check": "ergonomic|easy to use|easy to apply|squeez.?bottle|spreads?.*easily|no mess|water.?clean|comfortable|no fumes|pleasant", "flags": "i" },
@@ -554,7 +554,7 @@
           "image": "blank.jpg",
           "hint": "Think about the small bright-steel nails you used on the file box – size, head shape, how they hold thin ply, rusting, countersinking, etc. (Not covered in this booklet.)",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "bright|shiny|silver|steel|zinc plated|galvani(s|z)ed|plain shank", "flags": "i" },
             { "points": 1, "check": "jolt head|flat head|large head|wide head|bigger head|good bearing", "flags": "i" },
@@ -576,7 +576,7 @@
           "image": "blank.jpg",
           "hint": "Alternatives: brads, panel pins, staples, screws, or just glue. Compare speed, neatness, strength, cost, tools needed.",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "brad|brads|18 ?ga|brad nail|air brad|finish nail", "flags": "i" },
             { "points": 1, "check": "panel ?pin|pin|lost head|fine pin|escutcheon", "flags": "i" },
@@ -602,7 +602,7 @@
           "image": "blank.jpg",
           "hint": "Why hand-nail with jolt heads instead of using a brad nailer or screws? Think school workshop, cost, no power tools, neat finish after putty.",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 8,
           "rubric": [
             { "points": 2, "check": "aesthetic|neat|tidy|small hole|punched?.*putty|filled?.*putty|clean finish|flat head.*fill|almost invisible|professional look|head.*countersunk", "flags": "i" },
             { "points": 2, "check": "ergonomic|easy to (hammer|drive|use)|hand nail|no power tool|light hammer|quick|fast|one hand|simple|no compressor", "flags": "i" },

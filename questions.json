@@ -57,9 +57,20 @@
           "hint": "Look under Imported Hardwoods – which one is listed for decking and outdoor furniture? (Page 14)",
           "type": "short",
           "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "kwila|kwilla|merbau", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "kwila|merbau", "flags": "i" },
+    { "points": 1, "check": "garapa", "flags": "i" },
+    { "points": 1, "check": "iroko", "flags": "i" },
+    { "points": 1, "check": "balau", "flags": "i" },
+    { "points": 1, "check": "teak", "flags": "i" },
+    { "points": 1, "check": "purple ?heart|purpleheart", "flags": "i" },
+    { "points": 1, "check": "jarrah", "flags": "i" },
+    { "points": 1, "check": "spotted gum", "flags": "i" },
+    { "points": 1, "check": "karri", "flags": "i" },
+    { "points": 1, "check": "fijian.*mahogany|plantation mahogany", "flags": "i" },
+    { "points": 1, "check": "vitex", "flags": "i" },
+    { "points": 1, "check": "bangkirai", "flags": "i" }
+]
         },
         {
           "id": "q4",
@@ -68,12 +79,28 @@
           "hint": "See Indigenous timbers – one is specifically prized for woodturning; others are commonly used too. (Pages 12–13)",
           "type": "short",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "kauri|swamp kauri", "flags": "i" },
-            { "points": 1, "check": "rimu|rewarewa|matai", "flags": "i" },
-            { "points": 1, "check": "totara|puriri|macrocarpa|walnut|beech", "flags": "i" }
-            
-          ]
+         "rubric": [
+    { "points": 1, "check": "rimu", "flags": "i" },
+    { "points": 1, "check": "kauri", "flags": "i" },
+    { "points": 1, "check": "swamp kauri|ancient kauri", "flags": "i" },
+    { "points": 1, "check": "rewarewa", "flags": "i" },
+    { "points": 1, "check": "matai", "flags": "i" },
+    { "points": 1, "check": "puriri", "flags": "i" },
+    { "points": 1, "check": "totara", "flags": "i" },
+    { "points": 1, "check": "beech|red beech|silver beech|hard beech", "flags": "i" },
+    { "points": 1, "check": "tawa", "flags": "i" },
+    { "points": 1, "check": "macrocarpa", "flags": "i" },
+    { "points": 1, "check": "blackwood|tasmanian blackwood|australian blackwood", "flags": "i" },
+    { "points": 1, "check": "rosewood", "flags": "i" },
+    { "points": 1, "check": "padauk", "flags": "i" },
+    { "points": 1, "check": "jarrah", "flags": "i" },
+    { "points": 1, "check": "mahogany", "flags": "i" },
+    { "points": 1, "check": "walnut", "flags": "i" },
+    { "points": 1, "check": "olive|nz olive", "flags": "i" },
+    { "points": 1, "check": "eucalyptus|salmon gum|gum", "flags": "i" },
+    { "points": 1, "check": "mallee", "flags": "i" },
+    { "points": 1, "check": "pohutukawa", "flags": "i" }
+]
         },
         {
           "id": "q5",
@@ -83,10 +110,16 @@
           "type": "long",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "swell|swelling|expand|expansion|bulge|puff up", "flags": "i" },
-            { "points": 1, "check": "break|crumble|degrade|fall apart|split|crack|fib(re|er)|go soft", "flags": "i" },
-            { "points": 1, "check": "weak|lose strength|weaker|structural integrity|not strong|bend", "flags": "i" }
-          ]
+    { "points": 1, "check": "swell|swells|expands|expansion|bulge|thicken", "flags": "i" },
+    { "points": 1, "check": "edge.*swell|edges?.*swell|edges?.*expand|edges?.*puff", "flags": "i" },
+    { "points": 1, "check": "absorb|soaks?.*up|takes?.*in water|not resistant", "flags": "i" },
+    { "points": 1, "check": "warp|warps|twist|cup|bend|distort", "flags": "i" },
+    { "points": 1, "check": "disintegrate|fall.*apart|break down|crumble|go soft|degrade", "flags": "i" },
+    { "points": 1, "check": "not waterproof|not water.?resistant|poor moisture resistance|interior only", "flags": "i" },
+    { "points": 1, "check": "moisture.?resistant.*MR|MR.*MDF|better.*moisture|less swelling", "flags": "i" },
+    { "points": 1, "check": "seal|paint|varnish|edge.?seal|laminate|protect.*edges", "flags": "i" },
+    { "points": 1, "check": "ruin|damage|destroy|spoil|fail.*wet", "flags": "i" }
+]
         },
         {
           "id": "q6",

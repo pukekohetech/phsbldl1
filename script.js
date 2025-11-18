@@ -1,4 +1,4 @@
-/* script.js – US 24355 app: FINAL + A4 PDF + HINTS ONLY UNDER QUESTIONS */
+/* script.js – US 24355 app: FINAL + DEADLINE + HINTS ONLY UNDER QUESTIONS */
 // ------------------------------------------------------------
 // Local storage – now dynamic & versioned
 // ------------------------------------------------------------
@@ -61,6 +61,7 @@ const unxor = s => {
 // Globals
 // ------------------------------------------------------------
 let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
+let DEADLINE = null; // from questions.json.DEADLINE
 
 // ------------------------------------------------------------
 // DEBUG MODE
@@ -74,7 +75,7 @@ const MIN_PCT_FOR_SUBMIT = 100;
 // Change this to e.g. 80 if you want 80% or better
 
 // ------------------------------------------------------------
-// Load questions.json (now also extracts APP_ID & VERSION)
+// Load questions.json (now also extracts APP_ID & VERSION & DEADLINE)
 // ------------------------------------------------------------
 async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
@@ -94,6 +95,8 @@ async function loadQuestions() {
     APP_TITLE = json.APP_TITLE;
     APP_SUBTITLE = json.APP_SUBTITLE;
     TEACHERS = json.TEACHERS;
+    DEADLINE = json.DEADLINE || null;
+
     ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
       ...ass,
       questions: ass.questions.map(q => ({
@@ -171,6 +174,9 @@ function initApp() {
     o.textContent = `${a.title} – ${a.subtitle}`;
     assSel.appendChild(o);
   });
+
+  // NEW: set up firstSeen + deadline banner
+  setupDeadlineBanner();
 }
 
 // ------------------------------------------------------------
@@ -371,6 +377,83 @@ function submitWork() {
 function back() {
   document.getElementById("result").classList.add("hidden");
   document.getElementById("form").classList.remove("hidden");
+}
+
+// ------------------------------------------------------------
+// DEADLINE / COUNTDOWN LOGIC
+// ------------------------------------------------------------
+function getNextDeadlineDate(today) {
+  if (!DEADLINE || typeof DEADLINE.day !== "number" || typeof DEADLINE.month !== "number") {
+    return null;
+  }
+  const day = DEADLINE.day;
+  const monthIndex = DEADLINE.month - 1; // JS months 0–11
+  const year = today.getFullYear();
+
+  let candidate = new Date(year, monthIndex, day);
+  // If deadline already passed this year, use next year
+  if (candidate < today.setHours(0,0,0,0)) {
+    candidate = new Date(year + 1, monthIndex, day);
+  }
+  return candidate;
+}
+
+function setupDeadlineBanner() {
+  const banner = document.getElementById("deadline-banner");
+  if (!banner || !DEADLINE) return;
+
+  // Ensure we have a "firstSeen" date
+  if (!data.firstSeen) {
+    const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    data.firstSeen = todayStr;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  const today = new Date();
+  const deadlineDate = getNextDeadlineDate(new Date());
+  if (!deadlineDate) {
+    banner.classList.add("hidden");
+    return;
+  }
+
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  const daysLeft = Math.ceil((deadlineDate - today) / MS_PER_DAY);
+
+  const firstSeenDate = new Date(data.firstSeen);
+  const daysSinceStart = !isNaN(firstSeenDate.getTime())
+    ? Math.floor((today - firstSeenDate) / MS_PER_DAY)
+    : null;
+
+  const label = DEADLINE.label || "Deadline";
+  const day = DEADLINE.day;
+  const month = DEADLINE.month;
+  const dateStr = `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}`;
+
+  let text;
+  let cls = "info";
+
+  if (daysLeft < 0) {
+    cls = "over";
+    text = `${label}: ${dateStr} – Deadline has passed.`;
+  } else {
+    if (daysLeft <= 7) cls = "hot";
+    else if (daysLeft <= 28) cls = "warn";
+    else cls = "info";
+
+    text = `${label}: ${dateStr} – ${daysLeft} day${daysLeft === 1 ? "" : "s"} left.`;
+    if (daysSinceStart !== null && daysSinceStart >= 0) {
+      text += ` You started ${daysSinceStart} day${daysSinceStart === 1 ? "" : "s"} ago.`;
+    }
+
+    // Popup / toast in final week
+    if (daysLeft > 0 && daysLeft <= 7) {
+      showToast(`Only ${daysLeft} day${daysLeft === 1 ? "" : "s"} left to complete this assessment.`, false);
+    }
+  }
+
+  banner.textContent = text;
+  banner.className = `deadline-banner ${cls}`;
+  banner.classList.remove("hidden");
 }
 
 // ------------------------------------------------------------

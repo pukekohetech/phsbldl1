@@ -317,7 +317,7 @@ function submitWork() {
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
 
-    const { total, results } = gradeIt();
+  const { total, results } = gradeIt();
 
   // Colour question boxes + show inline hints on the form
   colourQuestions(results);
@@ -330,6 +330,7 @@ function submitWork() {
   if (emailBtn) {
     emailBtn.disabled = pct < MIN_PCT_FOR_SUBMIT;
   }
+
   finalData = {
     name, id,
     teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
@@ -360,7 +361,7 @@ function submitWork() {
       <div class="question-text"><em>${r.question}</em></div>
       Your answer: <em>${r.answer}</em><br>
       ${r.earned === r.max ? "Well done!" : "Review this question on the form."}`;
-  // ^ no hint added here, so no hints in result section/PDF
+    // ^ no hint added here, so no hints in result section/PDF
     ansDiv.appendChild(d);
   });
   document.getElementById("form").classList.add("hidden");
@@ -372,7 +373,6 @@ function back() {
   document.getElementById("form").classList.remove("hidden");
 }
 
-
 // ------------------------------------------------------------
 // Email / PDF – FIXED 900px LAYOUT + CORRECT MULTI-PAGE SLICING
 // ------------------------------------------------------------
@@ -383,9 +383,13 @@ async function emailWork() {
   if (finalData.pct < MIN_PCT_FOR_SUBMIT) {
     return alert(`You must reach at least ${MIN_PCT_FOR_SUBMIT}% before emailing your work.`);
   }
+
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s);
+    s.src = src;
+    s.onload = res;
+    s.onerror = rej;
+    document.head.appendChild(s);
   });
 
   try {
@@ -403,10 +407,16 @@ async function emailWork() {
   const FIXED_WIDTH = 900;
 
   Object.assign(clone.style, {
-    position: "absolute", left: "-9999px", top: "0",
-    width: `${FIXED_WIDTH}px`, maxWidth: "none",
-    background: "#fff", padding: "40px 30px", boxSizing: "border-box",
-    fontSize: "16px", lineHeight: "1.5"
+    position: "absolute",
+    left: "-9999px",
+    top: "0",
+    width: `${FIXED_WIDTH}px`,
+    maxWidth: "none",
+    background: "#fff",
+    padding: "40px 30px",
+    boxSizing: "border-box",
+    fontSize: "16px",
+    lineHeight: "1.5"
   });
   clone.querySelectorAll(".btn-group, button").forEach(b => b.remove());
   document.body.appendChild(clone);
@@ -426,7 +436,8 @@ async function emailWork() {
   // 3. Load crest (optional)
   let crestImg = null;
   const tryLoad = src => new Promise(r => {
-    const img = new Image(); img.crossOrigin = "anonymous";
+    const img = new Image();
+    img.crossOrigin = "anonymous";
     img.src = src + "?t=" + Date.now();
     img.onload = () => r(img);
     img.onerror = () => r(null);
@@ -449,24 +460,34 @@ async function emailWork() {
       pdf.addImage(crestImg, "PNG", pageWidth - w - 8, 5, w, h);
     }
     pdf.setTextColor(255, 255, 255);
-    pdf.setFont("helvetica", "bold"); pdf.setFontSize(18);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
     pdf.text(APP_TITLE, 10, 20);
-    pdf.setFont("helvetica", "normal"); pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12);
     pdf.text(APP_SUBTITLE, 10, 28);
   };
 
   addHeader();
 
   // Student info + score
-  pdf.setTextColor(0,0,0); pdf.setFontSize(11);
-  pdf.text(`${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`, 10, 42);
-  pdf.setFillColor(240,248,255); pdf.rect(10,47,60,12,"F");
-  pdf.setTextColor(110,24,24); pdf.setFontSize(16); pdf.setFont("helvetica","bold");
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFontSize(11);
+  pdf.text(
+    `${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`,
+    10,
+    42
+  );
+  pdf.setFillColor(240, 248, 255);
+  pdf.rect(10, 47, 60, 12, "F");
+  pdf.setTextColor(110, 24, 24);
+  pdf.setFontSize(16);
+  pdf.setFont("helvetica", "bold");
   pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 14, 55);
 
-  // 5. CORRECT multi-page slicing (the fix!)
+  // 5. CORRECT multi-page slicing
   const imgWidth = usableWidth;
-  const imgHeight = canvas.height * (imgWidth / canvas.width);   // correct height in mm
+  const imgHeight = canvas.height * (imgWidth / canvas.width);   // height in mm
 
   const pageContentHeight = pageHeight - 65 - 15;  // top 65mm + bottom 15mm margin
 
@@ -485,8 +506,17 @@ async function emailWork() {
     tempCanvas.width = canvas.width;
     tempCanvas.height = sourceSliceHeightPx;
     const ctx = tempCanvas.getContext("2d");
-    ctx.drawImage(canvas, 0, (sourceY / imgHeight) * canvas.height, canvas.width, sourceSliceHeightPx,
-                        0, 0, canvas.width, sourceSliceHeightPx);
+    ctx.drawImage(
+      canvas,
+      0,
+      (sourceY / imgHeight) * canvas.height,
+      canvas.width,
+      sourceSliceHeightPx,
+      0,
+      0,
+      canvas.width,
+      sourceSliceHeightPx
+    );
 
     const sliceDataUrl = tempCanvas.toDataURL("image/jpeg", 0.95);
 
@@ -513,7 +543,6 @@ async function emailWork() {
   await sharePDF(file);
 }
 
-
 // ------------------------------------------------------------
 // Share / Email
 // ------------------------------------------------------------
@@ -533,14 +562,19 @@ async function sharePDF(file) {
   }
   const url = URL.createObjectURL(file);
   const a = document.createElement("a");
-  a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+  a.href = url;
+  a.download = file.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
   const shortBody = [
     `Assessment: ${finalData.assessment.title}`,
     `Student: ${finalData.name} (ID: ${finalData.id})`,
     `Teacher: ${finalData.teacherName}`,
     `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`,
-    "", "Full report attached as PDF."
+    "",
+    "Full report attached as PDF."
   ].join("\n");
   window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
   showToast("Downloaded + email opened");

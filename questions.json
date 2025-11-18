@@ -3,6 +3,13 @@
   "VERSION": "2025",
   "APP_TITLE": "US 24355 – Materials Knowledge",
   "APP_SUBTITLE": "PHS - L1 Building – Assessment",
+
+  "DEADLINE": {
+  "day": 30,
+  "month": 11,
+  "label": "Submission deadline"
+},
+
   "TEACHERS": [
     {
       "id": "RY",

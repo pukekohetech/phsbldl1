@@ -169,7 +169,7 @@
           "id": "q9",
           "text": "List a hard, transparent material that can be manufactured to be noise-resistant, flat or curved, polished or textured surface and even bulletproof.",
           "image": "blank.jpg",
-          "hint": "See Glass in Other materials – a hard, transparent material that can be sound proof, flat or curved, polished or textured. (Page 24)",
+          "hint": "See Other materials – a hard, transparent material that can be sound proof, flat or curved, polished or textured. (Page 24)",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
@@ -211,7 +211,7 @@
           "image": "blank.jpg",
           "hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
           "type": "long",
-          "maxPoints": 5,
+          "maxPoints": 4,
           "rubric": [
             { "points": 1, "check": "seal|se-cancel|seals?.*surface|close.*pores|stop.*absorption|seal.*timber|seal.*mdf|seal.*plaster", "flags": "i" },
             { "points": 1, "check": "adhesion|stick|bond|grip|top.?coat.*stick|better adhesion|promote.*adhesion", "flags": "i" },

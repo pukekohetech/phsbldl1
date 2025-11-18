@@ -172,9 +172,10 @@
           "hint": "See clear thermoplastics – which one is tough and used for safety screens? (Page 24)",
           "type": "short",
           "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "polycarbonate|lexan", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "polycarbonate|lexan|makrolon|makroclear|bullet.?proof.*glass|laminated.*polycarbonate", "flags": "i" },
+    { "points": 1, "check": "acrylic|perspex|plexiglass|pmma", "flags": "i" }
+]
         },
         {
           "id": "q10",
@@ -183,9 +184,9 @@
           "hint": "Look under construction plastics – what sheet is used as a DPM? (Page 23)",
           "type": "short",
           "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "polythene|polyethylene|dpm|moisture barrier", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "polythene|polyethylene|plastic sheet|DPM|damp.?proof.?membrane|black plastic|200.?micron|250.?micron", "flags": "i" }
+]
         },
         {
           "id": "q11",
@@ -194,11 +195,12 @@
           "hint": "See Concrete section – list the three core components. (Page 25)",
           "type": "short",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "aggregate|gravel|sand|stones", "flags": "i" },
-            { "points": 1, "check": "cement", "flags": "i" },
-            { "points": 1, "check": "water", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "cement|portland cement|gp cement|general purpose cement", "flags": "i" },
+    { "points": 1, "check": "aggregate|stone|gravel|rocks?|metal|coarse aggregate|10 ?mm|20 ?mm", "flags": "i" },
+    { "points": 1, "check": "sand|fine aggregate|sharp sand|building sand|plaster sand", "flags": "i" },
+    { "points": 1, "check": "water", "flags": "i" }
+]
         },
    {
           "id": "q12",
@@ -207,12 +209,15 @@
           "hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
           "type": "long",
           "maxPoints": 4,
-          "rubric": [
-            { "points": 1, "check": "better adhesion|improves adhesion|helps paint adhere|helps paint stick|adhesion of paint|paint sticks better|good bond|better bond", "flags": "i" },
-            { "points": 1, "check": "increases durability|more durable|paint lasts longer|durability|longer lasting", "flags": "i" },
-            { "points": 1, "check": "additional protection|protects|provides protection|protects surface", "flags": "i" },
-            { "points": 1, "check": "preparatory coating|preparatory|prepares the surface|prepares surface|for first coat|undercoat", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "seal|seals?.*surface|close.*pores|stop.*absorption|seal.*timber|seal.*mdf|seal.*plaster", "flags": "i" },
+    { "points": 1, "check": "adhesion|stick|bond|grip|top.?coat.*stick|better adhesion|promote.*adhesion", "flags": "i" },
+    { "points": 1, "check": "even.*finish|uniform.*surface|smooth.*base|consistent.*absorption|stop.*patchy|even.*colour", "flags": "i" },
+    { "points": 1, "check": "block.*stain|stop.*bleed|stain.*block|stop.*tannin|prevent.*tannin|knot.*bleed", "flags": "i" },
+    { "points": 1, "check": "rust.*inhib|stop.*rust|corrosion.*resist|metal primer|protect.*steel", "flags": "i" },
+    { "points": 1, "check": "under.?coat|base.?coat|first coat|prepar|prime.*surface", "flags": "i" },
+    { "points": 1, "check": "save.*paint|less top.?coat|reduce.*topcoat|economical|use.*less", "flags": "i" }
+]
         },
         {
           "id": "q13",
@@ -222,10 +227,12 @@
           "type": "short",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "brush|brushing", "flags": "i" },
-            { "points": 1, "check": "roller|rolling", "flags": "i" },
-            { "points": 1, "check": "spray|sprayed|spraying|spray gun", "flags": "i" }
-          ]
+    { "points": 1, "check": "brush|brush.*paint|brushing|paint ?brush", "flags": "i" },
+    { "points": 1, "check": "roller|roll.*on|rolling|paint ?roller", "flags": "i" },
+    { "points": 1, "check": "spray|spray.*paint|spraying|spray ?gun|airless|HVL P", "flags": "i" },
+    { "points": 1, "check": "pad|paint ?pad|applicator ?pad|mohair pad", "flags": "i" },
+    { "points": 1, "check": "cloth|rag|rag.*on|wiping|wipe.*on", "flags": "i" }
+]
         },
         {
           "id": "q14",
@@ -234,12 +241,15 @@
           "hint": "See Polishes – name two types and compare durability to oil. (Page 28)",
           "type": "long",
           "maxPoints": 4,
-          "rubric": [
-            { "points": 1, "check": "french polish|shellac", "flags": "i" },
-            { "points": 1, "check": "wax|beeswax|carnauba", "flags": "i" },
-            { "points": 1, "check": "harder|durable|protective|seal|shiny|last longer", "flags": "i" },
-            { "points": 1, "check": "oil|oils|danish oil|tung oil", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "french polish|shellac|button polish|garnet polish", "flags": "i" },
+    { "points": 1, "check": "wax|wax polish|briwax|beezwax|paste wax|furniture wax|carnauba", "flags": "i" },
+    { "points": 1, "check": "oil.*polish|liber.*wax|liber.*polish|antique.*wax", "flags": "i" },
+    { "points": 1, "check": "harder|more durable|longer.?lasting|better wear|harder surface|scratch.*resist|more protective|higher protection", "flags": "i" },
+    { "points": 1, "check": "gloss|shine|mirror|deep.*shine|high.*gloss|glossier|brighter finish|more lustre", "flags": "i" },
+    { "points": 1, "check": "water.*resist|spill.*proof|water.?proof|alcohol.*resist|ring.*resist|mark.*resist|better stain resist", "flags": "i" },
+    { "points": 1, "check": "build.*film|film.*finish|builds?.*thickness|hard film|surface coat", "flags": "i" }
+]
         },
         {
           "id": "q15",
@@ -248,12 +258,26 @@
           "hint": "See Varnish section – note the two types and their key benefits (drying, durability, etc.). (Page 27)",
           "type": "long",
           "maxPoints": 4,
-          "rubric": [
-            { "points": 1, "check": "polyurethane|poly", "flags": "i" },
-            { "points": 1, "check": "durable|tough|hardwearing|scratch|wear|resilient|strong finish", "flags": "i" },
-            { "points": 1, "check": "acrylic|water based|water-based|waterborne", "flags": "i" },
-            { "points": 1, "check": "quick|fast dry|low odour|non yellow|non-yellow|clear|eco friendly", "flags": "i" }
-          ]
+         "rubric": [
+    { "points": 1, "check": "polyurethane|poly|polyurethane varnish|two.?pack|2.?pack|clear polyurethane|dulux.*poly|resene.*poly", "flags": "i" },
+    { "points": 1, "check": "acrylic|water.?based|water.?borne|aqua.*varnish|resene.*aqua|low odour|quick.?dry", "flags": "i" },
+    { "points": 1, "check": "yacht|spar|marine|exterior varnish|tung oil.*varnish|epifanes|boiled linseed", "flags": "i" },
+    { "points": 1, "check": "oil.?based|traditional|alkyd|solvent.?based|harder film|deeper gloss", "flags": "i" },
+
+    // Advantages for polyurethane
+    { "points": 1, "check": "very hard|tough|durable|scratch.*resist|wear.*resist|long.?lasting|strong film|best protection", "flags": "i" },
+    { "points": 1, "check": "waterproof|water.?resist|good.*moisture|exterior.*ok|spill.*proof", "flags": "i" },
+
+    // Advantages for acrylic / water-based
+    { "points": 1, "check": "quick.*dry|fast.*dry|dries?.*fast|low odour|low smell|no fumes|non.?yellow|clearer|easy clean|water clean", "flags": "i" },
+    { "points": 1, "check": "non.?yellow|doesn'?t yellow|stays?.*clear|won'?t amber|colourless", "flags": "i" },
+
+    // Advantages for yacht / spar / marine
+    { "points": 1, "check": "uv.*resist|sun.*resist|weather.*resist|exterior|outdoor|marine|flexible|won'?t crack|high gloss", "flags": "i" },
+
+    // Advantages for oil-based / traditional
+    { "points": 1, "check": "deep.*gloss|rich.*finish|high.*shine|feeds?.*wood|penetrates|traditional look", "flags": "i" }
+]
         }
       ]
     },

@@ -354,13 +354,16 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "cost|affordable|inexpensive|cheap|good price", "flags": "i" },
-            { "points": 1, "check": "availability|common|sheet form|easy to buy|in stock", "flags": "i" },
-            { "points": 1, "check": "durability|moisture resistant|strong|doesn't swell|holds up", "flags": "i" },
-            { "points": 1, "check": "jointing|easy to glue|nail|screw|attach", "flags": "i" },
-            { "points": 1, "check": "aesthetics|smooth|nice finish|looks good|flat surface", "flags": "i" },
-            { "points": 1, "check": "explanation|thin panels|file box|lightweight|fits design", "flags": "i" }
+         "rubric": [
+    { "points": 2, "check": "aesthetic|appearance|look|nice|attractive|natural|wood ?grain|warm|smooth finish|paint|varnish|modern|clean|professional|visually? appealing", "flags": "i" },
+    { "points": 2, "check": "ergonomic|light ?weight|lightweight|easy to (handle|carry|lift|move)|low weight|comfortable|not heavy|portable|easy for user", "flags": "i" },
+    { "points": 2, "check": "cost|cheap|inexpensive|affordable|low cost|budget|price|good value|cheaper than|less expensive than|economical", "flags": "i" },
+    { "points": 2, "check": "available|easy to (get|buy|source)|stocked|readily available|common|hardware store|Bunnings|Mitre 10|in stock|local supplier", "flags": "i" },
+    { "points": 2, "check": "joint|fixing|joining|glue|nail|screw|butt joint|housing joint|easy to (join|fix|assemble)|screws? well|glues? well|good screw holding", "flags": "i" },
+    { "points": 2, "check": "durab|strong|stable|rigid|long ?lasting|won't break|structural|cross ?grained|dimensionally? stable|resists? warping|doesn't twist|hard ?wearing", "flags": "i" },
+    { "points": 2, "check": "safety|safe|no sharp edges|smooth|non ?toxic|low formaldehyde|E0|E1|food safe|child safe|splinters? sealed|no harmful|doesn't splinter when finished", "flags": "i" },
+    { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen for|selected because|good choice because|suitable because|ideal because", "flags": "i" }
+]
           ]
         },
         {

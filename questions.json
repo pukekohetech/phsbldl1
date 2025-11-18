@@ -297,15 +297,15 @@
           "type": "long",
           "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "cost|affordable|cheap|inexpensive|low cost|budget", "flags": "i" },
-            { "points": 1, "check": "availability|common|nz grown|easy to get|readily available|local timber", "flags": "i" },
-            { "points": 1, "check": "jointing|easy to nail|glue|screw|join|holds nails well", "flags": "i" },
-            { "points": 1, "check": "durability|strong enough|lasts|holds up|doesn't break", "flags": "i" },
-            { "points": 1, "check": "aesthetics|looks good|nice finish|natural wood|pretty|pleasing", "flags": "i" },
-            { "points": 1, "check": "ergonomics|easy to hold|comfortable|lightweight|not heavy", "flags": "i" },
-            { "points": 1, "check": "safety|safe|no splinters|non-toxic", "flags": "i" },
-            { "points": 1, "check": "explanation|project needs|suitable|good for file box|fits purpose", "flags": "i" }
-          ]
+    { "points": 2, "check": "aesthetic|appearance|look|natural|warm|wood.*look|grain|knots|rustic|painted finish|traditional|timber look|nice when stained", "flags": "i" },
+    { "points": 2, "check": "ergonomic|light ?weight|lightweight|easy to (handle|lift|carry|move|work with)|low weight|not heavy|easy for one person", "flags": "i" },
+    { "points": 2, "check": "cost|cheap|inexpensive|affordable|low cost|budget|cheapest|good value|price|plantation|economical", "flags": "i" },
+    { "points": 2, "check": "availab|easy to (get|buy|source)|stocked|common|readily available|Bunnings|Mitre 10|hardware store|local|standard size|in stock", "flags": "i" },
+    { "points": 2, "check": "joint|fixing|joining|nail|screw|glue|butt|housing|easy to nail|screws? well|glues? well|good holding|takes? fixings?|dowel|biscuit", "flags": "i" },
+    { "points": 2, "check": "durab|strong enough|structural|last|long ?lasting|treated.*rot|won't rot|H1|H2|H3|boric|LOS P|hard ?wearing|construction grade", "flags": "i" },
+    { "points": 2, "check": "safety|safe|non ?toxic|no chemicals|untreated.*safe|low VOC|food safe|child safe|smooth|no splinters? when finished|softwood.*dent", "flags": "i" },
+    { "points": 1, "check": "because|since|as|for this reason|this is why|so that|chosen because|selected for|suitable because|ideal because|good choice because", "flags": "i" }
+]
         },
         {
           "id": "mat2_q1",

@@ -383,11 +383,22 @@
           "image": "blank.jpg",
           "type": "long",
           "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "appearance|white|dries clear|transparent|invisible when dry", "flags": "i" },
-            { "points": 1, "check": "workability|easy apply|water clean|non-toxic|easy cleanup|spreads well", "flags": "i" },
-            { "points": 1, "check": "strength|strong bond|porous|flexible|holds tight", "flags": "i" },
-            { "points": 1, "check": "stability|non-acidic|durable|not brittle|long lasting", "flags": "i" }
+         "rubric": [
+    { "points": 1, "check": "white|creamy|milky|opaque|turns? clear|dries? clear|dries? transparent", "flags": "i" },
+    { "points": 1, "check": "liquid|runny|viscous|thick|creamy consistency|water ?based|water ?soluble", "flags": "i" },
+    { "points": 1, "check": "easy to apply|spreads? easily|brush|spreadable|good spread|flows? well", "flags": "i" },
+    { "points": 1, "check": "clean ?up.*water|washes?.*water|easy clean|water clean|wipe.*water", "flags": "i" },
+    { "points": 1, "check": "clamp|clamping time|clamp.*(hour|30|20)|hold.*together|pressure needed", "flags": "i" },
+    { "points": 1, "check": "open time|working time|10.*20.*min|few minutes to adjust|reposition", "flags": "i" },
+    { "points": 1, "check": "dries? in.*hour|sets? in|full cure.*24|dry time|set time|curing time", "flags": "i" },
+    { "points": 1, "check": "strong bond|stronger than wood|wood failure|good strength|high strength|permanent bond", "flags": "i" },
+    { "points": 1, "check": "interior|interior use|not waterproof|not water ?resistant|Type II|cross ?link|aliphatic|titebond", "flags": "i" },
+    { "points": 1, "check": "fail.*water|swell.*moisture|break down.*wet|not exterior|not marine", "flags": "i" },
+    { "points": 1, "check": "gap ?filling|limited gap|no gap filling|needs tight joint|close fitting", "flags": "i" },
+    { "points": 1, "check": "flexible bond|slightly flexible|not brittle|absorbs movement|wood movement", "flags": "i" },
+    { "points": 1, "check": "non ?toxic|safe|food safe|PVA safe|school safe|low VOC|no fumes", "flags": "i" },
+    { "points": 1, "check": "sandable|paintable|stainable|takes? stain|does not stain|clear bond line", "flags": "i" }
+]
           ]
         },
         {

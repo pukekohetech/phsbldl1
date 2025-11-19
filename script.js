@@ -340,15 +340,11 @@ function getDeadlineStatus(today = new Date()) {
 
   // Decide which year this deadline belongs to:
   // use the year the student first opened the app
-  let baseYear;
-  if (data.firstSeen) {
-    const fs = new Date(data.firstSeen);
-    baseYear = isNaN(fs.getTime()) ? today.getFullYear() : fs.getFullYear();
-  } else {
-    baseYear = today.getFullYear();
-  }
-
+   // Decide which year this deadline belongs to:
+  // use the current year so it resets every January 1st
+  const baseYear = today.getFullYear();
   const deadlineDate = new Date(baseYear, monthIndex, day);
+
   const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
   const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -447,7 +443,7 @@ function submitWork() {
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
 
-  const { total, results } = gradeIt();
+   const { total, results } = gradeIt();
 
   // Colour question boxes + show inline hints on the form
   colourQuestions(results);
@@ -455,14 +451,16 @@ function submitWork() {
   const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
   const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
 
-  // Lock / unlock email button based on percentage
+  // Compute deadline status at time of submission (for both display + email lock)
+  const deadlineInfo = getDeadlineStatus(new Date());
+
+  // Lock / unlock email button based on percentage AND deadline
   const emailBtn = document.getElementById("emailBtn");
   if (emailBtn) {
-    emailBtn.disabled = pct < MIN_PCT_FOR_SUBMIT;
+    const canEmail = pct >= MIN_PCT_FOR_SUBMIT && (!deadlineInfo || deadlineInfo.status !== "overdue");
+    emailBtn.disabled = !canEmail;
   }
 
-  // Compute deadline status at time of submission
-  const deadlineInfo = getDeadlineStatus(new Date());
 
   finalData = {
     name, id,
@@ -513,9 +511,10 @@ function back() {
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
-  // Enforce minimum percentage before emailing
-  if (finalData.pct < MIN_PCT_FOR_SUBMIT) {
-    return alert(`You must reach at least ${MIN_PCT_FOR_SUBMIT}% before emailing your work.`);
+ // Enforce deadline: no emailing after the deadline for this year
+  const deadlineNow = getDeadlineStatus(new Date());
+  if (deadlineNow && deadlineNow.status === "overdue") {
+    return alert("The submission deadline has passed – emailing is now disabled until next year.");
   }
 
   const load = src => new Promise((res, rej) => {

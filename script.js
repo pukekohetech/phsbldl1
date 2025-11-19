@@ -179,6 +179,14 @@ function initApp() {
   setupDeadlineBanner();
 }
 
+function applyDeadlineLockIfNeeded() {
+  const info = getDeadlineStatus(new Date());
+  if (info && info.status === "overdue") {
+    lockAllFieldsForDeadline();
+  }
+}
+
+
 // ------------------------------------------------------------
 // Core
 // ------------------------------------------------------------
@@ -210,7 +218,7 @@ function loadAssessment() {
         : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
     const div = document.createElement("div");
     div.className = "q";
-    div.id = "q-" + q.id; // tie DOM card to JSON question id (e.g. q-q1, q-mat1_q1)
+    div.id = "q-" + q.id; 
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
@@ -218,40 +226,12 @@ function loadAssessment() {
       ${field}`;
     container.appendChild(div);
   });
-
-
-function lockAllFieldsForDeadline() {
-  // Lock answer fields (but keep them visible)
-  document.querySelectorAll(".answer-field").forEach(f => {
-    f.readOnly = true;              // can see but not edit
-    f.classList.add("locked-field"); // optional for styling
-  });
-
-  // Lock student info
-  const nameEl = document.getElementById("name");
-  const idEl = document.getElementById("id");
-  if (nameEl) nameEl.readOnly = true;
-  if (idEl) idEl.readOnly = true;
-
-  // Lock selectors
-  const teacherSel = document.getElementById("teacher");
-  const assSel = document.getElementById("assessmentSelector");
-  if (teacherSel) teacherSel.disabled = true;
-  if (assSel) assSel.disabled = true;
-
-  // Lock buttons (you may need to add id="submitBtn" in HTML)
-  const submitBtn = document.getElementById("submitBtn");
-  if (submitBtn) submitBtn.disabled = true;
-
-  const emailBtn = document.getElementById("emailBtn");
-  if (emailBtn) emailBtn.disabled = true;
-
-  showToast("Deadline has passed – fields are now locked.", false);
-}
-
-  
   attachProtection();
+
+  // 🔒 In case the deadline is already passed, lock new fields too
+  applyDeadlineLockIfNeeded();
 }
+
 
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);

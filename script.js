@@ -177,6 +177,40 @@ function initApp() {
 
   // NEW: set up firstSeen + deadline banner
   setupDeadlineBanner();
+  // Also apply lock if already overdue
+  applyDeadlineLockIfNeeded();
+}
+
+// ------------------------------------------------------------
+// Deadline lock helpers
+// ------------------------------------------------------------
+function lockAllFieldsForDeadline() {
+  // Lock answer fields (but keep them visible)
+  document.querySelectorAll(".answer-field").forEach(f => {
+    f.readOnly = true;              // can see but not edit
+    f.classList.add("locked-field"); // optional for styling
+  });
+
+  // Lock student info
+  const nameEl = document.getElementById("name");
+  const idEl = document.getElementById("id");
+  if (nameEl) nameEl.readOnly = true;
+  if (idEl) idEl.readOnly = true;
+
+  // Lock selectors
+  const teacherSel = document.getElementById("teacher");
+  const assSel = document.getElementById("assessmentSelector");
+  if (teacherSel) teacherSel.disabled = true;
+  if (assSel) assSel.disabled = true;
+
+  // Lock buttons (requires these IDs in your HTML)
+  const submitBtn = document.getElementById("submitBtn");
+  if (submitBtn) submitBtn.disabled = true;
+
+  const emailBtn = document.getElementById("emailBtn");
+  if (emailBtn) emailBtn.disabled = true;
+
+  showToast("Deadline has passed – fields are now locked.", false);
 }
 
 function applyDeadlineLockIfNeeded() {
@@ -185,7 +219,6 @@ function applyDeadlineLockIfNeeded() {
     lockAllFieldsForDeadline();
   }
 }
-
 
 // ------------------------------------------------------------
 // Core
@@ -231,7 +264,6 @@ function loadAssessment() {
   // 🔒 In case the deadline is already passed, lock new fields too
   applyDeadlineLockIfNeeded();
 }
-
 
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);
@@ -331,7 +363,6 @@ function colourQuestions(results) {
 // Uses:
 //
 // - DEADLINE.day, DEADLINE.month (no year)
-// - data.firstSeen to pick which year the deadline belongs to
 //
 // Output example:
 // {
@@ -350,10 +381,7 @@ function getDeadlineStatus(today = new Date()) {
   const day = DEADLINE.day;
   const monthIndex = DEADLINE.month - 1; // JS months 0–11
 
-  // Decide which year this deadline belongs to:
-  // use the year the student first opened the app
-   // Decide which year this deadline belongs to:
-  // use the current year so it resets every January 1st
+  // Use the current year so it resets every January 1st
   const baseYear = today.getFullYear();
   const deadlineDate = new Date(baseYear, monthIndex, day);
 
@@ -445,7 +473,6 @@ function setupDeadlineBanner() {
   banner.classList.remove("hidden");
 }
 
-
 // ------------------------------------------------------------
 // SUBMIT – HINTS ONLY UNDER QUESTIONS (NOT IN PDF)
 // ------------------------------------------------------------
@@ -458,7 +485,7 @@ function submitWork() {
   if (data.id && document.getElementById("id").value !== data.id)
     return alert("ID locked to: " + data.id);
 
-   const { total, results } = gradeIt();
+  const { total, results } = gradeIt();
 
   // Colour question boxes + show inline hints on the form
   colourQuestions(results);
@@ -475,7 +502,6 @@ function submitWork() {
     const canEmail = pct >= MIN_PCT_FOR_SUBMIT && (!deadlineInfo || deadlineInfo.status !== "overdue");
     emailBtn.disabled = !canEmail;
   }
-
 
   finalData = {
     name, id,
@@ -526,7 +552,12 @@ function back() {
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
- // Enforce deadline: no emailing after the deadline for this year
+  // Enforce minimum percentage before emailing
+  if (finalData.pct < MIN_PCT_FOR_SUBMIT) {
+    return alert(`You must reach at least ${MIN_PCT_FOR_SUBMIT}% before emailing your work.`);
+  }
+
+  // Enforce deadline: no emailing after the deadline for this year
   const deadlineNow = getDeadlineStatus(new Date());
   if (deadlineNow && deadlineNow.status === "overdue") {
     return alert("The submission deadline has passed – emailing is now disabled until next year.");
@@ -849,4 +880,3 @@ window.emailWork = emailWork;
     console.error("App failed to start:", err);
   }
 })();
- 

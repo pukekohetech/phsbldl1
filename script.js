@@ -423,7 +423,7 @@ function setupDeadlineBanner() {
     showToast("Deadline is today – make sure you submit your work.", false);
   } else if (st === "overdue") {
     cls = "over";
-    text = `${label}: ${dateStr} – Deadline has passed. You are ${overdueDays} day${overdueDays === 1 ? "" : "s"} late.`;
+    text = `${label}: ${dateStr} – Deadline has passed. You are ${overdueDays} day${overdueDays === 1 ? "" : "s"} late. You are no longer able to submit this through email to your teacher. Please respect your dealines in future`;
   }
 
   banner.textContent = text;

@@ -218,6 +218,38 @@ function loadAssessment() {
       ${field}`;
     container.appendChild(div);
   });
+
+
+function lockAllFieldsForDeadline() {
+  // Lock answer fields (but keep them visible)
+  document.querySelectorAll(".answer-field").forEach(f => {
+    f.readOnly = true;              // can see but not edit
+    f.classList.add("locked-field"); // optional for styling
+  });
+
+  // Lock student info
+  const nameEl = document.getElementById("name");
+  const idEl = document.getElementById("id");
+  if (nameEl) nameEl.readOnly = true;
+  if (idEl) idEl.readOnly = true;
+
+  // Lock selectors
+  const teacherSel = document.getElementById("teacher");
+  const assSel = document.getElementById("assessmentSelector");
+  if (teacherSel) teacherSel.disabled = true;
+  if (assSel) assSel.disabled = true;
+
+  // Lock buttons (you may need to add id="submitBtn" in HTML)
+  const submitBtn = document.getElementById("submitBtn");
+  if (submitBtn) submitBtn.disabled = true;
+
+  const emailBtn = document.getElementById("emailBtn");
+  if (emailBtn) emailBtn.disabled = true;
+
+  showToast("Deadline has passed – fields are now locked.", false);
+}
+
+  
   attachProtection();
 }
 

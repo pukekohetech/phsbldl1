@@ -445,7 +445,6 @@ function setupDeadlineBanner() {
       text += ` You started ${daysSinceStart} day${daysSinceStart === 1 ? "" : "s"} ago.`;
     }
 
-    // Popup / toast in final week
     if (daysLeft > 0 && daysLeft <= 7) {
       showToast(`Only ${daysLeft} day${daysLeft === 1 ? "" : "s"} left to complete this assessment.`, false);
     }
@@ -455,13 +454,17 @@ function setupDeadlineBanner() {
     showToast("Deadline is today – make sure you submit your work.", false);
   } else if (st === "overdue") {
     cls = "over";
-    text = `${label}: ${dateStr} – Deadline has passed. You are ${overdueDays} day${overdueDays === 1 ? "" : "s"} late. You are no longer able to submit this through email to your teacher.`;
+    text = `${label}: ${dateStr} – Deadline has passed. You are ${overdueDays} day${overdueDays === 1 ? "" : "s"} late.`;
+
+    // 🔒 Lock everything once the deadline has passed
+    lockAllFieldsForDeadline();
   }
 
   banner.textContent = text;
   banner.className = `deadline-banner ${cls}`;
   banner.classList.remove("hidden");
 }
+
 
 // ------------------------------------------------------------
 // SUBMIT – HINTS ONLY UNDER QUESTIONS (NOT IN PDF)

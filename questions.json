@@ -15,29 +15,19 @@
       "email": "ry@pukekohehigh.school.nz"
     },
     {
-      "id": "IR",
-      "name": "Mr Ireland",
-      "email": "ir@pukekohehigh.school.nz"
+      "id": "RNR",
+      "name": "Mr Ranson",
+      "email": "rnr@pukekohehigh.school.nz"
     },
     {
-      "id": "SH",
-      "name": "Mr Shears",
-      "email": "sh@pukekohehigh.school.nz"
+      "id": "NCC",
+      "name": "Mr Nicholls",
+      "email": "ncc@pukekohehigh.school.nz"
     },
     {
-      "id": "HB",
-      "name": "Mr Hobbs",
-      "email": "hb@pukekohehigh.school.nz"
-    },
-    {
-      "id": "TE",
-      "name": "Mr Tempest",
-      "email": "te@pukekohehigh.school.nz"
-    },
-    {
-      "id": "SM",
-      "name": "Mr Smale",
-      "email": "sm@pukekohehigh.school.nz"
+      "id": "KPC",
+      "name": "Mr Knapman",
+      "email": "kpc@pukekohehigh.school.nz"
     }
   ],
   "ASSESSMENTS": [

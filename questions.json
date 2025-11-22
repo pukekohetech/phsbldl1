@@ -5,10 +5,10 @@
   "APP_SUBTITLE": "PHS - L1 Building – Assessment",
 
   "DEADLINE": {
-  "day": 17,
-  "month": 12,
-  "label": "Submission deadline"
-},
+    "day": 17,
+    "month": 12,
+    "label": "Submission deadline"
+  },
 
   "TEACHERS": [
     {
@@ -27,11 +27,58 @@
       "email": "technology@pukekohehigh.school.nz"
     }
   ],
+
   "ASSESSMENTS": [
+    {
+      "id": "24355-checklist",
+      "title": "Start Here – Photo & Checklist",
+      "subtitle": "Do this quick checklist before you submit your work.",
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Have you taken a clear photo of your finished project and emailed it to your teacher?<br><br>Use this link to upload or check your photo: <a href=\"https://pukekohetech.github.io/phsphoto\" target=\"_blank\">pukekohetech.github.io/phsphoto</a>",
+          "image": "blank.jpg",
+          "hint": "Take a clear photo that shows the whole project from the best angle.",
+          "type": "mc",
+          "maxPoints": 1,
+          "options": [
+            "Yes – I have taken a clear photo and emailed it to my teacher.",
+            "No – I still need to do this."
+          ],
+          "rubric": [
+            {
+              "points": 1,
+              "check": "^yes",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "text": "Have you completed all of the other quizzes and assessments for this unit standard in this app (for example the Materials quiz, Self-reflection, Assessment Record Sheet and any others your teacher has added)?<br><br><em>This checklist will automatically stay up to date as new quizzes and assessments are added to <code>questions.json</code>.</em>",
+          "image": "blank.jpg",
+          "hint": "Go back and finish any other quizzes or assessment sheets before you submit.",
+          "type": "mc",
+          "maxPoints": 1,
+          "options": [
+            "Yes – I have fully completed all the quizzes and assessments in this app.",
+            "No – I still have quizzes and assessments to complete."
+          ],
+          "rubric": [
+            {
+              "points": 1,
+              "check": "^yes",
+              "flags": "i"
+            }
+          ]
+        }
+      ]
+    },
+
     {
       "id": "24355-selfreflection",
       "title": "Learner Self-reflection – 24355 (v3)",
-      "subtitle": "Demonstrate knowledge of construction and manufacturing materials used in BCATS projects",
+      "subtitle": "US 24355 – Materials Knowledge Quiz",
       "questions": [
         {
           "id": "q1",
@@ -283,6 +330,7 @@
         }
       ]
     },
+
     {
       "id": "24355-part7",
       "title": "Assessment Record Sheet – Materials",

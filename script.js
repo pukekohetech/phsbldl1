@@ -487,6 +487,7 @@ function loadAssessment() {
 }
 
 
+
 function saveAnswer(qid, valueOverride) {
   let val;
   if (valueOverride !== undefined && valueOverride !== null) {

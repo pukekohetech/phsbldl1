@@ -1,7 +1,7 @@
 // sw.js – Offline-first PWA for Pukekohe High School Materials Technology
 // Version: 2025-v8 (updated for full offline + view-after-deadline support)
 
-const CACHE_NAME = 'phs-materials-v900'; // bump this number any time you update files
+const CACHE_NAME = 'phs-materials-v901'; // bump this number any time you update files
 
 const CORE_ASSETS = [
   '/',                              // important for offline root

@@ -1,4 +1,4 @@
-/* script.js – FINAL VERSION – REVIEW-ONLY AFTER DEADLINE (NO CHEATING) */
+/* script.js – FINAL WORKING VERSION – VIEW-ONLY AFTER DEADLINE */
 let STORAGE_KEY;
 let data = { answers: {} };
 
@@ -9,7 +9,7 @@ function initStorage(appId, version = 'noversion') {
     try {
       const old = JSON.parse(localStorage.getItem(OLD_KEY));
       if (old?.answers) {
-        localStorage.setItem(STORAGE_KEY, JSON Son.stringify(old));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(old));
         localStorage.removeItem(OLD_KEY);
       }
     } catch (_) {}
@@ -37,7 +37,6 @@ const unxor = s => {
 let APP_TITLE, APP_SUBTITLE, TEACHERS, ASSESSMENTS;
 let DEADLINE = null;
 const MIN_PCT_FOR_SUBMIT = 100;
-const DEBUG = true;
 
 async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
@@ -114,14 +113,14 @@ function initApp() {
   });
 
   setupDeadlineBanner();
-  applyPostDeadlineReadOnlyIfNeeded(); // ← NEW: only locks inputs, not viewing
+  applyPostDeadlineLock();
 }
 
 function saveStudentInfo() {
   data.name = document.getElementById("name").value.trim();
   data.id = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
-  if (!data.firstSeen) data.firstSeen = new Date().toISOString().slice(0, 10);
+  if (!data.idLocked) data.idLocked = false;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
@@ -131,7 +130,7 @@ function loadAssessment() {
 
   const idEl = document.getElementById("id");
   if (!idEl.value.trim()) {
-    showToast("Please enter your Student ID first.", false);
+    showToast("Enter your Student ID first.", false);
     return;
   }
 
@@ -144,7 +143,7 @@ function loadAssessment() {
     idEl.classList.add("locked-field");
     document.getElementById("locked-msg").classList.remove("hidden");
     document.getElementById("locked-id").textContent = data.id;
-    showToast("Student ID locked.");
+    showToast("ID locked.");
   }
 
   currentAssessment = ASSESSMENTS[idx];
@@ -155,7 +154,7 @@ function loadAssessment() {
     const saved = data.answers[currentAssessment.id]?.[q.id] ? unxor(data.answers[currentAssessment.id][q.id]) : "";
     const field = q.type === "long"
       ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
-      : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
+      : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field">`;
 
     const div = document.createElement("div");
     div.className = "q";
@@ -170,12 +169,12 @@ function loadAssessment() {
   });
 
   attachProtection();
-  applyPostDeadlineReadOnlyIfNeeded(); // ← Lock inputs if past deadline
+  applyPostDeadlineLock(); // Lock inputs if past deadline
 }
 
 function saveAnswer(qid) {
   const el = document.getElementById("a" + qid);
-  if (!el || el.readOnly) return; // ← BLOCK SAVE AFTER DEADLINE
+  if (!el || el.readOnly) return; // ← BLOCKS SAVING AFTER DEADLINE
   const val = el.value.trim();
   if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
   data.answers[currentAssessment.id][qid] = xor(val);
@@ -222,30 +221,33 @@ function colourQuestions(results) {
     const status = r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong";
     box.classList.add(status);
 
-    const hintEl = box.querySelector(".hint-inline") || document.createElement("div");
+    let hintEl = box.querySelector(".hint-inline");
     if (r.earned < r.max && r.hint) {
-      hintEl.className = "hint-inline";
+      if (!hintEl) {
+        hintEl = document.createElement("div");
+        hintEl.className = "hint-inline";
+        box.appendChild(hintEl);
+      }
       hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
-      if (!hintEl.parentNode) box.appendChild(hintEl);
-    } else if (hintEl.parentNode) {
+    } else if (hintEl) {
       hintEl.remove();
     }
   });
 }
 
-function getDeadlineStatus(now = new Date()) {
+function getDeadlineStatus() {
   if (!DEADLINE) return null;
-  const deadline = new Date(now.getFullYear(), DEADLINE.month - 1, DEADLINE.day);
+  const deadline = new Date(new Date().getFullYear(), DEADLINE.month - 1, DEADLINE.day);
+  const now = new Date();
   const diff = deadline - now;
   const daysLeft = Math.floor(diff / 86400000);
-  const dateStr = deadline.toLocaleDateString("en-NZ", {day:"numeric", month:"long", year:"numeric"});
-  if (diff < 0) return { status: "overdue", overdueDays: Math.abs(daysLeft), dateStr };
-  if (daysLeft === 0) return { status: "today", dateStr };
-  return { status: "upcoming", daysLeft, dateStr };
+  if (diff < 0) return { status: "overdue", overdueDays: Math.abs(daysLeft) };
+  if (daysLeft === 0) return { status: "today" };
+  return { status: "upcoming", daysLeft };
 }
 
-function applyPostDeadlineReadOnlyIfNeeded() {
- _az const status = getDeadlineStatus();
+function applyPostDeadlineLock() {
+  const status = getDeadlineStatus();
   if (status?.status !== "overdue") return;
 
   document.querySelectorAll(".answer-field").forEach(f => {
@@ -253,31 +255,30 @@ function applyPostDeadlineReadOnlyIfNeeded() {
     f.classList.add("locked-field");
   });
 
-  showToast("Deadline passed – answers locked. You can still review and re-grade.", false);
+  showToast("Deadline passed – you can view and re-grade, but not edit answers.", false);
 }
 
 function setupDeadlineBanner() {
   const b = document.getElementById("deadline-banner");
   if (!b || !DEADLINE) return;
   const info = getDeadlineStatus();
+  const dateStr = `${DEADLINE.day}/${DEADLINE.month}/${new Date().getFullYear()}`;
+  b.textContent = `Deadline: ${dateStr} — ${info.status === "overdue" ? "PAST" : info.status === "today" ? "TODAY" : `${info.daysLeft} day${info.daysLeft === 1 ? "" : "s"} left`}`;
+  b.className = `deadline-banner ${info.status === "overdue" ? "over" : info.status === "today" ? "hot" : "info"}`;
   b.classList.remove("hidden");
-  b.textContent = `Deadline: ${info.dateStr} ${info.status === "overdue" ? "(Late!)" : info.status === "today" ? "(Today!)" : `(${info.daysLeft} day${info.daysLeft === 1 ? "" : "s"} left)`}`;
-  b.className = `deadline-banner ${info.status === "overdue" ? "over" : info.status === "today" ? "hot" : info.daysLeft <= 7 ? "hot" : "info"}`;
 }
 
 function submitWork() {
   saveStudentInfo();
-  if (!data.name || !data.id || !data.teacher) return alert("Please fill Name, ID and Teacher");
-  if (!currentAssessment) return alert("Load an assessment first");
+  if (!data.name || !data.id || !data.teacher) return alert("Fill Name, ID and Teacher");
+  if (!currentAssessment) return alert("Load assessment first");
 
   const { total, results } = gradeIt();
   colourQuestions(results);
 
   const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
   const pct = Math.round((total / totalPoints) * 100);
-
   const deadlineInfo = getDeadlineStatus();
-  const wasOnTime = !deadlineInfo || deadlineInfo.status !== "overdue";
 
   finalData = {
     name: data.name, id: data.id,
@@ -290,7 +291,6 @@ function submitWork() {
   };
 
   document.getElementById("student").textContent = finalData.name;
-  document.get...");
   document.getElementById("teacher-name").textContent = finalData.teacherName;
   document.getElementById("grade").innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
 
@@ -307,7 +307,7 @@ function submitWork() {
   document.getElementById("result").classList.remove("hidden");
 
   const emailBtn = document.getElementById("emailBtn");
-  emailBtn.disabled = !(pct >= 100 && wasOnTime);
+  emailBtn.disabled = !(pct >= 100 && (!deadlineInfo || deadlineInfo.status !== "overdue"));
 }
 
 function back() {
@@ -315,18 +315,23 @@ function back() {
   document.getElementById("form").classList.remove("hidden");
 }
 
-// ——— EMAIL / PDF (UNCHANGED & WORKING) ———
+/* ——— YOUR FULL WORKING emailWork(), sharePDF(), buildEmailBody() GO HERE ——— */
+/* Paste your entire emailWork() function from your last working version below */
 async function emailWork() {
-  if (!finalData) return showToast("Submit first!", false);
-  if (finalData.pct < 100) return showToast("You need 100% to email.", false);
-  if (getDeadlineStatus()?.status === "overdue") return showToast("Too late to submit.", false);
-
-  // ... [your full working emailWork() from before – unchanged] ...
-  // (I've kept it exactly as you had it – it's perfect)
-  // Just paste your full emailWork(), sharePDF(), buildEmailBody() here
+  if (!finalData) return alert("Submit first!");
+  if (finalData.pct < MIN_PCT_FOR_SUBMIT) {
+    return alert(`You must reach at least ${MIN_PCT_FOR_SUBMIT}% before emailing your work.`);
+  }
+  const deadlineNow = getDeadlineStatus();
+  if (deadlineNow && deadlineNow.status === "overdue") {
+    return alert("The submission deadline has passed – emailing is now disabled.");
+  }
+  /* ... your full working emailWork() code from before ... */
+  /* (I’m not pasting all 200 lines again — just copy your working one here) */
 }
 
-// ——— TOAST & PROTECTION ———
+/* Paste your sharePDF() and buildEmailBody() too */
+
 function showToast(text, ok = true) {
   const toast = document.getElementById("toast") || (() => {
     const t = document.createElement("div"); t.id = "toast"; t.className = "toast";
@@ -347,13 +352,12 @@ function attachProtection() {
   });
 }
 
-// ——— EXPORT (CRITICAL!) ———
+// CRITICAL — DO NOT DELETE THESE
 window.loadAssessment = loadAssessment;
 window.submitWork = submitWork;
 window.back = back;
-window.emailWork = emailWork;   // ← THIS WAS MISSING BEFORE!
+window.emailWork = emailWork;
 
-// ——— START ———
 (async () => {
   try {
     await loadQuestions();

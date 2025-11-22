@@ -375,29 +375,35 @@ function shuffleArray(arr) {
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
+
   saveStudentInfo();
   currentAssessment = ASSESSMENTS[idx];
+
   const container = document.getElementById("questions");
   container.innerHTML = `
     <div class="assessment-header">
       <h2>${currentAssessment.title}</h2>
       <p>${currentAssessment.subtitle}</p>
     </div>`;
+
   currentAssessment.questions.forEach(q => {
+    // any saved answer from storage
     const savedRaw = data.answers[currentAssessment.id]?.[q.id]
       ? unxor(data.answers[currentAssessment.id][q.id])
       : "";
     const saved = (savedRaw || "").trim();
 
-    let field = "";
+    let fieldHtml = "";
 
-    // Multiple choice question
+    // ---- MULTIPLE CHOICE ----
     if (q.type === "mc" || q.type === "mcq" || q.type === "multi") {
       const rawOptions = Array.isArray(q.options) ? q.options : [];
-      const options = q.shuffle === false ? rawOptions.slice() : shuffleArray(rawOptions);
+      const options = rawOptions.length
+        ? (q.shuffle === false ? rawOptions.slice() : shuffleArray(rawOptions))
+        : [];
 
       if (!options.length) {
-        field = `<em>No options configured for this question.</em>`;
+        fieldHtml = `<em>No options configured for this question.</em>`;
       } else {
         const nameAttr = `mc-${q.id}`;
         const optionsHtml = options
@@ -405,42 +411,81 @@ function loadAssessment() {
             const optStr = String(opt);
             const isChecked = saved && saved === optStr;
             return `
-        <label class="mc-option">
-          <input type="radio" name="${nameAttr}" value="${escapeHtml(optStr)}"${isChecked ? " checked" : ""}>
-          <span>${escapeHtml(optStr)}</span>
-        </label>`;
+              <label class="mc-option">
+                <input type="radio"
+                       name="${nameAttr}"
+                       value="${escapeHtml(optStr)}"${isChecked ? " checked" : ""}>
+                <span>${escapeHtml(optStr)}</span>
+              </label>`;
           })
           .join("");
-        field = `
-      <div class="mc-options" id="a${q.id}">
-        ${optionsHtml}
-      </div>`;
+
+        // NOTE: hidden .answer-field is what the rest of the app uses
+        fieldHtml = `
+          <div class="mc-options" data-qid="${q.id}">
+            ${optionsHtml}
+          </div>
+          <input type="hidden" id="a${q.id}" class="answer-field" value="${escapeHtml(saved)}">
+        `;
       }
     }
-    // Long answer (textarea)
+
+    // ---- LONG ANSWER ----
     else if (q.type === "long") {
-      field = `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`;
+      fieldHtml = `
+        <textarea rows="5"
+                  id="a${q.id}"
+                  class="answer-field">${saved}</textarea>`;
     }
-    // Short / default answer (single-line input)
+
+    // ---- SHORT / DEFAULT ----
     else {
-      field = `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
+      fieldHtml = `
+        <input type="text"
+               id="a${q.id}"
+               value="${saved}"
+               class="answer-field"
+               autocomplete="off">`;
     }
 
     const div = document.createElement("div");
     div.className = "q";
-    div.id = "q-" + q.id; 
+    div.id = "q-" + q.id;
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
       ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
-      ${field}`;
+      ${fieldHtml}
+    `;
     container.appendChild(div);
+
+    // ---- Wire up MC radios so they actually SAVE ----
+    if (q.type === "mc" || q.type === "mcq" || q.type === "multi") {
+      const group = div.querySelector(".mc-options");
+      const hidden = div.querySelector(`#a${q.id}`);
+
+      if (group && hidden) {
+        const radios = group.querySelectorAll("input[type=radio]");
+        radios.forEach(radio => {
+          radio.addEventListener("change", () => {
+            if (hidden.readOnly) return; // respect deadline lock
+
+            const value = radio.value || "";
+            hidden.value = value;          // keep hidden field in sync
+            saveAnswer(q.id, value);       // save to localStorage so gradeIt() sees it
+          });
+        });
+      }
+    }
   });
+
+  // hook up text inputs etc.
   attachProtection();
 
-  // 🔒 In case the deadline is already passed, lock new fields too
+  // if the deadline is already passed, lock newly-rendered fields
   applyDeadlineLockIfNeeded();
 }
+
 
 function saveAnswer(qid, valueOverride) {
   let val;

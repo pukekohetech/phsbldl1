@@ -38,7 +38,7 @@
       "questions": [
         {
           "id": "q1",
-          "text": "Have you taken a clear photo of your finished project and emailed it to your teacher?<br><br>Use this link to upload or check your photo: <a href=\"https://pukekohe.github.io/phsphoto\" target=\"_blank\">pukekohe.github.io/phsphoto</a>",
+          "text": "Have you taken a clear photo of your finished project and emailed it to your teacher?<br><br>Use this link to upload or check your photo: <a href=\"https://pukekohetech.github.io/phsphoto\" target=\"_blank\">pukekohe.github.io/phsphoto</a>",
           "image": "blank.jpg",
           "hint": "Take a clear photo that shows the whole project from the best angle.",
           "type": "mc",

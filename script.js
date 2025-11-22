@@ -233,35 +233,60 @@ function saveStudentInfo() {
 function loadAssessment() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return;
+
+  const idEl = document.getElementById("id");
+  if (!idEl.value.trim()) {
+    showToast("Please enter your Student ID first.", false);
+    return;
+  }
+
   saveStudentInfo();
+
+  if (data.id && !data.idLocked) {
+    data.idLocked = true;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    idEl.readOnly = true;
+    idEl.classList.add("locked-field");
+    document.getElementById("locked-msg").classList.remove("hidden");
+    document.getElementById("locked-id").textContent = data.id;
+    showToast("Student ID locked for this device.");
+  }
+
   currentAssessment = ASSESSMENTS[idx];
   const container = document.getElementById("questions");
-  container.innerHTML = `
-    <div class="assessment-header">
-      <h2>${currentAssessment.title}</h2>
-      <p>${currentAssessment.subtitle}</p>
-    </div>`;
+  container.innerHTML = `<div class="assessment-header"><h2>${currentAssessment.title}</h2><p>${currentAssessment.subtitle}</p></div>`;
+
   currentAssessment.questions.forEach(q => {
-    const saved = data.answers[currentAssessment.id]?.[q.id]
-      ? unxor(data.answers[currentAssessment.id][q.id])
-      : "";
-    const field =
-      q.type === "long"
-        ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
-        : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
+    const savedRaw = data.answers[currentAssessment.id]?.[q.id];
+    const saved = savedRaw ? unxor(savedRaw) : "";
+
+    let field = "";
+    if (q.type === "mc") {
+      field = `<select id="a${q.id}" class="answer-field"><option value="">Select an option</option>`;
+      q.options.forEach(opt => {
+        field += `<option value="${opt}" ${saved === opt ? "selected" : ""}>${opt}</option>`;
+      });
+      field += `</select>`;
+    } else if (q.type === "long") {
+      field = `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`;
+    } else {
+      field = `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
+    }
+
     const div = document.createElement("div");
     div.className = "q";
-    div.id = "q-" + q.id; 
+    div.id = "q-" + q.id;
     div.innerHTML = `
       <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
       ${q.text}<br>
-      ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
-      ${field}`;
+      ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
+      ${field}
+      ${q.hint ? `<div class="hint-inline" style="display:none"><strong>Hint:</strong> ${q.hint}</div>` : ""}
+    `;
     container.appendChild(div);
   });
-  attachProtection();
 
-  // 🔒 In case the deadline is already passed, lock new fields too
+  attachProtection();
   applyDeadlineLockIfNeeded();
 }
 

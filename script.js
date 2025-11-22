@@ -986,30 +986,7 @@ function attachProtection() {
 }
 
 
-  // ----- Multiple-choice answers (radios) -----
-  // We rely on the markup your loadAssessment() is generating:
-  // <div class="mc-options" data-qid="q1"> ... radios ... </div>
-  // <input type="hidden" id="aq1" class="answer-field">
-  document.querySelectorAll(".mc-options").forEach(group => {
-    const qid = group.dataset.qid;
-    if (!qid) return;
 
-    const hidden = document.getElementById("a" + qid);
-    if (!hidden) return;
-
-    const radios = group.querySelectorAll('input[type="radio"]');
-    radios.forEach(radio => {
-      radio.addEventListener("change", () => {
-        // Respect deadline locking: hidden gets readOnly set when locked
-        if (hidden.readOnly) return;
-
-        const value = radio.value || "";
-        hidden.value = value;        // keep hidden field in sync
-        saveAnswer(qid, value);      // store in data.answers[..][qid]
-      });
-    });
-  });
-}
 
 document.addEventListener("contextmenu", e => {
   if (!e.target.matches("input, textarea")) e.preventDefault();

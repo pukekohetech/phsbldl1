@@ -57,6 +57,16 @@ const unxor = s => {
   }
 };
 
+function escapeHtml(str) {
+  if (!str && str !== 0) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // ------------------------------------------------------------
 // Globals
 // ------------------------------------------------------------
@@ -191,6 +201,11 @@ function lockAllFieldsForDeadline() {
     f.classList.add("locked-field"); // optional for styling
   });
 
+  // Lock MC fields (radio buttons)
+  document.querySelectorAll(".mc-options input[type=radio]").forEach(r => {
+    r.disabled = true;
+  });
+
   // Lock student info
   const nameEl = document.getElementById("name");
   const idEl = document.getElementById("id");
@@ -218,141 +233,6 @@ function applyDeadlineLockIfNeeded() {
   if (info && info.status === "overdue") {
     lockAllFieldsForDeadline();
   }
-}
-
-// ------------------------------------------------------------
-// Core
-// ------------------------------------------------------------
-function saveStudentInfo() {
-  data.name = document.getElementById("name").value.trim();
-  data.id = document.getElementById("id").value.trim();
-  data.teacher = document.getElementById("teacher").value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function loadAssessment() {
-  const idx = document.getElementById("assessmentSelector").value;
-  if (idx === "") return;
-  saveStudentInfo();
-  currentAssessment = ASSESSMENTS[idx];
-  const container = document.getElementById("questions");
-  container.innerHTML = `
-    <div class="assessment-header">
-      <h2>${currentAssessment.title}</h2>
-      <p>${currentAssessment.subtitle}</p>
-    </div>`;
-  currentAssessment.questions.forEach(q => {
-    const saved = data.answers[currentAssessment.id]?.[q.id]
-      ? unxor(data.answers[currentAssessment.id][q.id])
-      : "";
-    const field =
-      q.type === "long"
-        ? `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`
-        : `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
-    const div = document.createElement("div");
-    div.className = "q";
-    div.id = "q-" + q.id; 
-    div.innerHTML = `
-      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
-      ${q.text}<br>
-      ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
-      ${field}`;
-    container.appendChild(div);
-  });
-  attachProtection();
-
-  // 🔒 In case the deadline is already passed, lock new fields too
-  applyDeadlineLockIfNeeded();
-}
-
-function saveAnswer(qid) {
-  const el = document.getElementById("a" + qid);
-  if (!el) return;
-  const val = el.value.trim();
-  if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
-  data.answers[currentAssessment.id][qid] = xor(val);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function getAnswer(id) {
-  const raw = data.answers[currentAssessment.id]?.[id] || "";
-  return raw ? unxor(raw).trim() : "";
-}
-
-// ------------------------------------------------------------
-// GRADING
-// ------------------------------------------------------------
-function gradeIt() {
-  let total = 0;
-  const results = [];
-  currentAssessment.questions.forEach(q => {
-    const ans = getAnswer(q.id);
-    let earned = 0;
-    if (q.rubric && ans) {
-      q.rubric.forEach(r => {
-        r.check.lastIndex = 0;
-        if (r.check.test(ans)) {
-          earned += r.points;
-          if (DEBUG) console.log(`Match: ${q.id} → "${ans}" → +${r.points}`);
-        }
-      });
-    }
-    earned = Math.min(earned, q.maxPoints);
-    total += earned;
-    const isCorrect = earned === q.maxPoints;
-    results.push({
-      id: q.id.toUpperCase(),
-      question: q.text,
-      answer: ans || "(blank)",
-      earned,
-      max: q.maxPoints,
-      markText: isCorrect ? "Correct" : earned > 0 ? "Partial" : "Incorrect",
-      hint: q.hint || ""
-    });
-  });
-  return { total, results };
-}
-
-// ------------------------------------------------------------
-// Colour question cards + show hints UNDER questions only
-// ------------------------------------------------------------
-function colourQuestions(results) {
-  results.forEach(r => {
-    // r.id is from gradeIt(): q.id.toUpperCase(), e.g. "Q1" or "MAT1_Q1"
-    const qid = r.id.toLowerCase(); // back to "q1", "mat1_q1"
-    const box = document.getElementById("q-" + qid);
-    if (!box) return;
-
-    // Clear previous state
-    box.classList.remove("correct", "partial", "wrong");
-
-    // Decide status from marks
-    const status =
-      r.earned === r.max ? "correct" :
-      r.earned > 0       ? "partial" :
-                           "wrong";
-
-    box.classList.add(status);
-
-    // ----- HINT UNDER QUESTION (ON FORM ONLY) -----
-    const hintClass = "hint-inline";
-    let hintEl = box.querySelector("." + hintClass);
-
-    if (r.earned < r.max && r.hint) {
-      // Needs a hint: create/update the inline hint element
-      if (!hintEl) {
-        hintEl = document.createElement("div");
-        hintEl.className = hintClass;
-        box.appendChild(hintEl);
-      }
-      hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
-    } else {
-      // Fully correct or no hint: remove inline hint if it exists
-      if (hintEl) {
-        hintEl.remove();
-      }
-    }
-  });
 }
 
 // ------------------------------------------------------------
@@ -471,6 +351,191 @@ function setupDeadlineBanner() {
   banner.textContent = text;
   banner.className = `deadline-banner ${cls}`;
   banner.classList.remove("hidden");
+}
+
+// ------------------------------------------------------------
+// Core
+// ------------------------------------------------------------
+function saveStudentInfo() {
+  data.name = document.getElementById("name").value.trim();
+  data.id = document.getElementById("id").value.trim();
+  data.teacher = document.getElementById("teacher").value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function loadAssessment() {
+  const idx = document.getElementById("assessmentSelector").value;
+  if (idx === "") return;
+  saveStudentInfo();
+  currentAssessment = ASSESSMENTS[idx];
+  const container = document.getElementById("questions");
+  container.innerHTML = `
+    <div class="assessment-header">
+      <h2>${currentAssessment.title}</h2>
+      <p>${currentAssessment.subtitle}</p>
+    </div>`;
+  currentAssessment.questions.forEach(q => {
+    const savedRaw = data.answers[currentAssessment.id]?.[q.id]
+      ? unxor(data.answers[currentAssessment.id][q.id])
+      : "";
+    const saved = (savedRaw || "").trim();
+
+    let field = "";
+
+    // Multiple choice question
+    if (q.type === "mc" || q.type === "mcq" || q.type === "multi") {
+      const rawOptions = Array.isArray(q.options) ? q.options : [];
+      const options = q.shuffle === false ? rawOptions.slice() : shuffleArray(rawOptions);
+
+      if (!options.length) {
+        field = `<em>No options configured for this question.</em>`;
+      } else {
+        const nameAttr = `mc-${q.id}`;
+        const optionsHtml = options
+          .map(opt => {
+            const optStr = String(opt);
+            const isChecked = saved && saved === optStr;
+            return `
+        <label class="mc-option">
+          <input type="radio" name="${nameAttr}" value="${escapeHtml(optStr)}"${isChecked ? " checked" : ""}>
+          <span>${escapeHtml(optStr)}</span>
+        </label>`;
+          })
+          .join("");
+        field = `
+      <div class="mc-options" id="a${q.id}">
+        ${optionsHtml}
+      </div>`;
+      }
+    }
+    // Long answer (textarea)
+    else if (q.type === "long") {
+      field = `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`;
+    }
+    // Short / default answer (single-line input)
+    else {
+      field = `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
+    }
+
+    const div = document.createElement("div");
+    div.className = "q";
+    div.id = "q-" + q.id; 
+    div.innerHTML = `
+      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
+      ${q.text}<br>
+      ${q.image ? `<img src="${q.image}" class="q-img" alt="Question image for ${q.id}">` : ""}
+      ${field}`;
+    container.appendChild(div);
+  });
+  attachProtection();
+
+  // 🔒 In case the deadline is already passed, lock new fields too
+  applyDeadlineLockIfNeeded();
+}
+
+function saveAnswer(qid, valueOverride) {
+  let val;
+  if (valueOverride !== undefined && valueOverride !== null) {
+    val = String(valueOverride).trim();
+  } else {
+    const el = document.getElementById("a" + qid);
+    if (!el) return;
+    val = (el.value || "").trim();
+  }
+
+  if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
+  data.answers[currentAssessment.id][qid] = xor(val);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getAnswer(id) {
+  const raw = data.answers[currentAssessment.id]?.[id] || "";
+  return raw ? unxor(raw).trim() : "";
+}
+
+// ------------------------------------------------------------
+// GRADING
+// ------------------------------------------------------------
+function gradeIt() {
+  let total = 0;
+  const results = [];
+  currentAssessment.questions.forEach(q => {
+    const ans = getAnswer(q.id);
+    let earned = 0;
+    if (q.rubric && ans) {
+      q.rubric.forEach(r => {
+        r.check.lastIndex = 0;
+        if (r.check.test(ans)) {
+          earned += r.points;
+          if (DEBUG) console.log(`Match: ${q.id} → "${ans}" → +${r.points}`);
+        }
+      });
+    }
+    earned = Math.min(earned, q.maxPoints);
+    total += earned;
+    const isCorrect = earned === q.maxPoints;
+    results.push({
+      id: q.id.toUpperCase(),
+      question: q.text,
+      answer: ans || "(blank)",
+      earned,
+      max: q.maxPoints,
+      markText: isCorrect ? "Correct" : earned > 0 ? "Partial" : "Incorrect",
+      hint: q.hint || ""
+    });
+  });
+  return { total, results };
+}
+
+// ------------------------------------------------------------
+// Colour question cards + show hints UNDER questions only
+// ------------------------------------------------------------
+function colourQuestions(results) {
+  results.forEach(r => {
+    // r.id is from gradeIt(): q.id.toUpperCase(), e.g. "Q1" or "MAT1_Q1"
+    const qid = r.id.toLowerCase(); // back to "q1", "mat1_q1"
+    const box = document.getElementById("q-" + qid);
+    if (!box) return;
+
+    // Clear previous state
+    box.classList.remove("correct", "partial", "wrong");
+
+    // Decide status from marks
+    const status =
+      r.earned === r.max ? "correct" :
+      r.earned > 0       ? "partial" :
+                           "wrong";
+
+    box.classList.add(status);
+
+    // ----- HINT UNDER QUESTION (ON FORM ONLY) -----
+    const hintClass = "hint-inline";
+    let hintEl = box.querySelector("." + hintClass);
+
+    if (r.earned < r.max && r.hint) {
+      // Needs a hint: create/update the inline hint element
+      if (!hintEl) {
+        hintEl = document.createElement("div");
+        hintEl.className = hintClass;
+        box.appendChild(hintEl);
+      }
+      hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
+    } else {
+      // Fully correct or no hint: remove inline hint if it exists
+      if (hintEl) {
+        hintEl.remove();
+      }
+    }
+  });
 }
 
 // ------------------------------------------------------------
@@ -850,11 +915,22 @@ async function clearClipboard() {
 }
 (async () => { await clearClipboard(); })();
 function attachProtection() {
+  // Free-text answers
   document.querySelectorAll(".answer-field").forEach(f => {
     f.addEventListener("input", () => saveAnswer(f.id.slice(1)));
     f.addEventListener("paste", e => { e.preventDefault(); showToast(PASTE_BLOCKED_MESSAGE, false); clearClipboard(); });
     f.addEventListener("copy", e => e.preventDefault());
     f.addEventListener("cut", e => e.preventDefault());
+  });
+
+  // Multiple‑choice answers
+  document.querySelectorAll(".mc-options input[type=radio]").forEach(r => {
+    r.addEventListener("change", () => {
+      const group = r.closest(".mc-options");
+      if (!group) return;
+      const qid = group.id.slice(1); // strip leading "a"
+      saveAnswer(qid, r.value);
+    });
   });
 }
 document.addEventListener("contextmenu", e => {

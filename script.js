@@ -299,7 +299,7 @@ function submitWork() {
   results.forEach(r => {
     const d = document.createElement("div");
     d.className = `feedback ${r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"}`;
-    d.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br><em>${r.question}</em><br>Your answer: <em>${r.answer}</em>`;
+    d.innerHTML = `<strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br><em>${r.question}</em><br>Your answer: <strong><em>${r.answer || "(no answer)"}</em></strong>`;
     ansDiv.appendChild(d);
   });
 

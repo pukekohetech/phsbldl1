@@ -1,53 +1,20 @@
 {
-  "name": "Pukekohe High School – Materials Technology",
-  "short_name": "Materials Tech",
-  "description": "US 24355 Materials Knowledge Assessment – Pukekohe High School Level 1 Technology",
-  "start_url": "/index.html",
+  "name": "PHS Materials Assessment",
+  "short_name": "PHS24355",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#6e1818",
+  "background_color": "#ffffff",
   "theme_color": "#6e1818",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "lang": "en-NZ",
-  "categories": ["education", "productivity"],
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "type": "image/png"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "icon-192-maskable.png",
-      "sizes": "192x192,
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    },
-    {
-      "src": "screenshot-narrow.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow"
+      "type": "image/png"
     }
   ]
 }

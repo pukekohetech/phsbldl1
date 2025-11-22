@@ -557,7 +557,7 @@ function submitWork() {
     d.innerHTML = `
       <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
       <div class="question-text"><em>${r.question}</em></div>
-      Your answer: <em>${r.answer}</em><br>
+      Your answer: <strong><em>${r.answer || "(no answer)"}</em></strong><br>
       ${r.earned === r.max ? "Well done!" : "Review this question on the form."}`;
     // ^ no hint added here, so no hints in result section/PDF
     ansDiv.appendChild(d);

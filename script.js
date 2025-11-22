@@ -960,12 +960,14 @@ async function clearClipboard() {
   try { await navigator.clipboard.writeText(""); } catch (_) {}
 }
 (async () => { await clearClipboard(); })();
+
+
 function attachProtection() {
-  // ----- Free-text answers (short + long) -----
+  // ----- Free-text answers (short + long, AND the hidden MC fields) -----
   document.querySelectorAll(".answer-field").forEach(f => {
     f.addEventListener("input", () => {
-      // id is like "aq1" → slice off the "a"
-      const qid = f.id.startsWith("a") ? f.id.slice(1) : f.id;
+      // ids are like "aq1" → strip the leading "a"
+      const qid = f.id && f.id.startsWith("a") ? f.id.slice(1) : f.id;
       saveAnswer(qid);
     });
     f.addEventListener("paste", e => {
@@ -976,6 +978,13 @@ function attachProtection() {
     f.addEventListener("copy", e => e.preventDefault());
     f.addEventListener("cut", e => e.preventDefault());
   });
+
+  // NOTE:
+  // We DO NOT wire MC radios here anymore.
+  // MC radios are already wired correctly inside loadAssessment(),
+  // where they update the hidden .answer-field and call saveAnswer(q.id, value).
+}
+
 
   // ----- Multiple-choice answers (radios) -----
   // We rely on the markup your loadAssessment() is generating:

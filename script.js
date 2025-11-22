@@ -3,7 +3,7 @@
 // Local storage – now dynamic & versioned
 // ------------------------------------------------------------
 let STORAGE_KEY;               // will be set after questions load
-let data = { answers: {}, idLocked: false };    // default
+let data = { answers: {} };    // default
 
 function initStorage(appId, version = 'noversion') {
   STORAGE_KEY = `${appId}_${version}_DATA`;
@@ -15,41 +15,42 @@ function initStorage(appId, version = 'noversion') {
       const old = JSON.parse(localStorage.getItem(OLD_KEY));
       if (old?.answers) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(old));
-        localStorage.removeItem(OLD_KEY);
-        console.info(`Migrated ${OLD_KEY} → ${STORAGE_KEY}`);
       }
-    } catch (_) {}
+      localStorage.removeItem(OLD_KEY);
+    } catch (e) {
+      console.warn("Migration from TECH_DATA failed:", e);
+    }
   }
 
-  // ---- load current data ----
+  // load existing data if present
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    data = raw ? JSON.parse(raw) : { answers: {}, idLocked: false };
-  } catch (_) {
-    data = { answers: {}, idLocked: false };
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === "object") data = parsed;
+    }
+  } catch (e) {
+    console.warn("Failed to parse stored data:", e);
   }
-
-  if (!data.answers) data.answers = {};
-  if (typeof data.idLocked === "undefined") data.idLocked = false;
 }
 
 // ------------------------------------------------------------
-// State
+// XOR obfuscation helpers
 // ------------------------------------------------------------
-let currentAssessment = null;
-let finalData = null;
+const XOR_KEY = 47;
 
-// ------------------------------------------------------------
-// XOR obfuscation
-// ------------------------------------------------------------
-const XOR_KEY = 42;
-const xor = s =>
-  btoa(
-    [...s]
+const xorEncode = s => {
+  if (!s) return "";
+  return btoa(
+    s
+      .split("")
       .map(c => String.fromCharCode(c.charCodeAt(0) ^ XOR_KEY))
       .join("")
   );
-const unxor = s => {
+};
+
+const xorDecode = s => {
+  if (!s) return "";
   try {
     return atob(s)
       .split("")
@@ -69,7 +70,7 @@ let DEADLINE = null; // from questions.json.DEADLINE
 // ------------------------------------------------------------
 // DEBUG MODE
 // ------------------------------------------------------------
-const DEBUG = true; // ← Set to false in production
+const DEBUG = false; // ← Debug logging off in production
 
 // ------------------------------------------------------------
 // Requirements
@@ -84,7 +85,7 @@ async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
   if (loadingEl) loadingEl.textContent = "Loading questions…";
   try {
-    const res = await fetch("questions.json?t=" + Date.now(), { cache: "no-store" });
+    const res = await fetch("questions.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     if (DEBUG) console.log("JSON loaded:", json);
@@ -100,7 +101,7 @@ async function loadQuestions() {
     TEACHERS = json.TEACHERS;
     DEADLINE = json.DEADLINE || null;
 
-    ASSESSMENTS = json.ASSESSMENTS.map(ass => ({
+    ASSESSMENTS = (json.ASSESSMENTS || []).map(ass => ({
       ...ass,
       questions: ass.questions.map(q => ({
         ...q,
@@ -131,117 +132,95 @@ async function loadQuestions() {
 // ------------------------------------------------------------
 function initApp() {
   document.getElementById("page-title").textContent = APP_TITLE;
-  document.getElementById("header-title").textContent = APP_TITLE;
-  document.getElementById("header-subtitle").textContent = APP_SUBTITLE;
+  document.getElementById("app-title").textContent = APP_TITLE;
+  document.getElementById("app-subtitle").textContent = APP_SUBTITLE;
 
-  const nameEl = document.getElementById("name");
-  const idEl = document.getElementById("id");
+  // Teacher dropdown
   const teacherSel = document.getElementById("teacher");
-  const assSel = document.getElementById("assessmentSelector");
-
-  nameEl.value = data.name || "";
-  idEl.value = data.id || "";
-
-  // Build teacher options
   TEACHERS.forEach(t => {
-    const o = document.createElement("option");
-    o.value = t.email;
-    o.textContent = t.name;
-    teacherSel.appendChild(o);
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = t.name;
+    teacherSel.appendChild(opt);
   });
 
-  // Restore teacher selection if saved
-  if (data.teacher) {
-    teacherSel.value = data.teacher;
-    if (teacherSel.value !== data.teacher) {
-      const o = document.createElement("option");
-      o.value = data.teacher;
-      o.textContent = data.teacher;
-      teacherSel.appendChild(o);
-      teacherSel.value = data.teacher;
-    }
-  }
-
-  // Auto-save when teacher changes
-  teacherSel.addEventListener("change", saveStudentInfo);
-
-  // Only lock ID if it has been locked previously
-  if (data.id && data.idLocked) {
-    document.getElementById("locked-msg").classList.remove("hidden");
-    document.getElementById("locked-id").textContent = data.id;
-    idEl.readOnly = true;
-    idEl.classList.add("locked-field");
-  }
-
-  ASSESSMENTS.forEach((a, i) => {
-    const o = document.createElement("option");
-    o.value = i;
-    o.textContent = `${a.title} – ${a.subtitle}`;
-    assSel.appendChild(o);
-  });
-
-  // NEW: set up firstSeen + deadline banner
-  setupDeadlineBanner();
-  // Also apply lock if already overdue
-  applyDeadlineLockIfNeeded();
-}
-
-// ------------------------------------------------------------
-// Deadline lock helpers
-// ------------------------------------------------------------
-function lockAllFieldsForDeadline() {
-  // Lock answer fields (but keep them visible)
-  document.querySelectorAll(".answer-field").forEach(f => {
-    if (f.tagName === "INPUT" || f.tagName === "TEXTAREA") {
-      f.readOnly = true; // can see but not edit
-    }
-    f.disabled = true; // works for all form controls
-    f.classList.add("locked-field"); // optional for styling
-  });
-
-  // Lock student info
-  const nameEl = document.getElementById("name");
-  const idEl = document.getElementById("id");
-  if (nameEl) {
-    nameEl.readOnly = true;
-    nameEl.classList.add("locked-field");
-  }
-  if (idEl) {
-    idEl.readOnly = true;
-    idEl.classList.add("locked-field");
-  }
-
-  // Lock selectors
-  const teacherSel = document.getElementById("teacher");
+  // Assessment dropdown
   const assSel = document.getElementById("assessmentSelector");
-  if (teacherSel) {
-    teacherSel.disabled = true;
-    teacherSel.classList.add("locked-field");
+  ASSESSMENTS.forEach((ass, idx) => {
+    const opt = document.createElement("option");
+    opt.value = idx;
+    opt.textContent = ass.title;
+    assSel.appendChild(opt);
+  });
+
+  // Part dropdown (if using multi-parts)
+  const partSel = document.getElementById("assessmentPartSelector");
+  ASSESSMENTS.forEach((ass, idx) => {
+    const opt = document.createElement("option");
+    opt.value = idx;
+    opt.textContent = ass.subtitle || `Part ${idx + 1}`;
+    partSel.appendChild(opt);
+  });
+
+  // Restore stored basic info
+  if (data.name) document.getElementById("name").value = data.name;
+  if (data.id) {
+    const idEl = document.getElementById("id");
+    idEl.value = data.id;
+    if (data.idLocked) {
+      idEl.readOnly = true;
+      idEl.classList.add("locked-field");
+      document.getElementById("locked-msg").classList.remove("hidden");
+      document.getElementById("locked-id").textContent = data.id;
+    }
   }
-  if (assSel) {
-    assSel.disabled = true;
-    assSel.classList.add("locked-field");
-  }
+  if (data.teacher) teacherSel.value = data.teacher;
 
-  // Lock buttons (requires these IDs in your HTML)
-  const submitBtn = document.getElementById("submitBtn");
-  if (submitBtn) submitBtn.disabled = true;
-
-  const emailBtn = document.getElementById("emailBtn");
-  if (emailBtn) emailBtn.disabled = true;
-
-  showToast("Deadline has passed – fields are now locked.", false);
-}
-
-function applyDeadlineLockIfNeeded() {
-  const info = getDeadlineStatus(new Date());
-  if (info && info.status === "overdue") {
-    lockAllFieldsForDeadline();
-  }
+  // Deadline banner / locking
+  setupDeadlineBanner();
 }
 
 // ------------------------------------------------------------
-// Core
+// Save / load answers
+// ------------------------------------------------------------
+function saveAnswer(qid) {
+  const field = document.getElementById("q" + qid);
+  if (!field) return;
+  const val = field.value;
+  data.answers[qid] = xorEncode(val);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getAnswer(qid) {
+  const enc = data.answers[qid];
+  return xorDecode(enc || "");
+}
+
+// ------------------------------------------------------------
+// Toast
+// ------------------------------------------------------------
+let toastTimeout;
+function showToast(msg, ok = true) {
+  let toast = document.getElementById("toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.className = "toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.remove("error", "show");
+  if (!ok) toast.classList.add("error");
+  void toast.offsetWidth;
+  toast.classList.add("show");
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove("show"), 3000);
+}
+
+const PASTE_BLOCKED_MESSAGE = "Pasting blocked – please type your own answer.";
+
+// ------------------------------------------------------------
+// Student info
 // ------------------------------------------------------------
 function saveStudentInfo() {
   data.name = document.getElementById("name").value.trim();
@@ -272,90 +251,124 @@ function loadAssessment() {
     showToast("Student ID locked for this device.");
   }
 
-  currentAssessment = ASSESSMENTS[idx];
-  const container = document.getElementById("questions");
-  container.innerHTML = `<div class="assessment-header"><h2>${currentAssessment.title}</h2><p>${currentAssessment.subtitle}</p></div>`;
+  const ass = ASSESSMENTS[idx];
+  const questionsDiv = document.getElementById("questions");
+  questionsDiv.innerHTML = "";
 
-  currentAssessment.questions.forEach(q => {
-    const savedRaw = data.answers[currentAssessment.id]?.[q.id];
-    const saved = savedRaw ? unxor(savedRaw) : "";
+  ass.questions.forEach(q => {
+    const wrap = document.createElement("div");
+    wrap.className = "question";
+    wrap.id = "q-" + q.id.toLowerCase();
 
-    let field = "";
-    if (q.type === "mc") {
-      field = `<select id="a${q.id}" class="answer-field"><option value="">Select an option</option>`;
-      q.options.forEach(opt => {
-        field += `<option value="${opt}" ${saved === opt ? "selected" : ""}>${opt}</option>`;
-      });
-      field += `</select>`;
-    } else if (q.type === "long") {
-      field = `<textarea rows="5" id="a${q.id}" class="answer-field">${saved}</textarea>`;
-    } else {
-      field = `<input type="text" id="a${q.id}" value="${saved}" class="answer-field" autocomplete="off">`;
+    const header = document.createElement("div");
+    header.className = "question-header";
+
+    const markSpan = document.createElement("span");
+    markSpan.textContent = `Q${q.id} – ${q.maxPoints} mark${q.maxPoints !== 1 ? "s" : ""}`;
+    header.appendChild(markSpan);
+
+    const typeSpan = document.createElement("span");
+    typeSpan.textContent = q.type === "mc" ? "Multi-choice" :
+                            q.type === "short" ? "Short answer" :
+                            "Extended answer";
+    header.appendChild(typeSpan);
+
+    wrap.appendChild(header);
+
+    const p = document.createElement("p");
+    p.textContent = q.text;
+    wrap.appendChild(p);
+
+    if (q.image) {
+      const img = document.createElement("img");
+      img.src = q.image;
+      img.alt = "Question image";
+      wrap.appendChild(img);
     }
 
-    const div = document.createElement("div");
-    div.className = "q";
-    div.id = "q-" + q.id;
-    div.innerHTML = `
-      <strong>${q.id.toUpperCase()} (${q.maxPoints} pt${q.maxPoints > 1 ? "s" : ""})</strong><br>
-      ${q.text}<br>
-      ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
-      ${field}
-      ${q.hint ? `<div class="hint-inline" style="display:none"><strong>Hint:</strong> ${q.hint}</div>` : ""}
-    `;
-    container.appendChild(div);
+    let field;
+    const fieldId = "q" + q.id;
+    if (q.type === "mc") {
+      field = document.createElement("select");
+      field.id = fieldId;
+      field.className = "answer-field";
+      const blankOpt = document.createElement("option");
+      blankOpt.value = "";
+      blankOpt.textContent = "Select an answer";
+      field.appendChild(blankOpt);
+      (q.options || []).forEach(opt => {
+        const o = document.createElement("option");
+        o.value = opt;
+        o.textContent = opt;
+        field.appendChild(o);
+      });
+    } else if (q.type === "short") {
+      field = document.createElement("input");
+      field.type = "text";
+      field.id = fieldId;
+      field.className = "answer-field";
+      field.placeholder = "Type your answer";
+    } else {
+      field = document.createElement("textarea");
+      field.id = fieldId;
+      field.className = "answer-field";
+      field.rows = 4;
+      field.placeholder = "Write your answer here";
+    }
+
+    const prev = getAnswer(q.id);
+    if (prev) field.value = prev;
+
+    wrap.appendChild(field);
+
+    questionsDiv.appendChild(wrap);
   });
 
   attachProtection();
-  applyDeadlineLockIfNeeded();
-}
-
-function saveAnswer(qid) {
-  const el = document.getElementById("a" + qid);
-  if (!el) return;
-  const val = el.value.trim();
-  if (!data.answers[currentAssessment.id]) data.answers[currentAssessment.id] = {};
-  data.answers[currentAssessment.id][qid] = xor(val);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function getAnswer(id) {
-  const raw = data.answers[currentAssessment.id]?.[id] || "";
-  return raw ? unxor(raw).trim() : "";
+  showToast("Assessment loaded.");
 }
 
 // ------------------------------------------------------------
-// GRADING
+// Grading – regex-based rubric
 // ------------------------------------------------------------
 function gradeIt() {
+  const idx = document.getElementById("assessmentSelector").value;
+  if (idx === "") return { total: 0, results: [], totalPoints: 0 };
+
+  const ass = ASSESSMENTS[idx];
   let total = 0;
-  const results = [];
-  currentAssessment.questions.forEach(q => {
-    const ans = getAnswer(q.id);
+  let totalPoints = 0;
+
+  const results = ass.questions.map(q => {
+    const field = document.getElementById("q" + q.id);
+    const ans = (field?.value || "").trim();
+    saveAnswer(q.id);
+
     let earned = 0;
-    if (q.rubric && ans) {
-      q.rubric.forEach(r => {
-        r.check.lastIndex = 0;
-        if (r.check.test(ans)) {
-          earned += r.points;
-          if (DEBUG) console.log(`Match: ${q.id} → "${ans}" → +${r.points}`);
-        }
-      });
-    }
-    earned = Math.min(earned, q.maxPoints);
+    let bestHint = "";
+
+    (q.rubric || []).forEach(rule => {
+      if (rule.check.test(ans)) {
+        earned = Math.max(earned, rule.points);
+        if (rule.hint) bestHint = rule.hint;
+      }
+    });
+
+    if (earned > q.maxPoints) earned = q.maxPoints;
     total += earned;
-    const isCorrect = earned === q.maxPoints;
-    results.push({
+    totalPoints += q.maxPoints;
+
+    return {
       id: q.id.toUpperCase(),
-      question: q.text,
-      answer: ans || "(blank)",
       earned,
       max: q.maxPoints,
-      markText: isCorrect ? "Correct" : earned > 0 ? "Partial" : "Incorrect",
-      hint: q.hint || ""
-    });
+      answer: ans,
+      text: q.text,
+      hint: bestHint
+    };
   });
-  return { total, results };
+
+  return { total, results, totalPoints };
 }
 
 // ------------------------------------------------------------
@@ -391,102 +404,126 @@ function colourQuestions(results) {
         box.appendChild(hintEl);
       }
       hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
-    } else {
-      // Fully correct or no hint: remove inline hint if it exists
-      if (hintEl) {
-        hintEl.remove();
-      }
+    } else if (hintEl) {
+      // Fully correct (or no hint): remove the hints under that question
+      hintEl.remove();
     }
   });
 }
 
 // ------------------------------------------------------------
-// DEADLINE / COUNTDOWN LOGIC
+// Deadline helpers
 // ------------------------------------------------------------
-// Returns an object describing deadline vs "this run" of the app.
-//
-// Uses:
-//
-// - DEADLINE.day, DEADLINE.month (no year)
-//
-// Output example:
-// {
-//   status: "upcoming" | "today" | "overdue",
-//   daysLeft: number,       // for upcoming; 0 for today/overdue
-//   overdueDays: number,    // for overdue; 0 otherwise
-//   deadlineDate: Date,     // with a concrete year
-//   label: string,          // DEADLINE.label or default
-//   dateStr: "dd/mm/yyyy"
-// }
-function getDeadlineStatus(today = new Date()) {
-  if (!DEADLINE || typeof DEADLINE.day !== "number" || typeof DEADLINE.month !== "number") {
-    return null;
-  }
+function getDeadlineStatus(now = new Date()) {
+  if (!DEADLINE) return null;
 
-  const day = DEADLINE.day;
-  const monthIndex = DEADLINE.month - 1; // JS months 0–11
+  const year = now.getFullYear();
+  const d = parseInt(DEADLINE.day, 10);
+  const m = parseInt(DEADLINE.month, 10) - 1;
+  const label = DEADLINE.label || "Assessment deadline";
 
-  // Use the current year so it resets every January 1st
-  const baseYear = today.getFullYear();
-  const deadlineDate = new Date(baseYear, monthIndex, day);
+  const deadlineDate = new Date(year, m, d);
+  const todayMid = new Date(year, now.getMonth(), now.getDate());
 
-  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  const diffMs = deadlineDate - todayMid;
+  const diffDays = Math.round(diffMs / 86400000);
 
-  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const deadlineMid = new Date(deadlineDate.getFullYear(), deadlineDate.getMonth(), deadlineDate.getDate());
-
-  const dayDiff = Math.floor((deadlineMid - todayMid) / MS_PER_DAY);
-  let status, daysLeft = 0, overdueDays = 0;
-
-  if (dayDiff > 0) {
-    status = "upcoming";
-    daysLeft = dayDiff;
-  } else if (dayDiff === 0) {
-    status = "today";
+  if (diffDays > 0) {
+    return {
+      status: "upcoming",
+      daysLeft: diffDays,
+      label,
+      dateStr: deadlineDate.toLocaleDateString()
+    };
+  } else if (diffDays === 0) {
+    return {
+      status: "today",
+      daysLeft: 0,
+      label,
+      dateStr: deadlineDate.toLocaleDateString()
+    };
   } else {
-    status = "overdue";
-    overdueDays = -dayDiff;
+    return {
+      status: "overdue",
+      overdueDays: Math.abs(diffDays),
+      label,
+      dateStr: deadlineDate.toLocaleDateString()
+    };
+  }
+}
+
+// Lock fields once deadline passed
+function lockAllFieldsForDeadline() {
+  const questionsDiv = document.getElementById("questions");
+  if (questionsDiv) {
+    questionsDiv.querySelectorAll("input, textarea, select").forEach(el => {
+      el.readOnly = true;
+      if (el.tagName === "SELECT") el.disabled = true;
+      el.classList.add("locked-field");
+    });
   }
 
-  const label = DEADLINE.label || "Deadline";
-  const dateStr = `${String(day).padStart(2, "0")}/${String(DEADLINE.month).padStart(2, "0")}/${deadlineDate.getFullYear()}`;
+  const nameEl = document.getElementById("name");
+  const idEl = document.getElementById("id");
+  const teacherEl = document.getElementById("teacher");
+  const assSel = document.getElementById("assessmentSelector");
+  const partSel = document.getElementById("assessmentPartSelector");
+  const emailBtn = document.getElementById("emailBtn");
 
-  return { status, daysLeft, overdueDays, deadlineDate: deadlineMid, label, dateStr };
+  [nameEl, idEl].forEach(el => {
+    if (el) {
+      el.readOnly = true;
+      el.classList.add("locked-field");
+    }
+  });
+
+  [teacherEl, assSel, partSel].forEach(el => {
+    if (el) el.disabled = true;
+  });
+
+  if (emailBtn) emailBtn.disabled = true;
 }
 
 function setupDeadlineBanner() {
   const banner = document.getElementById("deadline-banner");
-  if (!banner || !DEADLINE) return;
+  if (!banner) return;
 
-  // Ensure we have a "firstSeen" date for this run
-  if (!data.firstSeen) {
-    const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    data.firstSeen = todayStr;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const stored = (() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || data;
+    } catch {
+      return data;
+    }
+  })();
+
+  if (!stored.deadlineInfo) {
+    stored.deadlineInfo = {};
   }
 
-  const today = new Date();
-  const status = getDeadlineStatus(today);
-  if (!status) {
+  if (!stored.deadlineInfo.firstSeen) {
+    stored.deadlineInfo.firstSeen = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  }
+
+  const now = new Date();
+  const deadlineStatus = getDeadlineStatus(now);
+  if (!deadlineStatus) {
     banner.classList.add("hidden");
     return;
   }
 
-  const { status: st, daysLeft, overdueDays, label, dateStr } = status;
+  const firstSeen = new Date(stored.deadlineInfo.firstSeen);
+  const daysSinceStart = Math.floor((now - firstSeen) / 86400000);
 
-  const MS_PER_DAY = 24 * 60 * 60 * 1000;
-  let daysSinceStart = null;
-  if (data.firstSeen) {
-    const fs = new Date(data.firstSeen);
-    if (!isNaN(fs.getTime())) {
-      const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const fsMid = new Date(fs.getFullYear(), fs.getMonth(), fs.getDate());
-      daysSinceStart = Math.floor((todayMid - fsMid) / MS_PER_DAY);
-    }
-  }
-
-  let text = "";
   let cls = "info";
+  let text = "";
+  const { status: st, label, dateStr, daysLeft, overdueDays } = {
+    status: deadlineStatus.status,
+    label: deadlineStatus.label,
+    dateStr: deadlineStatus.dateStr,
+    daysLeft: deadlineStatus.daysLeft ?? null,
+    overdueDays: deadlineStatus.overdueDays ?? null
+  };
 
   if (st === "upcoming") {
     if (daysLeft <= 7) cls = "hot";
@@ -513,75 +550,107 @@ function setupDeadlineBanner() {
     lockAllFieldsForDeadline();
   }
 
-  banner.textContent = text;
   banner.className = `deadline-banner ${cls}`;
+  banner.textContent = text;
   banner.classList.remove("hidden");
 }
 
+// Extra check on load: if deadline already passed, lock immediately
+function applyDeadlineLockIfNeeded() {
+  const status = getDeadlineStatus(new Date());
+  if (status && status.status === "overdue") {
+    lockAllFieldsForDeadline();
+  }
+}
+
 // ------------------------------------------------------------
-// SUBMIT – HINTS ONLY UNDER QUESTIONS (NOT IN PDF)
+// Submit / result rendering
 // ------------------------------------------------------------
+let finalData = null;
+
 function submitWork() {
-  saveStudentInfo();
-  const name = data.name;
-  const id = data.id;
-  if (!name || !id || !data.teacher) return alert("Fill Name, ID and Teacher");
-  if (!currentAssessment) return alert("Select an assessment");
-  if (data.id && document.getElementById("id").value !== data.id)
-    return alert("ID locked to: " + data.id);
+  const teacherSel = document.getElementById("teacher");
+  const assSel = document.getElementById("assessmentSelector");
 
-  const { total, results } = gradeIt();
-
-  // Colour question boxes + show inline hints on the form
-  colourQuestions(results);
-
-  const totalPoints = currentAssessment.questions.reduce((s, q) => s + q.maxPoints, 0);
-  const pct = totalPoints ? Math.round((total / totalPoints) * 100) : 0;
-
-  // Compute deadline status at time of submission (for both display + email lock)
-  const deadlineInfo = getDeadlineStatus(new Date());
-
-  // Lock / unlock email button based on percentage AND deadline
-  const emailBtn = document.getElementById("emailBtn");
-  if (emailBtn) {
-    const canEmail = pct >= MIN_PCT_FOR_SUBMIT && (!deadlineInfo || deadlineInfo.status !== "overdue");
-    emailBtn.disabled = !canEmail;
+  if (!document.getElementById("name").value.trim()) {
+    showToast("Please enter your name.", false);
+    return;
+  }
+  if (!document.getElementById("id").value.trim()) {
+    showToast("Please enter your Student ID.", false);
+    return;
+  }
+  if (!teacherSel.value) {
+    showToast("Please select your teacher.", false);
+    return;
+  }
+  if (!assSel.value) {
+    showToast("Please select an assessment.", false);
+    return;
   }
 
+  const { total, results, totalPoints } = gradeIt();
+  const pct = totalPoints > 0 ? Math.round((total / totalPoints) * 100) : 0;
+
+  colourQuestions(results);
+
+  const studentName = document.getElementById("name").value.trim();
+  const teacherName = TEACHERS.find(t => t.id === teacherSel.value)?.name || "";
+
+  document.getElementById("student").textContent = studentName;
+  document.getElementById("teacher-name").textContent = teacherName;
+  document.getElementById("grade").innerHTML = `${total}/${totalPoints} <small>(${pct}%)</small>`;
+
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+
+  results.forEach(r => {
+    const fb = document.createElement("div");
+    const status =
+      r.earned === r.max ? "correct" :
+      r.earned > 0       ? "partial" :
+                           "wrong";
+    fb.className = `feedback ${status}`;
+    fb.innerHTML = `
+      <h3>${r.id}: ${r.text}</h3>
+      <p><strong>Your answer:</strong> ${r.answer || "<em>No answer provided</em>"}</p>
+      <p><strong>Result:</strong> ${
+        status === "correct" ? "Correct" :
+        status === "partial" ? "Partially correct" :
+                               "Incorrect"
+      }</p>
+    `;
+    answersDiv.appendChild(fb);
+  });
+
+  const deadlineNow = getDeadlineStatus(new Date());
+
   finalData = {
-    name, id,
-    teacherName: document.getElementById("teacher").selectedOptions[0].textContent,
-    teacherEmail: data.teacher,
-    assessment: currentAssessment,
+    studentName,
+    studentId: document.getElementById("id").value.trim(),
+    teacherName,
+    assessmentTitle: ASSESSMENTS[assSel.value].title,
+    assessmentSubtitle: ASSESSMENTS[assSel.value].subtitle || "",
     points: total,
     totalPoints,
     pct,
-    submittedAt: new Date().toLocaleString("en-NZ", {
-      timeZone: "Pacific/Auckland",
-      day: "2-digit", month: "2-digit", year: "numeric",
-      hour: "2-digit", minute: "2-digit"
-    }),
-    results,
-    deadlineInfo: deadlineInfo || null
+    timestamp: new Date().toISOString(),
+    deadlineInfo: deadlineNow
   };
-  document.getElementById("student").textContent = name;
-  document.getElementById("teacher-name").textContent = finalData.teacherName;
-  document.getElementById("grade").innerHTML = `${total}/${totalPoints}<br><small>(${pct}%)</small>`;
-  const ansDiv = document.getElementById("answers");
-  ansDiv.innerHTML = `<h3>${currentAssessment.title}<br><small>${currentAssessment.subtitle}</small></h3>`;
-  results.forEach(r => {
-    const d = document.createElement("div");
-    d.className = `feedback ${
-      r.earned === r.max ? "correct" : r.earned > 0 ? "partial" : "wrong"
-    }`;
-    d.innerHTML = `
-      <strong>${r.id}: ${r.earned}/${r.max} — ${r.markText}</strong><br>
-      <div class="question-text"><em>${r.question}</em></div>
-      Your answer: <strong><em>${r.answer || "(no answer)"}</em></strong><br>
-      ${r.earned === r.max ? "Well done!" : "Review this question on the form."}`;
-    // ^ no hint added here, so no hints in result section/PDF
-    ansDiv.appendChild(d);
-  });
+
+  const emailBtn = document.getElementById("emailBtn");
+  if (pct >= MIN_PCT_FOR_SUBMIT && (!deadlineNow || deadlineNow.status !== "overdue")) {
+    emailBtn.disabled = false;
+    showToast("Great job! You can now email your work.", true);
+  } else {
+    emailBtn.disabled = true;
+    if (pct < MIN_PCT_FOR_SUBMIT) {
+      showToast(`You have ${pct}%. You need at least ${MIN_PCT_FOR_SUBMIT}% to email your work.`, false);
+    } else if (deadlineNow && deadlineNow.status === "overdue") {
+      showToast("The deadline has passed – emailing is disabled.", false);
+    }
+  }
+
   document.getElementById("form").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 }
@@ -611,311 +680,212 @@ async function emailWork() {
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
     s.src = src;
-    s.onload = () => res();
+    s.onload = res;
     s.onerror = rej;
     document.head.appendChild(s);
   });
 
-  try {
-    if (!window.html2canvas) await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
-    if (!window.jspdf) await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
-  } catch (e) {
-    return showToast("Failed to load PDF tools", false);
+  if (!(window.jspdf && window.html2canvas)) {
+    await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
   }
 
   const { jsPDF } = window.jspdf;
 
-  // 1. Create fixed 900px-wide clone
-  const original = document.getElementById("result");
-  const clone = original.cloneNode(true);
-  const FIXED_WIDTH = 900;
+  const resultSection = document.getElementById("result");
+  const clone = resultSection.cloneNode(true);
 
-  Object.assign(clone.style, {
-    position: "absolute",
-    left: "-9999px",
-    top: "0",
-    width: `${FIXED_WIDTH}px`,
-    maxWidth: "none",
-    background: "#fff",
-    padding: "40px 30px",
-    boxSizing: "border-box",
-    fontSize: "16px",
-    lineHeight: "1.5"
-  });
-  clone.querySelectorAll(".btn-group, button").forEach(b => b.remove());
-  document.body.appendChild(clone);
+  const offscreenContainer = document.createElement("div");
+  offscreenContainer.style.position = "fixed";
+  offscreenContainer.style.left = "-9999px";
+  offscreenContainer.style.top = "0";
+  offscreenContainer.style.width = "900px";
+  offscreenContainer.style.background = "white";
 
-  // 2. Render canvas
-  const canvas = await html2canvas(clone, {
+  clone.style.width = "900px";
+  clone.style.maxWidth = "900px";
+
+  offscreenContainer.appendChild(clone);
+  document.body.appendChild(offscreenContainer);
+
+  const canvas = await window.html2canvas(clone, {
     scale: 2,
     useCORS: true,
-    backgroundColor: "#fff",
-    logging: false,
-    width: FIXED_WIDTH,
-    height: clone.scrollHeight,
-    windowWidth: FIXED_WIDTH
+    scrollX: 0,
+    scrollY: -window.scrollY
   });
-  document.body.removeChild(clone);
 
-  // 3. Load crest (optional)
-  let crestImg = null;
-  const tryLoad = src => new Promise(r => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = src + "?t=" + Date.now();
-    img.onload = () => r(img);
-    img.onerror = () => r(null);
-  });
-  crestImg = await tryLoad("crest_shield.png") || await tryLoad("icon-512.png");
+  const imgData = canvas.toDataURL("image/png");
 
-  // 4. Create PDF
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pageWidth = 210;   // A4 = 210 × 297 mm
+  document.body.removeChild(offscreenContainer);
+
+  const imgWidth = 190;
   const pageHeight = 297;
-  const margin = 10;
-  const usableWidth = pageWidth - 2 * margin;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  let heightLeft = imgHeight;
 
-  const addHeader = () => {
-    pdf.setFillColor(110, 24, 24);
-    pdf.rect(0, 0, pageWidth, 35, "F");
-    if (crestImg) {
-      const h = 25;
-      const w = h * crestImg.width / crestImg.height;
-      pdf.addImage(crestImg, "PNG", pageWidth - w - 8, 5, w, h);
-    }
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-    pdf.text(APP_TITLE, 10, 20);
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(12);
-    pdf.text(APP_SUBTITLE, 10, 28);
-  };
+  const pdf = new jsPDF("p", "mm", "a4");
 
-  addHeader();
-
-  // Student info + score
-  pdf.setTextColor(0, 0, 0);
-  pdf.setFontSize(11);
-  pdf.text(
-    `${finalData.name} (ID: ${finalData.id}) • ${finalData.teacherName} • ${finalData.submittedAt}`,
-    10,
-    42
-  );
-  pdf.setFillColor(240, 248, 255);
-  pdf.rect(10, 47, 60, 12, "F");
-  pdf.setTextColor(110, 24, 24);
-  pdf.setFontSize(16);
-  pdf.setFont("helvetica", "bold");
-  pdf.text(`${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 14, 55);
-
-  // NEW: indicate if deadline was missed (late)
-  let infoY = 62;
-  if (finalData.deadlineInfo && finalData.deadlineInfo.status === "overdue" && finalData.deadlineInfo.overdueDays > 0) {
-    pdf.setTextColor(231, 76, 60); // red
-    pdf.setFontSize(11);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(
-      `Late submission: ${finalData.deadlineInfo.overdueDays} day${finalData.deadlineInfo.overdueDays === 1 ? "" : "s"} after deadline (${finalData.deadlineInfo.dateStr}).`,
-      10,
-      infoY
-    );
-  } else if (finalData.deadlineInfo && finalData.deadlineInfo.status === "today") {
-    pdf.setTextColor(243, 156, 18); // amber
-    pdf.setFontSize(11);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`Submitted on the deadline date (${finalData.deadlineInfo.dateStr}).`, 10, infoY);
-  } else if (finalData.deadlineInfo && finalData.deadlineInfo.status === "upcoming") {
-    pdf.setTextColor(52, 152, 219);
-    pdf.setFontSize(11);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(
-      `Submitted ${finalData.deadlineInfo.daysLeft} day${finalData.deadlineInfo.daysLeft === 1 ? "" : "s"} before deadline (${finalData.deadlineInfo.dateStr}).`,
-      10,
-      infoY
-    );
-  }
-
-  // 5. CORRECT multi-page slicing
-  const imgWidth = usableWidth;
-  const imgHeight = canvas.height * (imgWidth / canvas.width);   // height in mm
-
-  const pageContentHeight = pageHeight - 65 - 15;  // top 65mm + bottom 15mm margin
-
-  let positionY = 65;   // start below header + student info
-
-  let remainingHeight = imgHeight;
-  let sourceY = 0;      // where we are cropping from the original canvas (in mm)
-
-  while (remainingHeight > 0) {
-    const currentSliceHeight = Math.min(pageContentHeight, remainingHeight);
-
-    // Crop the correct portion of the canvas
-    const sourceSliceHeightPx = (currentSliceHeight / imgHeight) * canvas.height;
-
-    const tempCanvas = document.createElement("canvas");
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = sourceSliceHeightPx;
-    const ctx = tempCanvas.getContext("2d");
-    ctx.drawImage(
-      canvas,
-      0,
-      (sourceY / imgHeight) * canvas.height,
-      canvas.width,
-      sourceSliceHeightPx,
-      0,
-      0,
-      canvas.width,
-      sourceSliceHeightPx
-    );
-
-    const sliceDataUrl = tempCanvas.toDataURL("image/jpeg", 0.95);
-
-    pdf.addImage(sliceDataUrl, "JPEG", margin, positionY, imgWidth, currentSliceHeight);
-
-    remainingHeight -= currentSliceHeight;
-    sourceY += currentSliceHeight;
-
-    if (remainingHeight > 0) {
-      pdf.addPage();
-      addHeader();
-      positionY = 45;
-    }
-  }
-
-  // Footer on last page
-  pdf.setFontSize(9);
-  pdf.setTextColor(100);
-  pdf.text("Generated by Pukekohe High School Technology Department", 10, pageHeight - 8);
-
-  // 6. Save & share
-  const filename = `${finalData.name.replace(/\s+/g, "_")}_${finalData.assessment.id}_${finalData.pct}%.pdf`;
-  const file = new File([pdf.output("blob")], filename, { type: "application/pdf" });
-  await sharePDF(file);
-}
-
-// Backwards-compat wrapper for older HTML that still calls generatePDF()
-async function generatePDF() {
-  // Re-use the new email/PDF workflow
-  return emailWork();
-}
-
-// ------------------------------------------------------------
-// Share / Email
-// ------------------------------------------------------------
-async function sharePDF(file) {
-  if (!finalData) return;
-  const subject = `${finalData.assessment.title} – ${finalData.name} (${finalData.id})`;
-  const fullBody = buildEmailBody(finalData);
-  const shareData = { files: [file], title: subject, text: fullBody };
-  if (navigator.canShare && navigator.canShare(shareData)) {
+  pdf.setFillColor(110, 24, 24);
+  pdf.rect(0, 0, 210, 30, "F");
+  const crestImg = document.querySelector("header img.crest");
+  if (crestImg && crestImg.src) {
     try {
-      await navigator.share(shareData);
-      showToast("Shared");
-      return;
-    } catch (err) {
-      if (!String(err).includes("AbortError")) showToast("Share failed", false);
+      const crestCanvas = document.createElement("canvas");
+      crestCanvas.width = 60;
+      crestCanvas.height = 60;
+      const ctx = crestCanvas.getContext("2d");
+      const tmpImg = new Image();
+      tmpImg.crossOrigin = "anonymous";
+      tmpImg.src = crestImg.src;
+      await new Promise((res, rej) => {
+        tmpImg.onload = res;
+        tmpImg.onerror = rej;
+      });
+      ctx.drawImage(tmpImg, 0, 0, 60, 60);
+      const crestDataUrl = crestCanvas.toDataURL("image/png");
+      pdf.addImage(crestDataUrl, "PNG", 10, 5, 20, 20);
+    } catch (e) {
+      if (DEBUG) console.log("Crest image failed, continuing without:", e);
     }
   }
-  const url = URL.createObjectURL(file);
+
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFontSize(16);
+  pdf.text(APP_TITLE || "Pukekohe High School", 35, 15);
+  pdf.setFontSize(12);
+  pdf.text(APP_SUBTITLE || "Technology Assessment", 35, 22);
+
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFontSize(12);
+  pdf.text(`Student: ${finalData.studentName}`, 10, 40);
+  pdf.text(`ID: ${finalData.studentId}`, 10, 47);
+  pdf.text(`Teacher: ${finalData.teacherName}`, 110, 40);
+  pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, 55);
+  if (finalData.assessmentSubtitle) {
+    pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, 62);
+  }
+  pdf.text(`Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 10, 69);
+
+  let infoY = 76;
+  if (finalData.deadlineInfo) {
+    const info = finalData.deadlineInfo;
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    if (info.status === "overdue" && info.overdueDays > 0) {
+      pdf.setTextColor(231, 76, 60);
+      pdf.text(
+        `Late submission: ${info.overdueDays} day${info.overdueDays === 1 ? "" : "s"} after deadline (${info.dateStr}).`,
+        10,
+        infoY
+      );
+    } else if (info.status === "today") {
+      pdf.setTextColor(243, 156, 18);
+      pdf.text(`Submitted on the deadline date (${info.dateStr}).`, 10, infoY);
+    } else if (info.status === "upcoming") {
+      pdf.setTextColor(39, 174, 96);
+      pdf.text(
+        `Submitted early: ${info.daysLeft} day${info.daysLeft === 1 ? "" : "s"} before deadline (${info.dateStr}).`,
+        10,
+        infoY
+      );
+    }
+    infoY += 7;
+  }
+
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFontSize(10);
+  pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, infoY);
+
+  let position = 90;
+  heightLeft -= (pageHeight - position) * (canvas.width / imgWidth) / canvas.height;
+
+  pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+  heightLeft = imgHeight;
+  position = 90;
+
+  while (heightLeft > pageHeight) {
+    pdf.addPage();
+    position = 10;
+    heightLeft -= pageHeight;
+    pdf.addImage(imgData, "PNG", 10, position - heightLeft, imgWidth, imgHeight);
+  }
+
+  const pdfBlob = pdf.output("blob");
+  const fileName = `${finalData.studentId || "student"}_${finalData.assessmentTitle.replace(/\s+/g, "_")}.pdf`;
+
+  const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+
+  if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+    try {
+      await navigator.share({
+        title: "Assessment PDF",
+        text: "Here is my completed assessment.",
+        files: [pdfFile]
+      });
+      showToast("Shared via device share sheet.");
+      return;
+    } catch (e) {
+      console.warn("Share cancelled or failed, falling back to download/mailto.", e);
+    }
+  }
+
+  const url = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = file.name;
-  document.body.appendChild(a);
+  a.download = fileName;
   a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 0);
-  const shortBody = [
-    `Assessment: ${finalData.assessment.title}`,
-    `Student: ${finalData.name} (ID: ${finalData.id})`,
-    `Teacher: ${finalData.teacherName}`,
-    `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`,
-    "",
-    "Full report attached as PDF."
-  ].join("\n");
-  window.location.href = `mailto:${encodeURIComponent(finalData.teacherEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
-  showToast("Downloaded + email opened");
+  URL.revokeObjectURL(url);
+
+  const mailto = `mailto:?subject=${encodeURIComponent("Assessment submission: " + finalData.studentName)}&body=${encodeURIComponent(
+    `Student: ${finalData.studentName} (${finalData.studentId})
+Teacher: ${finalData.teacherName}
+Assessment: ${finalData.assessmentTitle} ${finalData.assessmentSubtitle ? "(" + finalData.assessmentSubtitle + ")" : ""}
+
+Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)
+
+A PDF copy has been downloaded on this device.`
+  )}`;
+  window.location.href = mailto;
 }
 
-function buildEmailBody(fd) {
-  const l = [];
-  l.push(`Pukekohe High School – ${APP_TITLE}`);
-  l.push(APP_SUBTITLE);
-  l.push("");
-  l.push(`Assessment: ${fd.assessment.title} – ${fd.assessment.subtitle}`);
-  l.push(`Student: ${fd.name} (ID: ${fd.id})`);
-  l.push(`Teacher: ${fd.teacherName} <${fd.teacherEmail}>`);
-  l.push(`Submitted: ${fd.submittedAt}`);
-  if (fd.deadlineInfo) {
-    if (fd.deadlineInfo.status === "overdue" && fd.deadlineInfo.overdueDays > 0) {
-      l.push(`Deadline: ${fd.deadlineInfo.dateStr} – submitted ${fd.deadlineInfo.overdueDays} day(s) late.`);
-    } else if (fd.deadlineInfo.status === "today") {
-      l.push(`Deadline: ${fd.deadlineInfo.dateStr} – submitted on the deadline date.`);
-    } else if (fd.deadlineInfo.status === "upcoming") {
-      l.push(`Deadline: ${fd.deadlineInfo.dateStr} – submitted ${fd.deadlineInfo.daysLeft} day(s) early.`);
-    }
+// ------------------------------------------------------------
+// Simple clipboard clear (best-effort)
+// ------------------------------------------------------------
+function clearClipboard() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText("").catch(() => {});
   }
-  l.push("");
-  l.push(`Score: ${fd.points}/${fd.totalPoints} (${fd.pct}%)`);
-  l.push("=".repeat(60));
-  l.push("");
-  fd.results.forEach(r => {
-    l.push(`${r.id}: ${r.earned}/${r.max} — ${r.markText}`);
-    l.push(`Question: ${r.question}`);
-    l.push(`Answer: ${r.answer}`);
-    // No hint lines here – keep hints only on the form
-    l.push("-".repeat(60));
-    l.push("");
-  });
-  l.push("Generated by Pukekohe High School Technology Dept");
-  return l.join("\n");
 }
 
 // ------------------------------------------------------------
-// Toast
+// Attach protection to inputs (softened anti-cheat)
 // ------------------------------------------------------------
-function showToast(text, ok = true) {
-  const toast = document.getElementById("toast") || createToastElement();
-  toast.textContent = text;
-  toast.classList.toggle("error", !ok);
-  toast.style.display = "block";
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => (toast.style.display = "none"), 3200);
-}
-
-function createToastElement() {
-  const t = document.createElement("div");
-  t.id = "toast";
-  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2c3e50;color:#fff;padding:12px 24px;border-radius:30px;font-size:.95rem;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.2);display:none;';
-  document.body.appendChild(t);
-  return t;
-}
-
-// ------------------------------------------------------------
-// Protection
-// ------------------------------------------------------------
-const PASTE_BLOCKED_MESSAGE = "Pasting blocked!";
-async function clearClipboard() {
-  if (!navigator.clipboard?.writeText) return;
-  try { await navigator.clipboard.writeText(""); } catch (_) {}
-}
-(async () => { await clearClipboard(); })();
 function attachProtection() {
   document.querySelectorAll(".answer-field").forEach(f => {
-    const handler = () => saveAnswer(f.id.slice(1));
-    if (f.tagName === "SELECT") {
-      f.addEventListener("change", handler);
-    } else {
-      f.addEventListener("input", handler);
-    }
+    f.addEventListener("input", () => saveAnswer(f.id.slice(1)));
+    // Block paste to discourage copy-paste answers, but allow copy/cut for accessibility
     f.addEventListener("paste", e => { e.preventDefault(); showToast(PASTE_BLOCKED_MESSAGE, false); clearClipboard(); });
-    f.addEventListener("copy", e => e.preventDefault());
-    f.addEventListener("cut", e => e.preventDefault());
   });
 }
+// Limit context menu blocking to the question area only (still allow on inputs)
 document.addEventListener("contextmenu", e => {
-  if (!e.target.matches("input, textarea")) e.preventDefault();
+  const inQuestionsArea = e.target.closest("#questions");
+  if (inQuestionsArea && !e.target.matches("input, textarea")) {
+    e.preventDefault();
+  }
 });
+
+// ------------------------------------------------------------
+// Service worker registration for offline/PWA
+// ------------------------------------------------------------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      if (DEBUG) console.log('Service worker registration failed:', err);
+    });
+  });
+}
 
 // ------------------------------------------------------------
 // Export
@@ -924,27 +894,12 @@ window.loadAssessment = loadAssessment;
 window.submitWork = submitWork;
 window.back = back;
 window.emailWork = emailWork;
-window.generatePDF = generatePDF;
-
-// ------------------------------------------------------------
-// PWA / Service worker registration
-// ------------------------------------------------------------
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(err => {
-      if (DEBUG) console.error("Service worker registration failed:", err);
-    });
-  });
-}
 
 // ------------------------------------------------------------
 // Start
 // ------------------------------------------------------------
-(async () => {
-  try {
-    await loadQuestions();
-    initApp();
-  } catch (err) {
-    console.error("App failed to start:", err);
-  }
-})();
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadQuestions();
+  initApp();
+  applyDeadlineLockIfNeeded();
+});

@@ -55,7 +55,7 @@
         },
         {
           "id": "q2",
-          "text": "Have you completed all of the other quizzes and assessments for this unit standard in this app (for example the Materials quiz, Self-reflection, Assessment Record Sheet and any others your teacher has added)?<br><br><em>This checklist will automatically stay up to date as new quizzes and assessments are added to <code>questions.json</code>.</em>",
+          "text": "Have you completed all of the other quizzes and assessments for this unit standard in this app",
           "image": "blank.jpg",
           "hint": "Go back and finish any other quizzes or assessment sheets before you submit.",
           "type": "mc",

@@ -374,6 +374,9 @@ function gradeIt() {
 // ------------------------------------------------------------
 // Colour question cards + show hints UNDER questions only
 // ------------------------------------------------------------
+// ------------------------------------------------------------
+// Colour question cards + show hints UNDER questions only
+// ------------------------------------------------------------
 function colourQuestions(results) {
   results.forEach(r => {
     // r.id is from gradeIt(): q.id.toUpperCase(), e.g. "Q1" or "MAT1_Q1"
@@ -404,10 +407,10 @@ function colourQuestions(results) {
         box.appendChild(hintEl);
       }
       hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
-      hintEl.style.display = "block";  // ← turn it ON
+      hintEl.style.display = "block";   // ⇐ make it visible
     } else if (hintEl) {
-      // Fully correct or no hint: hide but keep the element
-      hintEl.style.display = "none";   // ← turn it OFF
+      // Fully correct (or no hint): hide but keep the element
+      hintEl.style.display = "none";    // ⇐ hide it again
     }
   });
 }

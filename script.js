@@ -290,8 +290,8 @@ header.appendChild(markSpan);
 
     const p = document.createElement("p");
     // If your question text includes HTML (like links/br), use innerHTML instead of textContent
-    p.innerHTML = q.text;
-    wrap.appendChild(p);
+  p.innerHTML = q.text;
+  wrap.appendChild(p);
 
     if (q.image) {
       const img = document.createElement("img");

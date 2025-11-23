@@ -330,9 +330,6 @@ function loadAssessment() {
   showToast("Assessment loaded.");
 }
 
-// ------------------------------------------------------------
-// Grading – regex-based rubric
-// ------------------------------------------------------------
 function gradeIt() {
   const idx = document.getElementById("assessmentSelector").value;
   if (idx === "") return { total: 0, results: [], totalPoints: 0 };
@@ -347,17 +344,25 @@ function gradeIt() {
     saveAnswer(q.id);
 
     let earned = 0;
-    // ✅ default to the question-level hint so wrong answers still get help
+    // default to the question-level hint so wrong answers still get help
     let bestHint = q.hint || "";
 
     (q.rubric || []).forEach(rule => {
       if (rule.check.test(ans)) {
-        earned = Math.max(earned, rule.points);
+        if (q.maxPoints === 1) {
+          // Single-mark question: any matching rule gives full credit (up to 1)
+          earned = Math.max(earned, Math.min(rule.points, q.maxPoints));
+        } else {
+          // Multi-mark question: each matched rule contributes its points
+          earned += rule.points;
+        }
         if (rule.hint) bestHint = rule.hint; // rubric-specific hint overrides
       }
     });
 
+    // Cap to the question's maximum
     if (earned > q.maxPoints) earned = q.maxPoints;
+
     total += earned;
     totalPoints += q.maxPoints;
 

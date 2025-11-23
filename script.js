@@ -264,9 +264,21 @@ function loadAssessment() {
     const header = document.createElement("div");
     header.className = "question-header";
 
-    const markSpan = document.createElement("span");
-    markSpan.textContent = `Q${q.id} – ${q.maxPoints} mark${q.maxPoints !== 1 ? "s" : ""}`;
-    header.appendChild(markSpan);
+   const markSpan = document.createElement("span");
+
+// Clean display ID: "q5" -> "Q5", others -> uppercased
+let displayId;
+const simpleMatch = q.id.match(/^q(\d+)$/i);
+if (simpleMatch) {
+  // IDs like "q1", "q2", "q15" become "Q1", "Q2", "Q15"
+  displayId = "Q" + simpleMatch[1];
+} else {
+  // Anything else (e.g. "mat1_q1") just uppercase
+  displayId = q.id.toUpperCase();
+}
+
+markSpan.textContent = `${displayId} – ${q.maxPoints} mark${q.maxPoints !== 1 ? "s" : ""}`;
+header.appendChild(markSpan);
 
     const typeSpan = document.createElement("span");
     typeSpan.textContent = q.type === "mc" ? "Multi-choice" :

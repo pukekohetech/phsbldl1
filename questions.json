@@ -35,7 +35,7 @@
       "subtitle": "Do this quick checklist before you submit your work.",
       "questions": [
         {
-          "id": "q1",
+          "id": "a1",
           "text": "Have you taken a clear photo of your finished project and emailed it to your teacher?<br><br>Use this link to stamp and eamil your photo to your teacher: <a href=\"https://pukekohetech.github.io/phsphoto\" target=\"_blank\">pukekohetech.github.io/phsphoto</a>",
           "image": "blank.jpg",
           "hint": "Take a clear photo that shows the whole project from the best angle.",
@@ -54,7 +54,7 @@
           ]
         },
         {
-          "id": "q2",
+          "id": "a2",
           "text": "Have you completed all of the other quizzes and assessments for this unit standard in this app",
           "image": "blank.jpg",
           "hint": "Go back and finish any other quizzes or assessment sheets before you submit.",

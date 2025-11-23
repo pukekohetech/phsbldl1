@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 let STORAGE_KEY;               // will be set after questions load
 let data = { answers: {} };    // default
+let currentAssessmentId = null; // track which assessment is loaded
 
 function initStorage(appId, version = 'noversion') {
   STORAGE_KEY = `${appId}_${version}_DATA`;
@@ -153,20 +154,12 @@ function initApp() {
     assSel.appendChild(opt);
   });
 
-  // Part dropdown (if using multi-parts)
-  const partSel = document.getElementById("assessmentPartSelector");
-  ASSESSMENTS.forEach((ass, idx) => {
-    const opt = document.createElement("option");
-    opt.value = idx;
-    opt.textContent = ass.subtitle || `Part ${idx + 1}`;
-    partSel.appendChild(opt);
-  });
-
   // Restore stored basic info
   if (data.name) document.getElementById("name").value = data.name;
   if (data.id) {
     const idEl = document.getElementById("id");
     idEl.value = data.id;
+    // ✅ Only lock if we've actually locked it before (after first assessment load)
     if (data.idLocked) {
       idEl.readOnly = true;
       idEl.classList.add("locked-field");
@@ -181,18 +174,23 @@ function initApp() {
 }
 
 // ------------------------------------------------------------
-// Save / load answers
+// Save / load answers  (now per-assessment)
 // ------------------------------------------------------------
 function saveAnswer(qid) {
+  if (!currentAssessmentId) return;
   const field = document.getElementById("q" + qid);
   if (!field) return;
   const val = field.value;
-  data.answers[qid] = xorEncode(val);
+  if (!data.answers[currentAssessmentId]) {
+    data.answers[currentAssessmentId] = {};
+  }
+  data.answers[currentAssessmentId][qid] = xorEncode(val);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function getAnswer(qid) {
-  const enc = data.answers[qid];
+  if (!currentAssessmentId) return "";
+  const enc = data.answers[currentAssessmentId]?.[qid];
   return xorDecode(enc || "");
 }
 
@@ -241,6 +239,7 @@ function loadAssessment() {
 
   saveStudentInfo();
 
+  // ✅ Lock ID to device after the FIRST assessment load
   if (data.id && !data.idLocked) {
     data.idLocked = true;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -252,6 +251,8 @@ function loadAssessment() {
   }
 
   const ass = ASSESSMENTS[idx];
+  currentAssessmentId = ass.id; // ✅ track which assessment we’re on
+
   const questionsDiv = document.getElementById("questions");
   questionsDiv.innerHTML = "";
 
@@ -276,7 +277,8 @@ function loadAssessment() {
     wrap.appendChild(header);
 
     const p = document.createElement("p");
-    p.textContent = q.text;
+    // If your question text includes HTML (like links/br), use innerHTML instead of textContent
+    p.innerHTML = q.text;
     wrap.appendChild(p);
 
     if (q.image) {
@@ -345,12 +347,13 @@ function gradeIt() {
     saveAnswer(q.id);
 
     let earned = 0;
-    let bestHint = "";
+    // ✅ default to the question-level hint so wrong answers still get help
+    let bestHint = q.hint || "";
 
     (q.rubric || []).forEach(rule => {
       if (rule.check.test(ans)) {
         earned = Math.max(earned, rule.points);
-        if (rule.hint) bestHint = rule.hint;
+        if (rule.hint) bestHint = rule.hint; // rubric-specific hint overrides
       }
     });
 
@@ -371,9 +374,6 @@ function gradeIt() {
   return { total, results, totalPoints };
 }
 
-// ------------------------------------------------------------
-// Colour question cards + show hints UNDER questions only
-// ------------------------------------------------------------
 // ------------------------------------------------------------
 // Colour question cards + show hints UNDER questions only
 // ------------------------------------------------------------
@@ -472,7 +472,6 @@ function lockAllFieldsForDeadline() {
   const idEl = document.getElementById("id");
   const teacherEl = document.getElementById("teacher");
   const assSel = document.getElementById("assessmentSelector");
-  const partSel = document.getElementById("assessmentPartSelector");
   const emailBtn = document.getElementById("emailBtn");
 
   [nameEl, idEl].forEach(el => {
@@ -482,7 +481,7 @@ function lockAllFieldsForDeadline() {
     }
   });
 
-  [teacherEl, assSel, partSel].forEach(el => {
+  [teacherEl, assSel].forEach(el => {
     if (el) el.disabled = true;
   });
 

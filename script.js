@@ -633,14 +633,15 @@ function submitWork() {
                            "wrong";
     fb.className = `feedback ${status}`;
     fb.innerHTML = `
-      <h3>${r.id}: ${r.text}</h3>
-      <p><strong>Your answer:</strong> ${r.answer || "<em>No answer provided</em>"}</p>
-      <p><strong>Result:</strong> ${
-        status === "correct" ? "Correct" :
-        status === "partial" ? "Partially correct" :
-                               "Incorrect"
-      }</p>
-    `;
+  <h3>${r.id}: ${r.text}</h3>
+  <p><strong>Your answer:</strong> ${r.answer || "<em>No answer provided</em>"}</p>
+  <p><strong>Result:</strong> ${
+    status === "correct" ? "Correct" :
+    status === "partial" ? "Partially correct" :
+                           "Incorrect"
+  } (${r.earned}/${r.max} marks)</p>
+`;
+
     answersDiv.appendChild(fb);
   });
 

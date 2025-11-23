@@ -404,12 +404,14 @@ function colourQuestions(results) {
         box.appendChild(hintEl);
       }
       hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
+      hintEl.style.display = "block";  // ← turn it ON
     } else if (hintEl) {
-      // Fully correct (or no hint): remove the hints under that question
-      hintEl.remove();
+      // Fully correct or no hint: hide but keep the element
+      hintEl.style.display = "none";   // ← turn it OFF
     }
   });
 }
+
 
 // ------------------------------------------------------------
 // Deadline helpers

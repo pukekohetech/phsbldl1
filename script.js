@@ -683,7 +683,7 @@ function back() {
 }
 
 // ------------------------------------------------------------
-// Email / PDF – FIXED 900px LAYOUT + CORRECT MULTI-PAGE SLICING
+// Email / PDF – 900px CAPTURE + CLEAN A4 SLICING + HEADER/FOOTER
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
@@ -699,6 +699,7 @@ async function emailWork() {
     return alert("The submission deadline has passed – emailing is now disabled until next year.");
   }
 
+  // Dynamically load jsPDF + html2canvas if needed
   const load = src => new Promise((res, rej) => {
     const s = document.createElement("script");
     s.src = src;
@@ -714,6 +715,7 @@ async function emailWork() {
 
   const { jsPDF } = window.jspdf;
 
+  // ---------- 900px OFF-SCREEN CLONE (keeps PDF layout consistent) ----------
   const resultSection = document.getElementById("result");
   const clone = resultSection.cloneNode(true);
 
@@ -731,7 +733,7 @@ async function emailWork() {
   document.body.appendChild(offscreenContainer);
 
   const canvas = await window.html2canvas(clone, {
-    scale: 1,
+    scale: 2,
     useCORS: true,
     scrollX: 0,
     scrollY: -window.scrollY
@@ -739,18 +741,18 @@ async function emailWork() {
 
   const imgData = canvas.toDataURL("image/png");
 
+  // Clean up the off-screen DOM
   document.body.removeChild(offscreenContainer);
 
-  const imgWidth = 190;
-  const pageHeight = 297;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  let heightLeft = imgHeight;
-
+  // ---------- CREATE PDF + GLOBAL PAGE DIMENSIONS ----------
   const pdf = new jsPDF("p", "mm", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
 
-  pdf.setFillColor(110, 24, 24);
-  pdf.rect(0, 0, 210, 30, "F");
+  // ---------- PREP SCHOOL CREST ONCE ----------
   const crestImg = document.querySelector("header img.crest");
+  let crestDataUrl = null;
+
   if (crestImg && crestImg.src) {
     try {
       const crestCanvas = document.createElement("canvas");
@@ -765,79 +767,150 @@ async function emailWork() {
         tmpImg.onerror = rej;
       });
       ctx.drawImage(tmpImg, 0, 0, 60, 60);
-      const crestDataUrl = crestCanvas.toDataURL("image/png");
-      pdf.addImage(crestDataUrl, "PNG", 10, 5, 20, 20);
+      crestDataUrl = crestCanvas.toDataURL("image/png");
     } catch (e) {
       if (DEBUG) console.log("Crest image failed, continuing without:", e);
     }
   }
 
-  pdf.setTextColor(255, 255, 255);
-  pdf.setFontSize(16);
-  pdf.text(APP_TITLE || "Pukekohe High School", 35, 15);
-  pdf.setFontSize(12);
-  pdf.text(APP_SUBTITLE || "Technology Assessment", 35, 22);
+  // ---------- HEADER DRAW FUNCTION (EVERY PAGE) ----------
+  const drawHeader = (isFirstPage = false) => {
+    // Maroon bar
+    pdf.setFillColor(110, 24, 24);
+    pdf.rect(0, 0, pageWidth, 30, "F");
 
-  pdf.setTextColor(0, 0, 0);
-  pdf.setFontSize(12);
-  pdf.text(`Student: ${finalData.studentName}`, 10, 40);
-  pdf.text(`ID: ${finalData.studentId}`, 10, 47);
-  pdf.text(`Teacher: ${finalData.teacherName}`, 110, 40);
-  pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, 55);
-  if (finalData.assessmentSubtitle) {
-    pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, 62);
-  }
-  pdf.text(`Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 10, 69);
-
-  let infoY = 76;
-  if (finalData.deadlineInfo) {
-    const info = finalData.deadlineInfo;
-    pdf.setFontSize(11);
-    pdf.setFont("helvetica", "normal");
-    if (info.status === "overdue" && info.overdueDays > 0) {
-      pdf.setTextColor(231, 76, 60);
-      pdf.text(
-        `Late submission: ${info.overdueDays} day${info.overdueDays === 1 ? "" : "s"} after deadline (${info.dateStr}).`,
-        10,
-        infoY
-      );
-    } else if (info.status === "today") {
-      pdf.setTextColor(243, 156, 18);
-      pdf.text(`Submitted on the deadline date (${info.dateStr}).`, 10, infoY);
-    } else if (info.status === "upcoming") {
-      pdf.setTextColor(39, 174, 96);
-      pdf.text(
-        `Submitted early: ${info.daysLeft} day${info.daysLeft === 1 ? "" : "s"} before deadline (${info.dateStr}).`,
-        10,
-        infoY
-      );
+    // Crest on left, if available
+    if (crestDataUrl) {
+      pdf.addImage(crestDataUrl, "PNG", 10, 5, 20, 20);
     }
-    infoY += 7;
+
+    // App title + subtitle in white
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(16);
+    pdf.text(APP_TITLE || "Pukekohe High School", 35, 15);
+    pdf.setFontSize(12);
+    pdf.text(APP_SUBTITLE || "Technology Assessment", 35, 22);
+
+    // Meta text (in black) under header
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(12);
+
+    const studentLineY = 40;
+
+    if (isFirstPage) {
+      // Full details first page
+      pdf.text(`Student: ${finalData.studentName}`, 10, studentLineY);
+      pdf.text(`ID: ${finalData.studentId}`, 10, studentLineY + 7);
+      pdf.text(`Teacher: ${finalData.teacherName}`, 110, studentLineY);
+      pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, studentLineY + 15);
+      if (finalData.assessmentSubtitle) {
+        pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, studentLineY + 22);
+      }
+      pdf.text(`Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 10, studentLineY + 29);
+
+      // Deadline info from submitWork()
+      let infoY = studentLineY + 36;
+      if (finalData.deadlineInfo) {
+        const info = finalData.deadlineInfo;
+        pdf.setFontSize(11);
+
+        if (info.status === "overdue" && info.overdueDays > 0) {
+          pdf.setTextColor(231, 76, 60);
+          pdf.text(
+            `Late submission: ${info.overdueDays} day${info.overdueDays === 1 ? "" : "s"} after deadline (${info.dateStr}).`,
+            10,
+            infoY
+          );
+        } else if (info.status === "today") {
+          pdf.setTextColor(243, 156, 18);
+          pdf.text(`Submitted on the deadline date (${info.dateStr}).`, 10, infoY);
+        } else if (info.status === "upcoming") {
+          pdf.setTextColor(39, 174, 96);
+          pdf.text(
+            `Submitted early: ${info.daysLeft} day${info.daysLeft === 1 ? "" : "s"} before deadline (${info.dateStr}).`,
+            10,
+            infoY
+          );
+        }
+        infoY += 7;
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(10);
+        pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, infoY);
+      } else {
+        // No deadline info – still show generated line
+        pdf.setFontSize(10);
+        pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, studentLineY + 36);
+      }
+    } else {
+      // Compact header for later pages, still with student name
+      pdf.text(`Student: ${finalData.studentName} (${finalData.studentId})`, 10, studentLineY);
+      pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, studentLineY + 7);
+    }
+  };
+
+  // ---------- IMAGE SIZE & A4 SLICING SETUP ----------
+  const imgProps = pdf.getImageProperties(imgData);
+
+  const marginLeft = 10;
+  const marginRight = 10;
+  const marginTop = 90;   // space for header + meta
+  const marginBottom = 15; // space for page number footer
+
+  const pdfWidth = pageWidth - marginLeft - marginRight;
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+  const usableHeight = pageHeight - marginTop - marginBottom;
+
+  let remainingHeight = pdfHeight;
+  let offsetY = 0;
+  let pageNum = 1;
+
+  // ---------- DRAW PAGES WITH SLICED IMAGE ----------
+  while (remainingHeight > 0) {
+    // Draw page header (full on first page, compact later)
+    drawHeader(pageNum === 1);
+
+    // Add the screenshot image, vertically shifted to "slice" for this page
+    pdf.addImage(
+      imgData,
+      "PNG",
+      marginLeft,
+      marginTop - offsetY,
+      pdfWidth,
+      pdfHeight
+    );
+
+    remainingHeight -= usableHeight;
+    offsetY += usableHeight;
+
+    if (remainingHeight > 0) {
+      pdf.addPage();
+      pageNum++;
+    }
   }
 
-  pdf.setTextColor(0, 0, 0);
-  pdf.setFontSize(10);
-  pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, infoY);
+  // ---------- PAGE NUMBERS IN FOOTER ----------
+  const pageCount = pdf.getNumberOfPages();
+  pdf.setFontSize(9);
+  pdf.setTextColor(120, 130, 140);
 
-  let position = 90;
-  heightLeft -= (pageHeight - position) * (canvas.width / imgWidth) / canvas.height;
-
-  pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-  heightLeft = imgHeight;
-  position = 90;
-
-  while (heightLeft > pageHeight) {
-    pdf.addPage();
-    position = 10;
-    heightLeft -= pageHeight;
-    pdf.addImage(imgData, "PNG", 10, position - heightLeft, imgWidth, imgHeight);
+  for (let i = 1; i <= pageCount; i++) {
+    pdf.setPage(i);
+    pdf.text(
+      `Page ${i} of ${pageCount}`,
+      pageWidth / 2,
+      pageHeight - 6,
+      { align: "center" }
+    );
   }
 
+  // ---------- EXPORT & SHARE / DOWNLOAD ----------
   const pdfBlob = pdf.output("blob");
   const fileName = `${finalData.studentId || "student"}_${finalData.assessmentTitle.replace(/\s+/g, "_")}.pdf`;
 
   const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
 
+  // Try native share sheet first (on phones/tablets)
   if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
     try {
       await navigator.share({
@@ -852,6 +925,7 @@ async function emailWork() {
     }
   }
 
+  // Fallback: download the file
   const url = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = url;
@@ -859,6 +933,7 @@ async function emailWork() {
   a.click();
   URL.revokeObjectURL(url);
 
+  // And open mailto with summary (PDF is saved on device)
   const mailto = `mailto:?subject=${encodeURIComponent("Assessment submission: " + finalData.studentName)}&body=${encodeURIComponent(
     `Student: ${finalData.studentName} (${finalData.studentId})
 Teacher: ${finalData.teacherName}
@@ -870,6 +945,7 @@ A PDF copy has been downloaded on this device.`
   )}`;
   window.location.href = mailto;
 }
+
 
 // ------------------------------------------------------------
 // Simple clipboard clear (best-effort)

@@ -1,0 +1,267 @@
+/* --------------------------------------------
+   GLOBAL
+--------------------------------------------- */
+:root {
+  --brand: #6e1818;        /* PHS maroon */
+  --brand-soft: #8d2b2b;
+  --accent: #2f4858;
+  --bg: #fafafa;
+  --card-bg: #ffffff;
+  --border: #d4d4d4;
+  --text: #333;
+  --text-light: #555;
+  --success: #3c8c3c;
+  --partial: #b8860b;
+  --error: #c0392b;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+button {
+  font-size: 1rem;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--brand);
+  color: #fff;
+  transition: background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--brand-soft);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ----------------------
+   LAYOUT
+----------------------- */
+#header {
+  background: var(--brand);
+  padding: 16px 20px;
+  color: #fff;
+  border-bottom: 3px solid var(--brand-soft);
+}
+
+#header-title {
+  font-size: 1.6rem;
+}
+
+#header-subtitle {
+  font-size: .95rem;
+  opacity: .9;
+}
+
+#form, #result {
+  max-width: 950px;
+  margin: 30px auto;
+  padding: 25px 25px 40px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fefefe;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--brand);
+}
+
+.locked-field {
+  background: #f3f3f3 !important;
+  border-color: #ccc !important;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------
+   QUESTION CARDS
+--------------------------------------------- */
+.q {
+  background: var(--bg);
+  padding: 18px;
+  border-left: 4px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 20px;
+  transition: background 0.2s ease;
+}
+
+.q strong {
+  color: var(--accent);
+}
+
+.q.correct {
+  border-left-color: var(--success);
+}
+
+.q.partial {
+  border-left-color: var(--partial);
+}
+
+.q.wrong {
+  border-left-color: var(--error);
+}
+
+.q-img {
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 10px 0 12px;
+}
+
+/* --------------------------------------------
+   HINTS (inline under questions)
+--------------------------------------------- */
+.hint-inline {
+  background: #fdf6db;
+  border-left: 4px solid var(--partial);
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #7a5c08;
+}
+
+/* --------------------------------------------
+   DEADLINE BANNER
+--------------------------------------------- */
+.deadline-banner {
+  padding: 10px 16px;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+
+.deadline-banner.info {
+  background: #f0f0f0;
+  color: var(--text-light);
+}
+
+.deadline-banner.warn {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.deadline-banner.hot {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.deadline-banner.over {
+  background: #f2dede;
+  color: #a94442;
+}
+
+/* --------------------------------------------
+   FEEDBACK RESULTS
+--------------------------------------------- */
+.feedback {
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.feedback.correct {
+  border-left: 4px solid var(--success);
+}
+
+.feedback.partial {
+  border-left: 4px solid var(--partial);
+}
+
+.feedback.wrong {
+  border-left: 4px solid var(--error);
+}
+
+.feedback strong {
+  color: var(--accent);
+}
+
+.question-text {
+  color: var(--text-light);
+  margin: 6px 0;
+}
+
+/* --------------------------------------------
+   TOAST
+--------------------------------------------- */
+#toast {
+  min-width: 220px;
+  text-align: center;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: none;
+  font-size: 0.95rem;
+  z-index: 999;
+}
+
+#toast.error {
+  background: var(--error);
+}
+
+/* --------------------------------------------
+   MISC
+--------------------------------------------- */
+.hidden {
+  display: none !important;
+}
+
+.assessment-header {
+  margin-bottom: 25px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+#grade {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--brand);
+  margin: 20px 0;
+}

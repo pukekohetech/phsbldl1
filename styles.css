@@ -61,18 +61,25 @@ label{
   font-weight:600;
   color:#2c3e50;
 }
+
+/* --------------------------------------
+   🔥 FIXED: Inputs & Textareas use SAME FONT
+--------------------------------------- */
 input,select,textarea{
   width:100%;
   padding:10px;
   border:1px solid #ccc;
   border-radius:6px;
   font-size:1rem;
+  font-family:inherit;  /* << THIS FIXES YOUR PROBLEM */
+  line-height:1.4;
   transition:border .2s;
 }
+/* -------------------------------------- */
+
 input:focus,select:focus,textarea:focus{
   outline:none;
   border-color:#6e1818;
-  /* Use a subtle maroon glow around focused inputs */
   box-shadow:0 0 0 2px rgba(110,24,24,0.2);
 }
 .locked-msg{
@@ -81,7 +88,6 @@ input:focus,select:focus,textarea:focus{
   margin-top:5px;
 }
 .hidden{display:none}
-/* Assessment section header updated to maroon */
 .assessment h2{
   border-bottom:2px solid #6e1818;
   padding-bottom:8px;
@@ -116,7 +122,6 @@ input:focus,select:focus,textarea:focus{
   border-radius:8px;
   margin:10px 0
 }
-/* Colour-coded marking states */
 .question.correct{
   border-color:#27ae60;
   background:#eafaf1;
@@ -139,7 +144,6 @@ input:focus,select:focus,textarea:focus{
 .question .status.correct{color:#27ae60}
 .question .status.partial{color:#f39c12}
 .question .status.wrong{color:#e74c3c}
-/* Inline hints that appear only under questions */
 .hint-inline{
   margin-top:10px;
   padding:10px;
@@ -152,7 +156,6 @@ input:focus,select:focus,textarea:focus{
 .hint-inline strong{
   font-weight:700;
 }
-/* Toast notification */
 .toast{
   position:fixed;
   bottom:20px;
@@ -244,20 +247,17 @@ input:focus,select:focus,textarea:focus{
 .feedback p{
   margin:3px 0;
 }
-/* Loading text */
 .loading{
   text-align:center;
   padding:10px;
   color:#7f8c8d;
   font-style:italic;
 }
-/* Student info / assessment info layout */
 .form-section{
   margin-top:10px;
   border-top:1px solid #ecf0f1;
   padding-top:10px;
 }
-/* Deadline banner */
 .deadline-banner{
   padding:10px 15px;
   text-align:center;

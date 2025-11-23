@@ -731,7 +731,7 @@ async function emailWork() {
   document.body.appendChild(offscreenContainer);
 
   const canvas = await window.html2canvas(clone, {
-    scale: 2,
+    scale: 1,
     useCORS: true,
     scrollX: 0,
     scrollY: -window.scrollY

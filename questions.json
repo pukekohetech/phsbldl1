@@ -162,7 +162,7 @@
           "image": "blank.jpg",
           "hint": "See MDF disadvantages – focus on the ‘when wet’ and ‘over time’ sections if not sealed. (Page 18)",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 6,
           "rubric": [
   // Core strong indicators of bad behavior when wet (2 pts)
   { "points": 1, "check": "swell|swells|swelling|expand|expands|expanding|expansion|bulge|bulges|thickens?|bulging|distort|distorts|distortion", "flags": "i" },

@@ -196,7 +196,7 @@
  
   { "points": 1, "check": "blows?.*up|balloon|like a sponge|mdf.*hate.*water|mdf.*drink|mdf.*suck|mdf.*ruin|mdf.*destroy", "flags": "i" }
 ]
-          ]
+          
         },
         {
           "id": "q6",

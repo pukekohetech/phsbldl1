@@ -164,15 +164,38 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 2, "check": "swell|swells|expands|expansion|bulge|thicken", "flags": "i" },
-            { "points": 1, "check": "edge.*swell|edges?.*swell|edges?.*expand|edges?.*puff", "flags": "i" },
-            { "points": 1, "check": "absorb|soaks?.*up|takes?.*in water|not resistant", "flags": "i" },
-            { "points": 1, "check": "warp|warps|twist|cup|bend|distort", "flags": "i" },
-            { "points": 1, "check": "disintegrate|fall.*apart|break down|break apart|crumble|go soft|degrade|breaks up|break.*apart", "flags": "i" },
-            { "points": 1, "check": "not waterproof|not water.?resistant|poor moisture resistance|interior only", "flags": "i" },
-            { "points": 1, "check": "moisture.?resistant.*MR|MR.*MDF|better.*moisture|less swelling", "flags": "i" },
-            { "points": 1, "check": "seal|paint|varnish|edge.?seal|laminate|protect.*edges", "flags": "i" },
-            { "points": 1, "check": "ruin|damage|destroy|spoil|fail.*wet", "flags": "i" }
+  // Core strong indicators of bad behavior when wet (2 pts)
+  { "points": 1, "check": "swell|swells|swelling|expand|expands|expanding|expansion|bulge|bulges|thickens?|bulging|distort|distorts|distortion", "flags": "i" },
+  { "points": 1, "check": "water damage|ruin|ruined|destroy|destroyed|spoil|spoiled|fail.*wet|fail.*water", "flags": "i" },
+
+  // Unsealed / poor protection (1-2 pts)
+  { "points": 1, "check": "unsealed|not sealed|without sealing|no seal|exposed edges?", "flags": "i" },
+  { "points": 1, "check": "poor (water|moisture) resistance|bad (water|moisture) resistance|low resistance|not waterproof|not water.?resistant|no(t| )waterproofing", "flags": "i" },
+  { "points": 1, "check": "interior only|indoor only|not (for|suited to) exterior|not (for|suited to) outdoor", "flags": "i" },
+
+  // Absorption and getting wet (1 pt)
+  { "points": 1, "check": "absorb|absorbs|absorption|soak|soaks?.*up|takes?.*in water|sucks?.*up water", "flags": "i" },
+  { "points": 1, "check": "wet|gets?.*wet|moisture|exposed?.*moisture|waterlogged|damp|humid|spill|leak", "flags": "i" },
+
+  // Physical breakdown (1 pt each)
+  { "points": 1, "check": "warp|warps|warped|warping|cup|cups|cupped|cupping|bend|bends|bent|bending|twist|twists|twisted", "flags": "i" },
+  { "points": 1, "check": "crumble|crumbles|crumbling|disintegrate|disintegrates|fall.*apart|break.*apart|break.*down|fractur|break.*up|go soft|mushy", "flags": "i" },
+
+  // Sealing / protection mentioned (positive or mitigation – you can decide if + or - points)
+  { "points": 1, "check": "seal|sealed|sealing|correctly sealed|properly sealed|well sealed|paint|varnish|laminate|edge.?seal|painted edges?|protected edges?|adequate protection", "flags": "i" },
+
+  // Moisture-resistant MDF mentioned (usually a positive counter-point)
+  { "points": 1, "check": "moisture.?resistant|MR.?MDF|MR grade|better moisture|less swelling|improved resistance", "flags": "i" },
+
+  // Time-related phrases that usually imply progressive damage
+  { "points": 1, "check": "over time|eventually|long.?term|prolonged exposure|subsequently|after.*(hours|days|weeks)|when left wet", "flags": "i" },
+
+  // Edge-specific swelling (very common real-world complaint)
+  { "points": 1, "check": "edge.*(swell|puff|bulge|expand)|edges?.*(swell|puff|bulge|expand)", "flags": "i" },
+
+  // Extra common phrases people actually use
+  { "points": 1, "check": "blows?.*up|balloon|like a sponge|mdf.*hate.*water|mdf.*drink|mdf.*suck|mdf.*ruin|mdf.*destroy", "flags": "i" }
+]
           ]
         },
         {

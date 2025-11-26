@@ -290,19 +290,14 @@
           "type": "long",
           "maxPoints": 4,
           "rubric": "rubric": [
-    // 1. Sealing / stopping absorption / closing pores
     { "points": 1, "check": "seal|seals?|sealer|close.*pore|stop.*absorb|soak.*pore|fill.*pore|block.*pore|seal.*grain|seal.*timber|seal.*mdf|seal.*surface|stop.*suction|reduce.*absorption|even.*absorption", "flags": "i" },
 
-    // 2. Adhesion / helps paint stick
     { "points": 1, "check": "adhesion|adhere|stick|bond|grip|key|helps?.*stick|better stick|top.?coat.*stick|paint.*stick|promote.*adhesion|good base|sticks? better|hold.*paint", "flags": "i" },
 
-    // 3. Even / smooth / uniform finish
     { "points": 1, "check": "even.*finish|uniform.*surface|smooth.*base|smooth.*surface|consistent.*absorption|stop.*patchy|even.*colour|stops?.*blotchy|level.*surface|smooths?.*out|prepares?.*surface", "flags": "i" },
 
-    // 4. Protection – rust, stain-blocking, tannin, etc.
     { "points": 1, "check": "rust|corrosion|anti.?rust|rust.*inhib|stop.*rust|protect.*steel|protect.*metal|block.*stain|stop.*bleed|stain.*block|stop.*tannin|prevent.*tannin|knot.*bleed|stain blocker|protect.*from|protects?.*surface", "flags": "i" },
 
-    // Bonus catch-all phrases students love to use
     { "points": 1, "check": "first coat|under.?coat|base.?coat|prime.*surface|prepar|initial coat|goes?.*first|start.*coat", "flags": "i" },
     { "points": 1, "check": "make.*smooth|smooths?.*it|smooth.*finish|prepares?.*surface|ready.*paint|gets?.*ready", "flags": "i" }
   ]

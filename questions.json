@@ -167,33 +167,17 @@
 
   { "points": 1, "check": "swell|swells|swelling|expand|expands|expanding|expansion|bulge|bulges|thickens?|bulging|distort|distorts|distortion", "flags": "i" },
   { "points": 1, "check": "water damage|ruin|ruined|destroy|destroyed|spoil|spoiled|fail.*wet|fail.*water", "flags": "i" },
-
-
   { "points": 1, "check": "unsealed|not sealed|without sealing|no seal|exposed edges?", "flags": "i" },
   { "points": 1, "check": "poor (water|moisture) resistance|bad (water|moisture) resistance|low resistance|not waterproof|not water.?resistant|no(t| )waterproofing", "flags": "i" },
   { "points": 1, "check": "interior only|indoor only|not (for|suited to) exterior|not (for|suited to) outdoor", "flags": "i" },
-
- 
   { "points": 1, "check": "absorb|absorbs|absorption|soak|soaks?.*up|takes?.*in water|sucks?.*up water", "flags": "i" },
   { "points": 1, "check": "wet|gets?.*wet|moisture|exposed?.*moisture|waterlogged|damp|humid|spill|leak", "flags": "i" },
-
-  
   { "points": 1, "check": "warp|warps|warped|warping|cup|cups|cupped|cupping|bend|bends|bent|bending|twist|twists|twisted", "flags": "i" },
   { "points": 1, "check": "crumble|crumbles|crumbling|disintegrate|disintegrates|fall.*apart|break.*apart|break.*down|fractur|break.*up|go soft|mushy", "flags": "i" },
-
- 
   { "points": 1, "check": "seal|sealed|sealing|correctly sealed|properly sealed|well sealed|paint|varnish|laminate|edge.?seal|painted edges?|protected edges?|adequate protection", "flags": "i" },
-
- 
   { "points": 1, "check": "moisture.?resistant|MR.?MDF|MR grade|better moisture|less swelling|improved resistance", "flags": "i" },
-
-
   { "points": 1, "check": "over time|eventually|long.?term|prolonged exposure|subsequently|after.*(hours|days|weeks)|when left wet", "flags": "i" },
-
- 
   { "points": 1, "check": "edge.*(swell|puff|bulge|expand)|edges?.*(swell|puff|bulge|expand)", "flags": "i" },
-
- 
   { "points": 1, "check": "blows?.*up|balloon|like a sponge|mdf.*hate.*water|mdf.*drink|mdf.*suck|mdf.*ruin|mdf.*destroy", "flags": "i" }
 ]
           

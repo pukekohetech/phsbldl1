@@ -273,7 +273,7 @@
           "hint": "See Paint section – what does primer do for adhesion, sealing, and protection? (Page 26)",
           "type": "long",
           "maxPoints": 4,
-          "rubric": "rubric": [
+          "rubric": [
     { "points": 1, "check": "seal|seals?|sealer|close.*pore|stop.*absorb|soak.*pore|fill.*pore|block.*pore|seal.*grain|seal.*timber|seal.*mdf|seal.*surface|stop.*suction|reduce.*absorption|even.*absorption", "flags": "i" },
 
     { "points": 1, "check": "adhesion|adhere|stick|bond|grip|key|helps?.*stick|better stick|top.?coat.*stick|paint.*stick|promote.*adhesion|good base|sticks? better|hold.*paint", "flags": "i" },

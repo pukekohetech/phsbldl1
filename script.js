@@ -938,29 +938,31 @@ currentY += imgHeight + 5; // 5mm gap between blocks
       showToast("Shared via device share sheet.");
       return;
     } catch (e) {
-      console.warn("Share cancelled or failed, falling back to download/mailto.", e);
-    }
-  }
-
-  // Fallback: download the file
+    //  console.warn("Share cancelled or failed, falling back to download/mailto.", e);
+       // Fallback: download the file
   const url = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = url;
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
+    }
+  }
+
+ 
+
 
   // And open mailto with summary (PDF is saved on device)
-  const mailto = `mailto:?subject=${encodeURIComponent("Assessment submission: " + finalData.studentName)}&body=${encodeURIComponent(
-    `Student: ${finalData.studentName} (${finalData.studentId})
-Teacher: ${finalData.teacherName}
-Assessment: ${finalData.assessmentTitle} ${finalData.assessmentSubtitle ? "(" + finalData.assessmentSubtitle + ")" : ""}
+//  const mailto = `mailto:?subject=${encodeURIComponent("Assessment submission: " + finalData.studentName)}&body=${encodeURIComponent(
+  //  `Student: ${finalData.studentName} (${finalData.studentId})
+//Teacher: ${finalData.teacherName}
+//Assessment: ${finalData.assessmentTitle} ${finalData.assessmentSubtitle ? "(" + finalData.assessmentSubtitle + ")" : ""}
 
-Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)
+//Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)
 
-A PDF copy has been downloaded on this device.`
+//A PDF copy has been downloaded on this device.`
   )}`;
-  window.location.href = mailto;
+  //window.location.href = mailto;
 }
 
 // ------------------------------------------------------------

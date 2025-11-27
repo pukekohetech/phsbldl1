@@ -264,21 +264,21 @@ function loadAssessment() {
     const header = document.createElement("div");
     header.className = "question-header";
 
-   const markSpan = document.createElement("span");
+    const markSpan = document.createElement("span");
 
-// Clean display ID: "q5" -> "Q5", others -> uppercased
-let displayId;
-const simpleMatch = q.id.match(/^q(\d+)$/i);
-if (simpleMatch) {
-  // IDs like "q1", "q2", "q15" become "Q1", "Q2", "Q15"
-  displayId = "Q" + simpleMatch[1];
-} else {
-  // Anything else (e.g. "mat1_q1") just uppercase
-  displayId = q.id.toUpperCase();
-}
+    // Clean display ID: "q5" -> "Q5", others -> uppercased
+    let displayId;
+    const simpleMatch = q.id.match(/^q(\d+)$/i);
+    if (simpleMatch) {
+      // IDs like "q1", "q2", "q15" become "Q1", "Q2", "Q15"
+      displayId = "Q" + simpleMatch[1];
+    } else {
+      // Anything else (e.g. "mat1_q1") just uppercase
+      displayId = q.id.toUpperCase();
+    }
 
-markSpan.textContent = `${displayId} – ${q.maxPoints} mark${q.maxPoints !== 1 ? "s" : ""}`;
-header.appendChild(markSpan);
+    markSpan.textContent = `${displayId} – ${q.maxPoints} mark${q.maxPoints !== 1 ? "s" : ""}`;
+    header.appendChild(markSpan);
 
     const typeSpan = document.createElement("span");
     typeSpan.textContent = q.type === "mc" ? "Multi-choice" :
@@ -290,8 +290,8 @@ header.appendChild(markSpan);
 
     const p = document.createElement("p");
     // If your question text includes HTML (like links/br), use innerHTML instead of textContent
-  p.innerHTML = q.text;
-  wrap.appendChild(p);
+    p.innerHTML = q.text;
+    wrap.appendChild(p);
 
     if (q.image) {
       const img = document.createElement("img");
@@ -685,6 +685,7 @@ function back() {
 // ------------------------------------------------------------
 // Email / PDF – per-block capture (no mid-question cuts) +
 // repeating header on every page (no overlap with maroon bar)
+// with consistent width + more than one question per page
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
@@ -712,6 +713,11 @@ async function emailWork() {
   if (!(window.jspdf && window.html2canvas)) {
     await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
     await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+  }
+
+  if (!window.jspdf || !window.html2canvas) {
+    alert("PDF libraries failed to load. Please check your internet connection.");
+    return;
   }
 
   const { jsPDF } = window.jspdf;
@@ -832,9 +838,12 @@ async function emailWork() {
   // ---------- LAYOUT CONSTANTS ----------
   const marginLeft = 10;
   const marginRight = 10;
-  const marginTop = 90;     // space for header + meta (keeps content well below maroon bar)
-  const marginBottom = 15;  // space for page numbers
+  const marginTop = 70;     // slightly tighter – still well below the maroon bar
+  const marginBottom = 10;  // a bit less footer padding
   const usableHeight = pageHeight - marginTop - marginBottom;
+
+  // Use a fixed "virtual" width so PDFs look consistent across devices
+  const TARGET_WIDTH = 900; // px – pretend the content is this wide for html2canvas
 
   // ---------- BUILD LIST OF BLOCKS TO CAPTURE ----------
   const resultSection = document.getElementById("result");
@@ -853,12 +862,13 @@ async function emailWork() {
   // ---------- DRAW FIRST PAGE HEADER ----------
   drawHeader(true);
   let currentY = marginTop;
-  let isFirstPage = true;
 
   // ---------- CAPTURE EACH BLOCK SEPARATELY (NO MID-QUESTION CUTS) ----------
   for (const block of blocks) {
     const canvas = await window.html2canvas(block, {
       scale: 2,
+      width: TARGET_WIDTH,
+      windowWidth: TARGET_WIDTH,
       useCORS: true,
       scrollX: 0,
       scrollY: -window.scrollY
@@ -870,17 +880,19 @@ async function emailWork() {
     let imgWidth = pageWidth - marginLeft - marginRight;
     let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-    // If this block is taller than the usable space, scale it down to fit
-    if (imgHeight > usableHeight) {
-      const scale = usableHeight / imgHeight;
+    // If this block is taller than ~90% of the usable space, scale it down a bit
+    // so it doesn't completely dominate the page visually.
+    const maxBlockHeight = usableHeight * 0.9;
+
+    if (imgHeight > maxBlockHeight) {
+      const scale = maxBlockHeight / imgHeight;
       imgWidth *= scale;
-      imgHeight = usableHeight;
+      imgHeight = maxBlockHeight;
     }
 
     // If it won't fit on the current page, go to a new page
     if (currentY + imgHeight > pageHeight - marginBottom) {
       pdf.addPage();
-      isFirstPage = false;
       drawHeader(false);
       currentY = marginTop;
     }
@@ -908,10 +920,13 @@ async function emailWork() {
   const pdfBlob = pdf.output("blob");
   const fileName = `${finalData.studentId || "student"}_${finalData.assessmentTitle.replace(/\s+/g, "_")}.pdf`;
 
-  const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+  let pdfFile = null;
+  if (window.File && typeof File === "function") {
+    pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+  }
 
   // Try native share sheet first (on phones/tablets)
-  if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+  if (pdfFile && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
     try {
       await navigator.share({
         title: "Assessment PDF",
@@ -946,8 +961,6 @@ A PDF copy has been downloaded on this device.`
   window.location.href = mailto;
 }
 
-
-
 // ------------------------------------------------------------
 // Simple clipboard clear (best-effort)
 // ------------------------------------------------------------
@@ -967,6 +980,7 @@ function attachProtection() {
     f.addEventListener("paste", e => { e.preventDefault(); showToast(PASTE_BLOCKED_MESSAGE, false); clearClipboard(); });
   });
 }
+
 // Limit context menu blocking to the question area only (still allow on inputs)
 document.addEventListener("contextmenu", e => {
   const inQuestionsArea = e.target.closest("#questions");

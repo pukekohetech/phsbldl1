@@ -42,16 +42,19 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "1 – Low velocity hazard flying particles and objects",
-            "2 – Medium velocity hazard small flying particles",
-            "3 – High velocity hazards particles",
             "4 – Gas vapours",
-            "5 – Non-ionizing radiation only",
-            "6 – Infrared and UV radiation"
+            "2 – Medium velocity hazard small flying particles",
+            "1 – Low velocity hazard flying particles and objects",
+            "6 – Infrared and UV radiation",
+            "3 – High velocity hazards particles",
+            "5 – Non-ionizing radiation only"
           ],
           "rubric": [
-            { "points": 1, "check": "^\\s*1\\s*$|hazard\\s*1\\b", "flags": "i" },
-            { "points": 1, "check": "low velocity.*flying (particles?|objects?)", "flags": "i" }
+            {
+              "points": 1,
+              "check": "^\\s*1\\b",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -62,17 +65,19 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "1 – Low velocity hazard flying particles and objects",
-            "2 – Medium velocity hazard small flying particles",
             "3 – High velocity hazards particles",
-            "4 – Gas vapours",
+            "1 – Low velocity hazard flying particles and objects",
             "5 – Non-ionizing radiation only",
-            "6 – Infrared and UV radiation"
+            "2 – Medium velocity hazard small flying particles",
+            "6 – Infrared and UV radiation",
+            "4 – Gas vapours"
           ],
           "rubric": [
-            { "points": 1, "check": "^\\s*2\\s*$|hazard\\s*2\\b", "flags": "i" },
-            { "points": 1, "check": "medium velocity.*small flying particles?", "flags": "i" },
-            { "points": 1, "check": "high.?speed debris|high speed debris|toxic environment", "flags": "i" }
+            {
+              "points": 1,
+              "check": "^\\s*2\\b",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -83,17 +88,19 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "1 – Low velocity hazard flying particles and objects",
-            "2 – Medium velocity hazard small flying particles",
+            "6 – Infrared and UV radiation",
             "3 – High velocity hazards particles",
             "4 – Gas vapours",
+            "1 – Low velocity hazard flying particles and objects",
             "5 – Non-ionizing radiation only",
-            "6 – Infrared and UV radiation"
+            "2 – Medium velocity hazard small flying particles"
           ],
           "rubric": [
-            { "points": 1, "check": "^\\s*3\\s*$|hazard\\s*3\\b", "flags": "i" },
-            { "points": 1, "check": "high velocity (hazards?|particles?|debris)", "flags": "i" },
-            { "points": 1, "check": "working close.*creating a hazard", "flags": "i" }
+            {
+              "points": 1,
+              "check": "^\\s*3\\b",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -104,16 +111,19 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "1 – Low velocity hazard flying particles and objects",
             "2 – Medium velocity hazard small flying particles",
-            "3 – High velocity hazards particles",
             "4 – Gas vapours",
-            "5 – Non-ionizing radiation only",
-            "6 – Infrared and UV radiation"
+            "6 – Infrared and UV radiation",
+            "1 – Low velocity hazard flying particles and objects",
+            "3 – High velocity hazards particles",
+            "5 – Non-ionizing radiation only"
           ],
           "rubric": [
-            { "points": 1, "check": "^\\s*4\\s*$|hazard\\s*4\\b", "flags": "i" },
-            { "points": 1, "check": "gas vapours?|fumes|dust.*fumes?.*vapours?", "flags": "i" }
+            {
+              "points": 1,
+              "check": "^\\s*4\\b",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -124,16 +134,19 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "1 – Low velocity hazard flying particles and objects",
-            "2 – Medium velocity hazard small flying particles",
-            "3 – High velocity hazards particles",
-            "4 – Gas vapours",
             "5 – Non-ionizing radiation only",
+            "1 – Low velocity hazard flying particles and objects",
+            "3 – High velocity hazards particles",
+            "2 – Medium velocity hazard small flying particles",
+            "4 – Gas vapours",
             "6 – Infrared and UV radiation"
           ],
           "rubric": [
-            { "points": 1, "check": "^\\s*5\\s*$|hazard\\s*5\\b", "flags": "i" },
-            { "points": 1, "check": "non.?ion(i|iz)ing radiation|glare|oxy.?acetylene|brazing", "flags": "i" }
+            {
+              "points": 1,
+              "check": "^\\s*5\\b",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -145,15 +158,18 @@
           "maxPoints": 1,
           "options": [
             "1 – Low velocity hazard flying particles and objects",
-            "2 – Medium velocity hazard small flying particles",
-            "3 – High velocity hazards particles",
-            "4 – Gas vapours",
             "5 – Non-ionizing radiation only",
-            "6 – Infrared and UV radiation"
+            "6 – Infrared and UV radiation",
+            "2 – Medium velocity hazard small flying particles",
+            "4 – Gas vapours",
+            "3 – High velocity hazards particles"
           ],
           "rubric": [
-            { "points": 1, "check": "^\\s*6\\s*$|hazard\\s*6\\b", "flags": "i" },
-            { "points": 1, "check": "infrared|IR|UV|ultra.?violet|arc welding", "flags": "i" }
+            {
+              "points": 1,
+              "check": "^\\s*6\\b",
+              "flags": "i"
+            }
           ]
         },
 
@@ -165,14 +181,17 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Dust mask and extraction system",
-            "Welding respirator",
             "Respirator with organic vapour cartridges",
-            "Air-fed breathing apparatus with its own air supply"
+            "Dust mask and extraction system",
+            "Air-fed breathing apparatus with its own air supply",
+            "Welding respirator"
           ],
           "rubric": [
-            { "points": 1, "check": "dust mask|paper mask|P2 (mask|respirator)|particulate (mask|respirator)", "flags": "i" },
-            { "points": 1, "check": "extraction system|dust extractor|dust.*extraction", "flags": "i" }
+            {
+              "points": 1,
+              "check": "dust mask and extraction system|dust mask",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -183,13 +202,17 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Dust mask and extraction system",
+            "Air-fed breathing apparatus with its own air supply",
             "Welding respirator",
-            "Respirator with organic vapour cartridges",
-            "Air-fed breathing apparatus with its own air supply"
+            "Dust mask and extraction system",
+            "Respirator with organic vapour cartridges"
           ],
           "rubric": [
-            { "points": 1, "check": "respirator|welding respirator|P2 respirator|fume respirator", "flags": "i" }
+            {
+              "points": 1,
+              "check": "welding respirator",
+              "flags": "i"
+            }
           ]
         },
         {
@@ -201,17 +224,16 @@
           "maxPoints": 1,
           "options": [
             "Dust mask and extraction system",
-            "Welding respirator",
+            "Air-fed breathing apparatus with its own air supply",
             "Respirator with organic vapour cartridges",
-            "Air-fed breathing apparatus with its own air supply"
+            "Welding respirator"
           ],
           "rubric": [
             {
               "points": 1,
-              "check": "respirator.*(filter|cartridge)|cartridge respirator|organic vapou?r (filter|cartridge)|half.?face respirator",
+              "check": "respirator with organic vapour cartridges|organic vapou?r",
               "flags": "i"
-            },
-            { "points": 1, "check": "dust mask.*not suitable|not.*dust mask", "flags": "i" }
+            }
           ]
         },
         {
@@ -222,15 +244,15 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Dust mask and extraction system",
             "Welding respirator",
             "Respirator with organic vapour cartridges",
-            "Air-fed breathing apparatus with its own air supply"
+            "Air-fed breathing apparatus with its own air supply",
+            "Dust mask and extraction system"
           ],
           "rubric": [
             {
               "points": 1,
-              "check": "air.?fed (respirator|mask)|air supplied (respirator|mask)|fresh air (mask|hood)|breathing apparatus|BA set|supplied.?air",
+              "check": "air-?fed breathing apparatus with its own air supply|air.?fed (respirator|mask)|breathing apparatus",
               "flags": "i"
             }
           ]

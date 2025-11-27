@@ -29,231 +29,197 @@
   ],
 
   "ASSESSMENTS": [
+   {
+  "id": "24352-selfreflection1",
+  "title": "Learner Self-reflection 1 – 24352 (v3)",
+  "subtitle": "US 24352 – Eye and Respiratory PPE",
+  "questions": [
     {
-      "id": "24352-selfreflection1",
-      "title": "Learner Self-reflection 1 – 24352 (v3)",
-      "subtitle": "US 24352 – Eye and Respiratory PPE",
-      "questions": [
-        {
-          "id": "q1a_face_shields",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Polycarbonate face shields – write the best hazard number (1–6) for this PPE.",
-          "image": "blank.jpg",
-          "hint": "Hazard 1: Low velocity hazard flying particles and objects.",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "4 – Gas vapours",
-            "2 – Medium velocity hazard small flying particles",
-            "1 – Low velocity hazard flying particles and objects",
-            "6 – Infrared and UV radiation",
-            "3 – High velocity hazards particles",
-            "5 – Non-ionizing radiation only"
-          ],
-         "rubric": [
-  { "points": 1, "check": "^1", "flags": "i" }
-]
-        },
-        {
-          "id": "q1b_hood_helmet",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Hood and helmet (completely sealing the face) – write the best hazard number (1–6) for this PPE.",
-          "image": "blank.jpg",
-          "hint": "Hazard 2: Medium velocity hazard small flying particles.",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "3 – High velocity hazards particles",
-            "1 – Low velocity hazard flying particles and objects",
-            "5 – Non-ionizing radiation only",
-            "2 – Medium velocity hazard small flying particles",
-            "6 – Infrared and UV radiation",
-            "4 – Gas vapours"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^\\s*2\\b",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q1c_wide_goggles",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Wide vision goggles – write the best hazard number (1–6) for this PPE.",
-          "image": "blank.jpg",
-          "hint": "Hazard 3: High velocity hazards particles.",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "6 – Infrared and UV radiation",
-            "3 – High velocity hazards particles",
-            "4 – Gas vapours",
-            "1 – Low velocity hazard flying particles and objects",
-            "5 – Non-ionizing radiation only",
-            "2 – Medium velocity hazard small flying particles"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^\\s*3\\b",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q1d_safety_glasses",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Safety glasses – write the best hazard number (1–6) for this PPE.",
-          "image": "blank.jpg",
-          "hint": "Hazard 4: Gas vapours. Properly fitting safety glasses or goggles can help prevent injuries from dust, fumes, and vapours (page 30).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "2 – Medium velocity hazard small flying particles",
-            "4 – Gas vapours",
-            "6 – Infrared and UV radiation",
-            "1 – Low velocity hazard flying particles and objects",
-            "3 – High velocity hazards particles",
-            "5 – Non-ionizing radiation only"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^\\s*4\\b",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q1e_filter_lens",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Safety glasses/goggles with filter lens – write the best hazard number (1–6) for this PPE.",
-          "image": "blank.jpg",
-          "hint": "Hazard 5: Non-ionizing radiation only. Shaded safety glasses to protect your eyes from glare must be worn when brazing or using an oxy-acetylene set (page 30).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "5 – Non-ionizing radiation only",
-            "1 – Low velocity hazard flying particles and objects",
-            "3 – High velocity hazards particles",
-            "2 – Medium velocity hazard small flying particles",
-            "4 – Gas vapours",
-            "6 – Infrared and UV radiation"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^\\s*5\\b",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q1f_welding_helmet",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Welding helmet – write the best hazard number (1–6) for this PPE.",
-          "image": "blank.jpg",
-          "hint": "Hazard 6: Infrared and UV radiation. For arc welding, a welding helmet with the correct lenses must be worn (page 31).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "1 – Low velocity hazard flying particles and objects",
-            "5 – Non-ionizing radiation only",
-            "6 – Infrared and UV radiation",
-            "2 – Medium velocity hazard small flying particles",
-            "4 – Gas vapours",
-            "3 – High velocity hazards particles"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^\\s*6\\b",
-              "flags": "i"
-            }
-          ]
-        },
-
-        {
-          "id": "q2a_sanding_timber",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 1 Sanding timber – what is the appropriate respiratory protection?",
-          "image": "blank.jpg",
-          "hint": "Use the extraction system and wear a dust mask over the nose and mouth (page 35).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "Respirator with organic vapour cartridges",
-            "Dust mask and extraction system",
-            "Air-fed breathing apparatus with its own air supply",
-            "Welding respirator"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "dust mask and extraction system|dust mask",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q2b_arc_welding",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 2 Arc welding – what is the appropriate respiratory protection?",
-          "image": "blank.jpg",
-          "hint": "Wear an appropriate respirator (page 36).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "Air-fed breathing apparatus with its own air supply",
-            "Welding respirator",
-            "Dust mask and extraction system",
-            "Respirator with organic vapour cartridges"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "welding respirator",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q2c_spraying_glue",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 3 Spraying glue – what is the appropriate respiratory protection?",
-          "image": "blank.jpg",
-          "hint": "Wear a respirator fitted with filters appropriate to the job. Dust masks are not suitable (page 37).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "Dust mask and extraction system",
-            "Air-fed breathing apparatus with its own air supply",
-            "Respirator with organic vapour cartridges",
-            "Welding respirator"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "respirator with organic vapour cartridges|organic vapou?r",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "q2d_spraying_two_pot",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 4 Spraying ‘two-pot’ paint – what is the appropriate respiratory protection?",
-          "image": "blank.jpg",
-          "hint": "You must wear a special breathing apparatus that has its own pure air supply (page 37).",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "Welding respirator",
-            "Respirator with organic vapour cartridges",
-            "Air-fed breathing apparatus with its own air supply",
-            "Dust mask and extraction system"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "air-?fed breathing apparatus with its own air supply|air.?fed (respirator|mask)|breathing apparatus",
-              "flags": "i"
-            }
-          ]
-        }
+      "id": "q1a_face_shields",
+      "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Polycarbonate face shields – write the best hazard number (1–6) for this PPE.",
+      "image": "blank.jpg",
+      "hint": "Hazard 1: Low velocity hazard flying particles and objects.",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "1 – Low velocity flying particles and objects",
+        "2 – Medium velocity small flying particles",
+        "3 – High velocity particles",
+        "4 – Gas vapours, dust and fumes",
+        "5 – Non-ionizing radiation and glare",
+        "6 – Infrared and UV radiation (arc welding)"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^1", "flags": "i" }
       ]
+    },
+    {
+      "id": "q1b_hood_helmet",
+      "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Hood and helmet (completely sealing the face) – write the best hazard number (1–6) for this PPE.",
+      "image": "blank.jpg",
+      "hint": "Hazard 2: Medium velocity hazard small flying particles.",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "2 – Medium velocity small flying particles",
+        "1 – Low velocity flying particles and objects",
+        "3 – High velocity particles",
+        "4 – Gas vapours, dust and fumes",
+        "5 – Non-ionizing radiation and glare",
+        "6 – Infrared and UV radiation (arc welding)"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^2", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q1c_wide_goggles",
+      "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Wide vision goggles – write the best hazard number (1–6) for this PPE.",
+      "image": "blank.jpg",
+      "hint": "Hazard 3: High velocity hazards particles.",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "3 – High velocity particles",
+        "1 – Low velocity flying particles and objects",
+        "2 – Medium velocity small flying particles",
+        "4 – Gas vapours, dust and fumes",
+        "5 – Non-ionizing radiation and glare",
+        "6 – Infrared and UV radiation (arc welding)"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^3", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q1d_safety_glasses",
+      "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Safety glasses – write the best hazard number (1–6) for this PPE.",
+      "image": "blank.jpg",
+      "hint": "Hazard 4: Gas vapours. Properly fitting safety glasses or goggles can help prevent injuries from dust, fumes, and vapours (page 30).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "4 – Gas vapours, dust and fumes",
+        "1 – Low velocity flying particles and objects",
+        "2 – Medium velocity small flying particles",
+        "3 – High velocity particles",
+        "5 – Non-ionizing radiation and glare",
+        "6 – Infrared and UV radiation (arc welding)"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^4", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q1e_filter_lens",
+      "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Safety glasses/goggles with filter lens – write the best hazard number (1–6) for this PPE.",
+      "image": "blank.jpg",
+      "hint": "Hazard 5: Non-ionizing radiation only. Shaded safety glasses to protect your eyes from glare must be worn when brazing or using an oxy-acetylene set (page 30).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "5 – Non-ionizing radiation and glare",
+        "1 – Low velocity flying particles and objects",
+        "2 – Medium velocity small flying particles",
+        "3 – High velocity particles",
+        "4 – Gas vapours, dust and fumes",
+        "6 – Infrared and UV radiation (arc welding)"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^5", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q1f_welding_helmet",
+      "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Welding helmet – write the best hazard number (1–6) for this PPE.",
+      "image": "blank.jpg",
+      "hint": "Hazard 6: Infrared and UV radiation. For arc welding, a welding helmet with the correct lenses must be worn (page 31).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "6 – Infrared and UV radiation (arc welding)",
+        "1 – Low velocity flying particles and objects",
+        "2 – Medium velocity small flying particles",
+        "3 – High velocity particles",
+        "4 – Gas vapours, dust and fumes",
+        "5 – Non-ionizing radiation and glare"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^6", "flags": "i" }
+      ]
+    },
+
+    {
+      "id": "q2a_sanding_timber",
+      "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 1 Sanding timber – what is the appropriate respiratory protection?",
+      "image": "blank.jpg",
+      "hint": "Use the extraction system and wear a dust mask over the nose and mouth (page 35).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "1 – Dust mask / particulate respirator for sanding timber",
+        "2 – Welding respirator for arc welding",
+        "3 – Respirator with appropriate filters for spraying glue",
+        "4 – Air-fed breathing apparatus for two-pot paint"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^1", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q2b_arc_welding",
+      "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 2 Arc welding – what is the appropriate respiratory protection?",
+      "image": "blank.jpg",
+      "hint": "Wear an appropriate respirator (page 36).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "2 – Welding respirator for arc welding",
+        "1 – Dust mask / particulate respirator for sanding timber",
+        "3 – Respirator with appropriate filters for spraying glue",
+        "4 – Air-fed breathing apparatus for two-pot paint"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^2", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q2c_spraying_glue",
+      "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 3 Spraying glue – what is the appropriate respiratory protection?",
+      "image": "blank.jpg",
+      "hint": "Wear a respirator fitted with filters appropriate to the job. Dust masks are not suitable (page 37).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "3 – Respirator with appropriate filters for spraying glue",
+        "1 – Dust mask / particulate respirator for sanding timber",
+        "2 – Welding respirator for arc welding",
+        "4 – Air-fed breathing apparatus for two-pot paint"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^3", "flags": "i" }
+      ]
+    },
+    {
+      "id": "q2d_spraying_two_pot",
+      "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 4 Spraying ‘two-pot’ paint – what is the appropriate respiratory protection?",
+      "image": "blank.jpg",
+      "hint": "You must wear a special breathing apparatus that has its own pure air supply (page 37).",
+      "type": "mc",
+      "maxPoints": 1,
+      "options": [
+        "4 – Air-fed breathing apparatus for two-pot paint",
+        "1 – Dust mask / particulate respirator for sanding timber",
+        "2 – Welding respirator for arc welding",
+        "3 – Respirator with appropriate filters for spraying glue"
+      ],
+      "rubric": [
+        { "points": 1, "check": "^4", "flags": "i" }
+      ]
+    }
+  ]
+
+
     },
 
     {

@@ -1,50 +1,6 @@
 {
+  "APP_ID": "pukekohetech-24352",
   "ASSESSMENTS": [
-    {
-      "id": "24355-checklist",
-      "title": "Start Here – Photo & Checklist",
-      "subtitle": "Do this quick checklist before you submit your work.",
-      "questions": [
-        {
-          "id": "a1",
-          "text": "Have you taken a clear photo of your finished project and emailed it to your teacher?<br><br>Use this link to stamp and eamil your photo to your teacher: <a href=\"https://pukekohetech.github.io/phsphoto\" target=\"_blank\">pukekohetech.github.io/phsphoto</a>",
-          "image": "blank.jpg",
-          "hint": "Take a clear photo that shows the whole project from the best angle.",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "Yes",
-            "No"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^yes",
-              "flags": "i"
-            }
-          ]
-        },
-        {
-          "id": "a2",
-          "text": "Have you completed all of the other quizzes and assessments for this unit standard in this app",
-          "image": "blank.jpg",
-          "hint": "Go back and finish any other quizzes or assessment sheets before you submit.",
-          "type": "mc",
-          "maxPoints": 1,
-          "options": [
-            "Yes",
-            "No"
-          ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^yes",
-              "flags": "i"
-            }
-          ]
-        }
-      ]
-    },
     {
       "id": "24352-selfreflection1",
       "title": "Learner Self-reflection 1 – 24352 (v3)",
@@ -58,12 +14,12 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Medium velocity small flying particles",
-            "Infrared and UV radiation (arc welding)",
-            "Low velocity flying particles and objects",
+            "Non-ionizing radiation and glare",
             "Gas vapours, dust and fumes",
+            "Low velocity flying particles and objects",
             "High velocity particles",
-            "Non-ionizing radiation and glare"
+            "Infrared and UV radiation (arc welding)",
+            "Medium velocity small flying particles"
           ],
           "rubric": [
             { "points": 1, "check": "Low velocity flying particles and objects", "flags": "i" }
@@ -79,10 +35,10 @@
           "options": [
             "High velocity particles",
             "Medium velocity small flying particles",
-            "Non-ionizing radiation and glare",
+            "Gas vapours, dust and fumes",
             "Low velocity flying particles and objects",
-            "Infrared and UV radiation (arc welding)",
-            "Gas vapours, dust and fumes"
+            "Non-ionizing radiation and glare",
+            "Infrared and UV radiation (arc welding)"
           ],
           "rubric": [
             { "points": 1, "check": "Medium velocity small flying particles", "flags": "i" }
@@ -96,12 +52,12 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Gas vapours, dust and fumes",
-            "High velocity particles",
             "Infrared and UV radiation (arc welding)",
+            "High velocity particles",
             "Non-ionizing radiation and glare",
-            "Low velocity flying particles and objects",
-            "Medium velocity small flying particles"
+            "Gas vapours, dust and fumes",
+            "Medium velocity small flying particles",
+            "Low velocity flying particles and objects"
           ],
           "rubric": [
             { "points": 1, "check": "High velocity particles", "flags": "i" }
@@ -115,12 +71,12 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
+            "Low velocity flying particles and objects",
             "Gas vapours, dust and fumes",
             "Non-ionizing radiation and glare",
             "Medium velocity small flying particles",
-            "Infrared and UV radiation (arc welding)",
-            "Low velocity flying particles and objects",
-            "High velocity particles"
+            "High velocity particles",
+            "Infrared and UV radiation (arc welding)"
           ],
           "rubric": [
             { "points": 1, "check": "Gas vapours, dust and fumes", "flags": "i" }
@@ -134,12 +90,12 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Infrared and UV radiation (arc welding)",
             "Non-ionizing radiation and glare",
+            "Medium velocity small flying particles",
+            "Infrared and UV radiation (arc welding)",
             "High velocity particles",
             "Low velocity flying particles and objects",
-            "Gas vapours, dust and fumes",
-            "Medium velocity small flying particles"
+            "Gas vapours, dust and fumes"
           ],
           "rubric": [
             { "points": 1, "check": "Non-ionizing radiation and glare", "flags": "i" }
@@ -153,12 +109,12 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Infrared and UV radiation (arc welding)",
             "Gas vapours, dust and fumes",
-            "Medium velocity small flying particles",
-            "Low velocity flying particles and objects",
+            "Infrared and UV radiation (arc welding)",
             "High velocity particles",
-            "Non-ionizing radiation and glare"
+            "Non-ionizing radiation and glare",
+            "Low velocity flying particles and objects",
+            "Medium velocity small flying particles"
           ],
           "rubric": [
             { "points": 1, "check": "Infrared and UV radiation \\(arc welding\\)", "flags": "i" }
@@ -172,10 +128,10 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Welding respirator for arc welding",
-            "Dust mask / particulate respirator for sanding timber",
             "Air-fed breathing apparatus for two-pot paint",
-            "Respirator with appropriate filters for spraying glue"
+            "Dust mask / particulate respirator for sanding timber",
+            "Respirator with appropriate filters for spraying glue",
+            "Welding respirator for arc welding"
           ],
           "rubric": [
             { "points": 1, "check": "Dust mask / particulate respirator for sanding timber", "flags": "i" }
@@ -189,10 +145,10 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Respirator with appropriate filters for spraying glue",
-            "Air-fed breathing apparatus for two-pot paint",
             "Welding respirator for arc welding",
-            "Dust mask / particulate respirator for sanding timber"
+            "Dust mask / particulate respirator for sanding timber",
+            "Air-fed breathing apparatus for two-pot paint",
+            "Respirator with appropriate filters for spraying glue"
           ],
           "rubric": [
             { "points": 1, "check": "Welding respirator for arc welding", "flags": "i" }
@@ -207,8 +163,8 @@
           "maxPoints": 1,
           "options": [
             "Respirator with appropriate filters for spraying glue",
-            "Dust mask / particulate respirator for sanding timber",
             "Air-fed breathing apparatus for two-pot paint",
+            "Dust mask / particulate respirator for sanding timber",
             "Welding respirator for arc welding"
           ],
           "rubric": [
@@ -223,10 +179,10 @@
           "type": "mc",
           "maxPoints": 1,
           "options": [
-            "Air-fed breathing apparatus for two-pot paint",
             "Welding respirator for arc welding",
-            "Dust mask / particulate respirator for sanding timber",
-            "Respirator with appropriate filters for spraying glue"
+            "Air-fed breathing apparatus for two-pot paint",
+            "Respirator with appropriate filters for spraying glue",
+            "Dust mask / particulate respirator for sanding timber"
           ],
           "rubric": [
             { "points": 1, "check": "Air-fed breathing apparatus for two-pot paint", "flags": "i" }

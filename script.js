@@ -686,6 +686,7 @@ function back() {
 // Email / PDF – per-block capture (no mid-question cuts) +
 // repeating header on every page (no overlap with maroon bar)
 // with consistent width + more than one question per page
+// and device-native sharing when available
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
@@ -902,7 +903,7 @@ async function emailWork() {
 
     pdf.addImage(imgData, "PNG", xPos, currentY, imgWidth, imgHeight);
     currentY += imgHeight + 5; // 5mm gap between blocks
-  } // ← this closing brace for the for-loop was missing
+  }
 
   // ---------- PAGE NUMBERS IN FOOTER ----------
   const pageCount = pdf.getNumberOfPages();
@@ -918,6 +919,40 @@ async function emailWork() {
       { align: "center" }
     );
   }
+
+  // ---------- EXPORT & SHARE / DOWNLOAD ----------
+  const pdfBlob = pdf.output("blob");
+  const fileName = `${finalData.studentId || "student"}_${finalData.assessmentTitle.replace(/\s+/g, "_")}.pdf`;
+
+  let pdfFile = null;
+  if (window.File && typeof File === "function") {
+    pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+  }
+
+  // 1) Try device-native share sheet (phones/tablets, some desktops)
+  if (pdfFile && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+    try {
+      await navigator.share({
+        title: "Assessment PDF",
+        text: "Here is my completed assessment.",
+        files: [pdfFile]
+      });
+      showToast("Shared via device share sheet.");
+      return; // we’re done
+    } catch (e) {
+      console.warn("Share cancelled or failed, falling back to download:", e);
+    }
+  }
+
+  // 2) Fallback: download the file
+  const url = URL.createObjectURL(pdfBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 
   // ---------- EXPORT & SHARE / DOWNLOAD ----------
   const pdfBlob = pdf.output("blob");

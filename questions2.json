@@ -1,13 +1,15 @@
 {
-  "APP_ID": "US24356_HANDTOOLS",
+  "APP_ID": "US24352_SAFETY",
   "VERSION": "2025",
-  "APP_TITLE": "US 24356 – Basic Hand Tools for Engineering",
-  "APP_SUBTITLE": "PHS - L1 Technology – Assessment",
+  "APP_TITLE": "US 24352 – Safety Knowledge",
+  "APP_SUBTITLE": "PHS - L1 Building – Assessment",
+
   "DEADLINE": {
-    "day": 20,
-    "month": 11,
+    "day": 17,
+    "month": 12,
     "label": "Submission deadline"
   },
+
   "TEACHERS": [
     {
       "id": "RY",
@@ -25,276 +27,385 @@
       "email": "technology@pukekohehigh.school.nz"
     }
   ],
+
   "ASSESSMENTS": [
     {
-      "id": "24356-selfreflection",
-      "title": "Learner Self-reflection – 24356 (v3)",
-      "subtitle": "Demonstrate knowledge of basic hand tools used in BCATS and engineering projects",
+      "id": "24352-selfreflection1",
+      "title": "Learner Self-reflection 1 – 24352 (v3)",
+      "subtitle": "US 24352 – Eye & Respiratory PPE Quiz",
       "questions": [
         {
-          "id": "q1",
-          "text": "Name the hand tool primarily used for measuring and marking straight lines accurately over long distances.",
-          "image": "straightedge.jpg",
-          "hint": "Long metal or timber ruler-like tool, often 1–2 m long.",
+          "id": "q1_intro",
+          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number (1–6) beneath the appropriate eye protection.",
+          "image": "blank.jpg",
+          "hint": "Use the specific PPE questions below. Hazards:\n1. Low velocity flying particles and objects\n2. Medium velocity small flying particles\n3. High velocity particles\n4. Gas vapours\n5. Non-ionising radiation only\n6. Infrared and UV radiation",
+          "type": "info",
+          "maxPoints": 0
+        },
+
+        {
+          "id": "q1a_face_shield",
+          "text": "For <b>Polycarbonate face shields</b>, which hazard number (1–6) do they best protect against?",
+          "image": "blank.jpg",
+          "hint": "Think about low velocity flying particles and objects.",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "straight.?edge|straight edge|metal ruler|aluminium ruler", "flags": "i" }
+            { "points": 1, "check": "^1\\b|low velocity", "flags": "i" }
           ]
         },
         {
-          "id": "q2",
-          "text": "Name two types of squares commonly used in woodworking and metalworking to check 90° angles.",
-          "image": "squares.jpg",
-          "hint": "One has a steel blade and wooden/plastic stock, the other is all metal.",
-          "type": "short",
-          "maxPoints": 2,
-          "rubric": [
-            { "points": 1, "check": "try.?square|try square|engineer.?s square", "flags": "i" },
-            { "points": 1, "check": "carpenter.?s square|framing square|steel square|roofing square", "flags": "i" },
-            { "points": 1, "check": "combination square|sliding square|combo square", "flags": "i" }
-          ]
-        },
-        {
-          "id": "q3",
-          "text": "What is the main purpose of a marking gauge?",
-          "image": "markinggauge.jpg",
-          "hint": "Used for scribing lines parallel to an edge.",
+          "id": "q1b_hood_helmet",
+          "text": "For a <b>hood and helmet that completely seals the face</b>, which hazard number (1–6) do they best protect against?",
+          "image": "blank.jpg",
+          "hint": "Protection against small, high-speed debris, or used in highly toxic environments.",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "mark.*parallel|scribe.*parallel|gauge lines|parallel lines|consistent distance", "flags": "i" }
+            { "points": 1, "check": "^2\\b|medium velocity|small flying particles", "flags": "i" }
           ]
         },
         {
-          "id": "q4",
-          "text": "Name three types of handsaws commonly used in a school workshop.",
-          "image": "handsaws.jpg",
-          "hint": "Think rip, cross-cut, back saw, etc.",
-          "type": "short",
-          "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "tenon saw|back saw|backsaw", "flags": "i" },
-            { "points": 1, "check": "cross.?cut.*saw|crosscut|cros.?cut|panel saw", "flags": "i" },
-            { "points": 1, "check": "rip.?saw|ripsaw", "flags": "i" },
-            { "points": 1, "check": "dovetail saw|dovetail", "flags": "i" },
-            { "points": 1, "check": "coping saw|coping|scroll saw", "flags": "i" },
-            { "points": 1, "check": "japanese pull saw|pullsaw|ryoba|kataba", "flags": "i" }
-          ]
-        },
-        {
-          "id": "q5",
-          "text": "Describe the difference between a cross-cut saw and a rip saw in terms of tooth shape and cutting direction.",
-          "image": "sawteeth.jpg",
-          "hint": "Cross-cut teeth act like knives, rip teeth act like chisels.",
-          "type": "long",
-          "maxPoints": 3,
-          "rubric": [
-            { "points": 1, "check": "cross.?cut.*knife|bevel.*knife|cuts?.*fibre|across.*grain", "flags": "i" },
-            { "points": 1, "check": "rip.*chisel|flat front|square front|along.*grain|parallel.*grain", "flags": "i" },
-            { "points": 1, "check": "cross.?cut.*fleam|bevelled|angled teeth|knife.?like", "flags": "i" },
-            { "points": 1, "check": "rip.*no fleam|straight.*front|chisel.*like", "flags": "i" }
-          ]
-        },
-        {
-          "id": "q6",
-          "text": "Name the hand tool used for cutting curves and intricate shapes in thin timber or plywood.",
-          "image": "copingsaw.jpg",
-          "hint": "Thin blade held in a frame under tension, blade can be rotated.",
+          "id": "q1c_wide_goggles",
+          "text": "For <b>wide vision goggles</b>, which hazard number (1–6) do they best protect against?",
+          "image": "blank.jpg",
+          "hint": "Needed when working close to anyone who is creating a high velocity hazard.",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "coping saw|coping|scroll saw|fretsaw|fret saw", "flags": "i" }
+            { "points": 1, "check": "^3\\b|high velocity", "flags": "i" }
           ]
         },
         {
-          "id": "q7",
-          "text": "List four types of chisels commonly found in a woodworking workshop.",
-          "image": "chisels.jpg",
-          "hint": "Bevel-edge, firmer, mortice, paring, etc.",
-          "type": "short",
-          "maxPoints": 4,
-          "rubric": [
-            { "points": 1, "check": "bevel.?edge|bevel edge chisel", "flags": "i" },
-            { "points": 1, "check": "firmer chisel|firmer", "flags": "i" },
-            { "points": 1, "check": "mortise|mortice chisel", "flags": "i" },
-            { "points": 1, "check": "paring chisel|paring", "flags": "i" },
-            { "points": 1, "check": "butt chisel|short chisel", "flags": "i" },
-            { "points": 1, "check": "carving chisel|carving", "flags": "i" }
-          ]
-        },
-        {
-          "id": "q8",
-          "text": "What is the primary function of a woodworker's bench plane?",
-          "image": "jackplane.jpg",
-          "hint": "Smoothing, flattening, thicknessing, truing edges.",
-          "type": "short",
-          "maxPoints": 2,
-          "rubric": [
-            { "points": 1, "check": "smooth|flatten|level|even surface|remove.*high spots", "flags": "i" },
-            { "points": 1, "check": "thickness|reduce thickness|true.*edge|straighten|square", "flags": "i" }
-          ]
-        },
-        {
-          "id": "q9",
-          "text": "Name three types of hand planes and give a typical use for each.",
-          "image": "planes.jpg",
-          "hint": "Jack, smoothing, block, shoulder, etc.",
-          "type": "long",
-          "maxPoints": 6,
-          "rubric": [
-            { "points": 1, "check": "jack plane|No5|No.5|number 5", "flags": "i" },
-            { "points": 1, "check": "smoothing plane|No4|No.4|number 4", "flags": "i" },
-            { "points": 1, "check": "block plane|small plane|60 1/2", "flags": "i" },
-            { "points": 1, "check": "shoulder plane|rebate|bullnose", "flags": "i" },
-            { "points": 1, "check": "rough.*stock|general|heavy removal|initial|first plane", "flags": "i" },
-            { "points": 1, "check": "final.*smooth|finish|fine shavings|polished surface", "flags": "i" },
-            { "points": 1, "check": "end grain|chamfer|trim.*flush|one.?handed|small work", "flags": "i" },
-            { "points": 1, "check": "rebate|rabbet|clean.*shoulder|tenon|fine fitting", "flags": "i" }
-          ]
-        },
-        {
-          "id": "q10",
-          "text": "Name the tool used to drive nails below the surface of timber.",
-          "image": "nailpunch.jpg",
-          "hint": "Also called nail set.",
+          "id": "q1d_safety_glasses",
+          "text": "For <b>safety glasses</b>, which hazard number (1–6) do they best protect against?",
+          "image": "blank.jpg",
+          "hint": "Properly fitting safety glasses or goggles can help prevent injuries from dust, fumes, and vapours (Page 30).",
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "nail punch|nail set|punch|nailpunch", "flags": "i" }
+            { "points": 1, "check": "^4\\b|gas vapours?|fumes", "flags": "i" }
           ]
         },
         {
-          "id": "q11",
-          "text": "What safety equipment must always be worn when using hand tools in the workshop? (name at least three)",
-          "image": "ppe.jpg",
-          "hint": "Standard workshop PPE.",
+          "id": "q1e_filter_lens",
+          "text": "For <b>safety glasses/goggles with a filter lens</b>, which hazard number (1–6) do they best protect against?",
+          "image": "blank.jpg",
+          "hint": "Shaded safety glasses to protect your eyes from glare when brazing or using an oxy-acetylene set (Page 30).",
           "type": "short",
-          "maxPoints": 3,
+          "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "safety glasses|safety goggles|eye protection", "flags": "i" },
-            { "points": 1, "check": "dust mask|mask|respirator", "flags": "i" },
-            { "points": 1, "check": "hearing protection|ear muffs|ear plugs", "flags": "i" },
-            { "points": 1, "check": "covered shoes|steel cap|closed shoes", "flags": "i" },
-            { "points": 1, "check": "apron|workshop apron", "flags": "i" }
+            { "points": 1, "check": "^5\\b|non.?ion(i|iz)ing|glare|oxy.?acetylene", "flags": "i" }
           ]
         },
         {
-          "id": "q12",
-          "text": "Explain why a claw hammer is preferred over a ball-pein hammer for general carpentry work.",
-          "image": "clawhammer.jpg",
-          "hint": "Think about nail removal.",
-          "type": "long",
-          "maxPoints": 2,
+          "id": "q1f_welding_helmet",
+          "text": "For a <b>welding helmet</b>, which hazard number (1–6) does it best protect against?",
+          "image": "blank.jpg",
+          "hint": "For arc welding, a welding helmet with the correct lenses must be worn (Page 31).",
+          "type": "short",
+          "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "claw.*remove|pull.*nail|extract.*nail|demolition|lever", "flags": "i" },
-            { "points": 1, "check": "ball.?pein|peen|metalwork|riveting|shaping metal", "flags": "i" }
+            { "points": 1, "check": "^6\\b|(infrared|IR).*UV|ultra.?violet", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q2_intro",
+          "text": "Q2: From the photos below, select the appropriate respiratory equipment for each activity.",
+          "image": "blank.jpg",
+          "hint": "Answer the separate questions for each activity using the best respiratory protection.",
+          "type": "info",
+          "maxPoints": 0
+        },
+        {
+          "id": "q2a_sanding_timber",
+          "text": "What is the most appropriate respiratory protection for <b>sanding timber</b>?",
+          "image": "blank.jpg",
+          "hint": "Use the extraction system and wear a dust mask over the nose and mouth (Page 35).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "dust mask|paper mask|P2 mask|particulate mask", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q2b_arc_welding",
+          "text": "What is the most appropriate respiratory protection for <b>arc welding</b>?",
+          "image": "blank.jpg",
+          "hint": "Wear an appropriate respirator (Page 36).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "respirator|welding respirator", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q2c_spraying_glue",
+          "text": "What is the most appropriate respiratory protection for <b>spraying glue</b>?",
+          "image": "blank.jpg",
+          "hint": "Wear a respirator fitted with filters appropriate to the job. Dust masks are not suitable (Page 37).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "respirator.*filter|cartridge respirator|organic vapour", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q2d_spraying_two_pot_paint",
+          "text": "What is the most appropriate respiratory protection for <b>spraying ‘two-pot’ paint</b>?",
+          "image": "blank.jpg",
+          "hint": "You must wear a special breathing apparatus that has its own pure air supply (Page 37).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "air.?fed|air supplied|(fresh|pure) air|breathing apparatus|BA set", "flags": "i" }
           ]
         }
       ]
     },
+
     {
-      "id": "24356-part7",
-      "title": "Assessment Record Sheet – Hand Tools",
-      "subtitle": "US 24356 (v3) - Demonstrate knowledge of basic hand tools used in BCATS projects (Level 1)",
+      "id": "24352-selfreflection2",
+      "title": "Learner Self-reflection 2 – 24352 (v3)",
+      "subtitle": "US 24352 – Safe Working Practices in BCATS",
       "questions": [
         {
-          "id": "q_project",
-          "text": "BCATS Project: Tool Storage Box",
+          "id": "q1_rules",
+          "text": "Q1: Compile a list of rules/codes of conduct that would ensure safe working practices in a BCATS environment.",
+          "image": "blank.jpg",
+          "hint": "Include rules such as: always think about possible hazards; always wear appropriate PPE; do not wear loose or dangling clothing or jewellery; tie back long hair before operating machines.",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "think.*hazard|possible hazards|think first", "flags": "i" },
+            { "points": 1, "check": "PPE|personal protective|eye protection|wear.*(glasses|earmuffs|mask|boots)", "flags": "i" },
+            { "points": 1, "check": "loose.*clothing|dangling.*(clothing|jewellery)|baggy sleeves", "flags": "i" },
+            { "points": 1, "check": "tie back.*hair|long hair.*tie|hair.*hat", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q1b_consequences",
+          "text": "Q1 (a–h): For each of your safety rules/codes above, describe potential consequences if they are not followed.",
+          "image": "blank.jpg",
+          "hint": "Think about consequences such as eye injuries, hair getting caught in machinery, or long-term health problems from toxic products.",
+          "type": "long",
+          "maxPoints": 4,
+          "rubric": [
+            { "points": 1, "check": "eye injur|blind(ness)?|loss of sight", "flags": "i" },
+            { "points": 1, "check": "hair.*caught|ripped out|peeled from (your )?scalp", "flags": "i" },
+            { "points": 1, "check": "(lung|respirator).*(disease|damage)|breathing (problem|issue)|asthma", "flags": "i" },
+            { "points": 1, "check": "cancer|serious health|long.?term health|permanent damage", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q2_jandals",
+          "text": "Q2: Why should jandals never be worn on a work site?",
+          "image": "blank.jpg",
+          "hint": "Think about how much protection they give compared to safety footwear (Page 50).",
           "type": "short",
-          "maxPoints": 0,
-          "default": "Tool Storage Box"
-        },
-        {
-          "id": "tool1_q1",
-          "text": "Try Square – What is the purpose of this tool in your tool storage box project?",
-          "type": "long",
           "maxPoints": 1,
           "rubric": [
-            { "points": 1, "check": "check.*90|square|right angle|perpendicular|mark.*90", "flags": "i" }
+            { "points": 1, "check": "minimal protection|little protection|no protection.*feet|expos(ed|e).*feet", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q3a_heat_sparks",
+          "text": "Q3(a): Around <b>heat or sparks</b>, what type of clothing would be a hazard to wear?",
+          "image": "blank.jpg",
+          "hint": "Clothing that is not protected from heat or sparks. Overalls and a welding jacket are needed for protection (Pages 47–48).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "synthetic|nylon|polyester|thin (shirt|t.?shirt)|no overalls|no welding jacket|unprotected clothing", "flags": "i" }
           ]
         },
         {
-          "id": "tool1_q2",
-          "text": "Try Square – Describe its key features and how to use it correctly.",
+          "id": "q3b_machinery",
+          "text": "Q3(b): Around machinery such as <b>lathes</b>, what type of clothing would be a hazard to wear?",
+          "image": "blank.jpg",
+          "hint": "Machine operators should wear close-fitting clothing. Do not wear ties or baggy sleeves (Page 48).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "tie|necktie|baggy sleeves|loose clothing|dangling clothing", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q3c_spraying_paint",
+          "text": "Q3(c): When <b>spraying paint</b>, what type of clothing would be a hazard to wear?",
+          "image": "blank.jpg",
+          "hint": "Spray painting requires overalls for complete body protection from paint, over-spray and chemicals (Page 49).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "no overalls|shorts|t.?shirt|normal clothes|uncovered skin|street clothes", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q4_long_hair",
+          "text": "Q4: Identify the potential hazards of wearing long hair around machinery.",
+          "image": "blank.jpg",
+          "hint": "If hair gets caught in a machine, it will either be ripped out or peeled from your scalp (Page 14).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "hair.*caught.*machine|ripped out|peeled from (your )?scalp|scalp injur", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q5_hi_vis",
+          "text": "Q5: Identify the purpose of high-visibility vests or similar signage/equipment on site.",
+          "image": "blank.jpg",
+          "hint": "The purpose is to ensure that the wearer can easily be seen by plant operators to reduce the possibility of injury from moving vehicles and equipment (Page 49).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "easily seen|high visibility|stand out|visible", "flags": "i" },
+            { "points": 1, "check": "reduce.*injury|prevent.*(accident|collision)|moving vehicles?|plant operators?", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q6_nailing_eye",
+          "text": "Q6: When nailing timber you should always wear eye protection. Describe an eye hazard associated with this activity.",
+          "image": "blank.jpg",
+          "hint": "Think about flying particles or a nail ricocheting off the hammer face (Page 27).",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            { "points": 1, "check": "flying (particle|object)|ricochet|nail.*(bounce|ricochet).*eye|struck in the eye", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q7_general_risk",
+          "text": "Q7 (General): Describe the general risk of using poorly fitting or unmaintained PPE.",
+          "image": "blank.jpg",
+          "hint": "Poorly fitting and unmaintained PPE is unlikely to protect against the identified hazard, and often exposes the wearer to additional hazards (Page 51).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "unlikely to protect|doesn't protect|no protection", "flags": "i" },
+            { "points": 1, "check": "additional hazards?|extra risks?|more danger", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q7a_safety_glasses",
+          "text": "Q7(1): What are the risks of not maintaining <b>safety glasses</b> (e.g. not cleaning the lenses daily)?",
+          "image": "blank.jpg",
+          "hint": "Think about impaired vision and hygiene/infection risks (Page 51).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "impaired vision|can't see|hard to see|poor visibility", "flags": "i" },
+            { "points": 1, "check": "infection|eye infection|germs|bacteria", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q7b_respiratory",
+          "text": "Q7(2): What are the risks of not maintaining <b>respiratory protection</b> (e.g. not sterilising equipment or changing filters)?",
+          "image": "blank.jpg",
+          "hint": "Think about lung diseases, cancer and other serious health-related problems (Page 52).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "lung (disease|damage)|respiratory (problem|issue)", "flags": "i" },
+            { "points": 1, "check": "cancer|serious health|long.?term health", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q7c_earmuffs",
+          "text": "Q7(3): What are the risks of not maintaining <b>ear muffs</b> (e.g. not cleaning or checking the pads)?",
+          "image": "blank.jpg",
+          "hint": "Think about poor fit and not getting enough hearing protection (Page 52).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "poor fit|don't seal|leaks sound", "flags": "i" },
+            { "points": 1, "check": "hearing damage|hearing loss|noise damage", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q7d_hardhat",
+          "text": "Q7(4): What are the risks of not maintaining a <b>hard hat</b> (e.g. not checking for cracks or splits)?",
+          "image": "blank.jpg",
+          "hint": "Think about head injuries if the hard hat fails (Page 52).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "crack|split|weakened shell|fails? on impact", "flags": "i" },
+            { "points": 1, "check": "head injury|skull fracture|brain injury", "flags": "i" }
+          ]
+        },
+        {
+          "id": "q7e_gloves",
+          "text": "Q7(5): What are the risks of not maintaining <b>gloves</b> (e.g. not checking for tears or damage)?",
+          "image": "blank.jpg",
+          "hint": "Think about chemicals or sharp edges getting through (Page 52).",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            { "points": 1, "check": "chemicals?|solvents?|paint.*skin|exposed skin", "flags": "i" },
+            { "points": 1, "check": "cuts?|abrasions?|puncture|injury to hands?", "flags": "i" }
+          ]
+        },
+
+        {
+          "id": "q8a_router",
+          "text": "Q8(a): You are using an electric router to shape the edges of a rimu table top. Identify at least FOUR hazards and the PPE that will help protect you.",
+          "image": "blank.jpg",
+          "hint": "Think about: eye protection (particles), respiratory protection (wood dust), hearing protection (100 dB noise), body protection (loose clothing/hair), and foot protection (safety shoes).",
           "type": "long",
           "maxPoints": 4,
           "rubric": [
-            { "points": 1, "check": "steel blade|metal blade|stainless blade", "flags": "i" },
-            { "points": 1, "check": "stock|handle|wood.*stock|plastic stock|rosewood|brass face", "flags": "i" },
-            { "points": 1, "check": "90.*degree|right angle|square", "flags": "i" },
-            { "points": 1, "check": "hold stock.*edge|stock against|blade across|check both sides", "flags": "i" },
-            { "points": 1, "check": "mark.*along blade|pencil.*blade", "flags": "i" }
+            { "points": 1, "check": "eye.*(safety glasses|goggles)|particles? being flung", "flags": "i" },
+            { "points": 1, "check": "dust mask|extraction system|wood dust|respirator", "flags": "i" },
+            { "points": 1, "check": "ear (plugs|muffs)|hearing protection|100 ?dB", "flags": "i" },
+            { "points": 1, "check": "close.?fitting clothing|tie(d)? back hair|safety (shoes|boots)", "flags": "i" }
           ]
         },
         {
-          "id": "tool2_q1",
-          "text": "Tenon Saw – What is the purpose of this tool in your project?",
+          "id": "q8b_concrete",
+          "text": "Q8(b): You are breaking up a concrete path using a sledge hammer. Identify at least THREE hazards and the PPE that will help protect you.",
+          "image": "blank.jpg",
+          "hint": "Think about: flying concrete chips (eye protection), impact noise (hearing protection), falling objects or tripping (foot protection), and cuts/abrasions to hands (gloves).",
           "type": "long",
-          "maxPoints": 1,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "cut.*joint|tenon|shoulder|accurate cut|straight cut|fine cut", "flags": "i" }
+            { "points": 1, "check": "eye.*(safety glasses|goggles)|flying (particles?|chips?)", "flags": "i" },
+            { "points": 1, "check": "ear (plugs|muffs)|hearing protection|impact noise", "flags": "i" },
+            { "points": 1, "check": "safety shoes|steel cap|falling objects|leather gloves|cuts? and abrasions?", "flags": "i" }
           ]
         },
         {
-          "id": "tool2_q2",
-          "text": "Tenon Saw – Describe its properties and correct cutting technique.",
+          "id": "q8c_lathe",
+          "text": "Q8(c): You are turning a bowl on a wood lathe. Identify at least THREE hazards and the PPE that will help protect you.",
+          "image": "blank.jpg",
+          "hint": "Think about: high velocity particles (goggles or full-face shield), wood dust (dust mask/extraction), and loose clothing or long hair (close-fitting clothing and hair tied back).",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "brass back|steel back|stiff back|reinforced spine", "flags": "i" },
-            { "points": 1, "check": "fine teeth|12.*14.*tpi|small teeth|cross.?cut teeth", "flags": "i" },
-            { "points": 1, "check": "pistol grip|closed handle|comfortable grip", "flags": "i" },
-            { "points": 1, "check": "start.*waste|start.*corner|light stroke|back stroke|guide.*thumb", "flags": "i" },
-            { "points": 1, "check": "support.*offcut|bench hook|vice|vise", "flags": "i" },
-            { "points": 1, "check": "long smooth stroke|full length|let saw.*cut|don'?t force", "flags": "i" }
+            { "points": 1, "check": "wide vision goggles|full.?face shield|high velocity", "flags": "i" },
+            { "points": 1, "check": "dust mask|extraction system|wood dust|respirator", "flags": "i" },
+            { "points": 1, "check": "close.?fitting clothing|tie(d)? back hair|long hair.*machine", "flags": "i" }
           ]
         },
         {
-          "id": "tool3_q1",
-          "text": "Jack Plane (No.5) – What is the purpose of this tool in your project?",
+          "id": "q8d_plywood",
+          "text": "Q8(d): You are unloading sheets of plywood off a truck and stacking them in a storage shed. Identify at least THREE hazards and the PPE or controls that will help protect you.",
+          "image": "blank.jpg",
+          "hint": "Think about: poor lifting technique (ergonomic hazard), falling sheets (foot protection), and sharp edges/coarse surfaces (hand protection).",
           "type": "long",
-          "maxPoints": 1,
+          "maxPoints": 3,
           "rubric": [
-            { "points": 1, "check": "smooth|flatten|true.*edge|reduce thickness|shoot.*edge", "flags": "i" }
-          ]
-        },
-        {
-          "id": "tool3_q2",
-          "text": "Jack Plane – Describe its main parts and how to adjust it.",
-          "type": "long",
-          "maxPoints": 4,
-          "rubric": [
-            { "points": 1, "check": "blade|iron|cutter|plane iron", "flags": "i" },
-            { "points": 1, "check": "cap iron|chipbreaker|break.*chip", "flags": "i" },
-            { "points": 1, "check": "lever cap|cam|lock.*blade", "flags": "i" },
-            { "points": 1, "check": "frog|base|body|sole", "flags": "i" },
-            { "points": 1, "check": "depth.*adjust|knob|wheel|adjust.*depth", "flags": "i" },
-            { "points": 1, "check": "lateral.*adjust|tilt|level|side.*side", "flags": "i" },
-            { "points": 1, "check": "mouth|opening|fine.*coarse", "flags": "i" }
-          ]
-        },
-        {
-          "id": "tool4_q1",
-          "text": "Bevel-Edge Chisel (19mm) – What is the purpose of this chisel in your project?",
-          "type": "long",
-          "maxPoints": 1,
-          "rubric": [
-            { "points": 1, "check": "clean.*housing|pare|trim|chop.*joint|dovetail|fine work", "flags": "i" }
-          ]
-        },
-        {
-          "id": "tool4_q2",
-          "text": "Bevel-Edge Chisel – Describe correct sharpening angle and safe use.",
-          "type": "long",
-          "maxPoints": 4,
-          "rubric": [
-            { "points": 1, "check": "25.*degree|25°|primary bevel", "flags": "i" },
-            { "points": 1, "check": "30.*degree|30°|secondary|micro.?bevel|honing", "flags": "i" },
-            { "points": 1, "check": "oilstone|waterstone|diamond plate|scary sharp", "flags": "i" },
-            { "points": 1, "check": "mallet|wooden mallet|never metal hammer", "flags": "i" },
-            { "points": 1, "check": "cut.*away|away from body|hands.*behind|never.*lap", "flags": "i" },
-            { "points": 1, "check": "pare.*hand|hand pressure|light cut|fine shaving", "flags": "i" }
+            { "points": 1, "check": "poor lifting technique|back injury|ergonomic hazard|correct lifting", "flags": "i" },
+            { "points": 1, "check": "safety shoes|steel cap|falling sheets?|falling objects", "flags": "i" },
+            { "points": 1, "check": "leather gloves|reinforced poly.?cotton|sharp edges|coarse surfaces", "flags": "i" }
           ]
         }
       ]

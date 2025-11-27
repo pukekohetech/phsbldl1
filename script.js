@@ -877,31 +877,32 @@ async function emailWork() {
     const imgData = canvas.toDataURL("image/png");
     const imgProps = pdf.getImageProperties(imgData);
 
-  // Start from a max width based on margins
-const maxContentWidth = pageWidth - marginLeft - marginRight;
-let imgWidth = maxContentWidth;
-let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+    // Start from a max width based on margins
+    const maxContentWidth = pageWidth - marginLeft - marginRight;
+    let imgWidth = maxContentWidth;
+    let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-// If this block is taller than ~90% of the usable space, scale it down a bit
-const maxBlockHeight = usableHeight * 0.9;
-if (imgHeight > maxBlockHeight) {
-  const scale = maxBlockHeight / imgHeight;
-  imgWidth *= scale;
-  imgHeight = maxBlockHeight;
-}
+    // If this block is taller than ~90% of the usable space, scale it down a bit
+    const maxBlockHeight = usableHeight * 0.9;
+    if (imgHeight > maxBlockHeight) {
+      const scale = maxBlockHeight / imgHeight;
+      imgWidth *= scale;
+      imgHeight = maxBlockHeight;
+    }
 
-// Center horizontally on the page
-const xPos = (pageWidth - imgWidth) / 2;
+    // Center horizontally on the page
+    const xPos = (pageWidth - imgWidth) / 2;
 
-// If it won't fit on the current page, go to a new page
-if (currentY + imgHeight > pageHeight - marginBottom) {
-  pdf.addPage();
-  drawHeader(false);
-  currentY = marginTop;
-}
+    // If it won't fit on the current page, go to a new page
+    if (currentY + imgHeight > pageHeight - marginBottom) {
+      pdf.addPage();
+      drawHeader(false);
+      currentY = marginTop;
+    }
 
-pdf.addImage(imgData, "PNG", xPos, currentY, imgWidth, imgHeight);
-currentY += imgHeight + 5; // 5mm gap between blocks
+    pdf.addImage(imgData, "PNG", xPos, currentY, imgWidth, imgHeight);
+    currentY += imgHeight + 5; // 5mm gap between blocks
+  } // ← this closing brace for the for-loop was missing
 
   // ---------- PAGE NUMBERS IN FOOTER ----------
   const pageCount = pdf.getNumberOfPages();
@@ -938,31 +939,20 @@ currentY += imgHeight + 5; // 5mm gap between blocks
       showToast("Shared via device share sheet.");
       return;
     } catch (e) {
-    //  console.warn("Share cancelled or failed, falling back to download/mailto.", e);
-       // Fallback: download the file
+      // If sharing fails, fall through to download
+      console.warn("Share failed, falling back to download:", e);
+    }
+  }
+
+  // Always have a download fallback
   const url = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = url;
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-    }
-  }
 
- 
-
-
-  // And open mailto with summary (PDF is saved on device)
-//  const mailto = `mailto:?subject=${encodeURIComponent("Assessment submission: " + finalData.studentName)}&body=${encodeURIComponent(
-  //  `Student: ${finalData.studentName} (${finalData.studentId})
-//Teacher: ${finalData.teacherName}
-//Assessment: ${finalData.assessmentTitle} ${finalData.assessmentSubtitle ? "(" + finalData.assessmentSubtitle + ")" : ""}
-
-//Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)
-
-//A PDF copy has been downloaded on this device.`
-  )}`;
-  //window.location.href = mailto;
+  // (Optional mailto block removed to avoid half-comment bugs)
 }
 
 // ------------------------------------------------------------

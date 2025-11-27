@@ -683,7 +683,8 @@ function back() {
 }
 
 // ------------------------------------------------------------
-// Email / PDF – 900px CAPTURE + CLEAN A4 SLICING + HEADER/FOOTER
+// Email / PDF – per-block capture (no mid-question cuts) +
+// repeating header on every page (no overlap with maroon bar)
 // ------------------------------------------------------------
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
@@ -714,35 +715,6 @@ async function emailWork() {
   }
 
   const { jsPDF } = window.jspdf;
-
-  // ---------- 900px OFF-SCREEN CLONE (keeps PDF layout consistent) ----------
-  const resultSection = document.getElementById("result");
-  const clone = resultSection.cloneNode(true);
-
-  const offscreenContainer = document.createElement("div");
-  offscreenContainer.style.position = "fixed";
-  offscreenContainer.style.left = "-9999px";
-  offscreenContainer.style.top = "0";
-  offscreenContainer.style.width = "900px";
-  offscreenContainer.style.background = "white";
-
-  clone.style.width = "900px";
-  clone.style.maxWidth = "900px";
-
-  offscreenContainer.appendChild(clone);
-  document.body.appendChild(offscreenContainer);
-
-  const canvas = await window.html2canvas(clone, {
-    scale: 2,
-    useCORS: true,
-    scrollX: 0,
-    scrollY: -window.scrollY
-  });
-
-  const imgData = canvas.toDataURL("image/png");
-
-  // Clean up the off-screen DOM
-  document.body.removeChild(offscreenContainer);
 
   // ---------- CREATE PDF + GLOBAL PAGE DIMENSIONS ----------
   const pdf = new jsPDF("p", "mm", "a4");
@@ -791,7 +763,7 @@ async function emailWork() {
     pdf.setFontSize(12);
     pdf.text(APP_SUBTITLE || "Technology Assessment", 35, 22);
 
-    // Meta text (in black) under header
+    // Meta text (in black) under header – never overlaps maroon bar
     pdf.setTextColor(0, 0, 0);
     pdf.setFontSize(12);
 
@@ -806,7 +778,11 @@ async function emailWork() {
       if (finalData.assessmentSubtitle) {
         pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, studentLineY + 22);
       }
-      pdf.text(`Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 10, studentLineY + 29);
+      pdf.text(
+        `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`,
+        10,
+        studentLineY + 29
+      );
 
       // Deadline info from submitWork()
       let infoY = studentLineY + 36;
@@ -842,51 +818,75 @@ async function emailWork() {
         pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, studentLineY + 36);
       }
     } else {
-      // Compact header for later pages, still with student name
+      // Compact but still clear header on later pages
       pdf.text(`Student: ${finalData.studentName} (${finalData.studentId})`, 10, studentLineY);
       pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, studentLineY + 7);
+      if (finalData.assessmentSubtitle) {
+        pdf.setFontSize(11);
+        pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, studentLineY + 14);
+        pdf.setFontSize(12);
+      }
     }
   };
 
-  // ---------- IMAGE SIZE & A4 SLICING SETUP ----------
-  const imgProps = pdf.getImageProperties(imgData);
-
+  // ---------- LAYOUT CONSTANTS ----------
   const marginLeft = 10;
   const marginRight = 10;
-  const marginTop = 90;   // space for header + meta
-  const marginBottom = 15; // space for page number footer
-
-  const pdfWidth = pageWidth - marginLeft - marginRight;
-  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
+  const marginTop = 90;     // space for header + meta (keeps content well below maroon bar)
+  const marginBottom = 15;  // space for page numbers
   const usableHeight = pageHeight - marginTop - marginBottom;
 
-  let remainingHeight = pdfHeight;
-  let offsetY = 0;
-  let pageNum = 1;
+  // ---------- BUILD LIST OF BLOCKS TO CAPTURE ----------
+  const resultSection = document.getElementById("result");
+  const blocks = [];
 
-  // ---------- DRAW PAGES WITH SLICED IMAGE ----------
-  while (remainingHeight > 0) {
-    // Draw page header (full on first page, compact later)
-    drawHeader(pageNum === 1);
+  const resultHeader = resultSection.querySelector(".result-header");
+  if (resultHeader) blocks.push(resultHeader);
 
-    // Add the screenshot image, vertically shifted to "slice" for this page
-    pdf.addImage(
-      imgData,
-      "PNG",
-      marginLeft,
-      marginTop - offsetY,
-      pdfWidth,
-      pdfHeight
-    );
+  resultSection.querySelectorAll(".feedback").forEach(el => blocks.push(el));
 
-    remainingHeight -= usableHeight;
-    offsetY += usableHeight;
+  // Safety: if somehow no blocks found, fall back to whole section
+  if (blocks.length === 0) {
+    blocks.push(resultSection);
+  }
 
-    if (remainingHeight > 0) {
-      pdf.addPage();
-      pageNum++;
+  // ---------- DRAW FIRST PAGE HEADER ----------
+  drawHeader(true);
+  let currentY = marginTop;
+  let isFirstPage = true;
+
+  // ---------- CAPTURE EACH BLOCK SEPARATELY (NO MID-QUESTION CUTS) ----------
+  for (const block of blocks) {
+    const canvas = await window.html2canvas(block, {
+      scale: 2,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const imgProps = pdf.getImageProperties(imgData);
+
+    let imgWidth = pageWidth - marginLeft - marginRight;
+    let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+    // If this block is taller than the usable space, scale it down to fit
+    if (imgHeight > usableHeight) {
+      const scale = usableHeight / imgHeight;
+      imgWidth *= scale;
+      imgHeight = usableHeight;
     }
+
+    // If it won't fit on the current page, go to a new page
+    if (currentY + imgHeight > pageHeight - marginBottom) {
+      pdf.addPage();
+      isFirstPage = false;
+      drawHeader(false);
+      currentY = marginTop;
+    }
+
+    pdf.addImage(imgData, "PNG", marginLeft, currentY, imgWidth, imgHeight);
+    currentY += imgHeight + 5; // 5mm gap between blocks
   }
 
   // ---------- PAGE NUMBERS IN FOOTER ----------
@@ -945,6 +945,7 @@ A PDF copy has been downloaded on this device.`
   )}`;
   window.location.href = mailto;
 }
+
 
 
 // ------------------------------------------------------------

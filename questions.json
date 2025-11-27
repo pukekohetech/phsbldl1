@@ -49,13 +49,9 @@
             "3 – High velocity hazards particles",
             "5 – Non-ionizing radiation only"
           ],
-          "rubric": [
-            {
-              "points": 1,
-              "check": "^\\s*1\\b",
-              "flags": "i"
-            }
-          ]
+         "rubric": [
+  { "points": 1, "check": "^1", "flags": "i" }
+]
         },
         {
           "id": "q1b_hood_helmet",

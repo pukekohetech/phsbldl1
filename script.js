@@ -839,8 +839,8 @@ async function emailWork() {
   // ---------- LAYOUT CONSTANTS ----------
   const marginLeft = 10;
   const marginRight = 10;
-  const marginTop = 70;     // slightly tighter – still well below the maroon bar
-  const marginBottom = 10;  // a bit less footer padding
+  const marginTop = 70;     // space for header + meta
+  const marginBottom = 10;  // footer
   const usableHeight = pageHeight - marginTop - marginBottom;
 
   // Use a fixed "virtual" width so PDFs look consistent across devices
@@ -951,43 +951,6 @@ async function emailWork() {
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-}
-
-
-  // ---------- EXPORT & SHARE / DOWNLOAD ----------
-  const pdfBlob = pdf.output("blob");
-  const fileName = `${finalData.studentId || "student"}_${finalData.assessmentTitle.replace(/\s+/g, "_")}.pdf`;
-
-  let pdfFile = null;
-  if (window.File && typeof File === "function") {
-    pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
-  }
-
-  // Try native share sheet first (on phones/tablets)
-  if (pdfFile && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-    try {
-      await navigator.share({
-        title: "Assessment PDF",
-        text: "Here is my completed assessment.",
-        files: [pdfFile]
-      });
-      showToast("Shared via device share sheet.");
-      return;
-    } catch (e) {
-      // If sharing fails, fall through to download
-      console.warn("Share failed, falling back to download:", e);
-    }
-  }
-
-  // Always have a download fallback
-  const url = URL.createObjectURL(pdfBlob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  a.click();
-  URL.revokeObjectURL(url);
-
-  // (Optional mailto block removed to avoid half-comment bugs)
 }
 
 // ------------------------------------------------------------

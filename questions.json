@@ -1,5 +1,33 @@
 {
   "APP_ID": "pukekohetech-24352",
+  "VERSION": "2025",
+  "APP_TITLE": "US 24352 – Safety Knowledge",
+  "APP_SUBTITLE": "PHS - L1 Building – Assessment",
+
+  "DEADLINE": {
+    "day": 17,
+    "month": 12,
+    "label": "Submission deadline"
+  },
+
+  "TEACHERS": [
+    {
+      "id": "RY",
+      "name": "Mr Reynolds",
+      "email": "ry@pukekohehigh.school.nz"
+    },
+    {
+      "id": "RNR",
+      "name": "Mr Ranson",
+      "email": "rnr@pukekohehigh.school.nz"
+    },
+    {
+      "id": "Other",
+      "name": "Other Teacher",
+      "email": "technology@pukekohehigh.school.nz"
+    }
+  ],
+
   "ASSESSMENTS": [
     {
       "id": "24352-selfreflection1",
@@ -21,7 +49,9 @@
             "Medium velocity small flying particles",
             "Infrared and UV radiation (arc welding)"
           ],
-          "rubric": [{ "points": 1, "check": "Low velocity flying particles and objects", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Low velocity flying particles and objects", "flags": "i" }
+          ]
         },
         {
           "id": "q1b_hood_helmet",
@@ -38,7 +68,9 @@
             "Gas vapours, dust and fumes",
             "Non-ionizing radiation and glare"
           ],
-          "rubric": [{ "points": 1, "check": "Medium velocity small flying particles", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Medium velocity small flying particles", "flags": "i" }
+          ]
         },
         {
           "id": "q1c_wide_goggles",
@@ -55,7 +87,9 @@
             "Infrared and UV radiation (arc welding)",
             "Medium velocity small flying particles"
           ],
-          "rubric": [{ "points": 1, "check": "High velocity particles", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "High velocity particles", "flags": "i" }
+          ]
         },
         {
           "id": "q1d_safety_glasses",
@@ -72,7 +106,9 @@
             "High velocity particles",
             "Non-ionizing radiation and glare"
           ],
-          "rubric": [{ "points": 1, "check": "Gas vapours, dust and fumes", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Gas vapours, dust and fumes", "flags": "i" }
+          ]
         },
         {
           "id": "q1e_filter_lens",
@@ -89,7 +125,9 @@
             "Medium velocity small flying particles",
             "Gas vapours, dust and fumes"
           ],
-          "rubric": [{ "points": 1, "check": "Non-ionizing radiation and glare", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Non-ionizing radiation and glare", "flags": "i" }
+          ]
         },
         {
           "id": "q1f_welding_helmet",
@@ -106,7 +144,9 @@
             "High velocity particles",
             "Low velocity flying particles and objects"
           ],
-          "rubric": [{ "points": 1, "check": "Infrared and UV radiation", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Infrared and UV radiation", "flags": "i" }
+          ]
         },
         {
           "id": "q2a_sanding_timber",
@@ -121,7 +161,9 @@
             "Welding respirator for arc welding",
             "Air-fed breathing apparatus for two-pot paint"
           ],
-          "rubric": [{ "points": 1, "check": "Dust mask / particulate respirator for sanding timber", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Dust mask / particulate respirator for sanding timber", "flags": "i" }
+          ]
         },
         {
           "id": "q2b_arc_welding",
@@ -136,7 +178,9 @@
             "Dust mask / particulate respirator for sanding timber",
             "Respirator with appropriate filters for spraying glue"
           ],
-          "rubric": [{ "points": 1, "check": "Welding respirator for arc welding", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Welding respirator for arc welding", "flags": "i" }
+          ]
         },
         {
           "id": "q2c_spraying_glue",
@@ -151,7 +195,9 @@
             "Dust mask / particulate respirator for sanding timber",
             "Welding respirator for arc welding"
           ],
-          "rubric": [{ "points": 1, "check": "Respirator with appropriate filters for spraying glue", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Respirator with appropriate filters for spraying glue", "flags": "i" }
+          ]
         },
         {
           "id": "q2d_spraying_two_pot",
@@ -166,7 +212,9 @@
             "Welding respirator for arc welding",
             "Respirator with appropriate filters for spraying glue"
           ],
-          "rubric": [{ "points": 1, "check": "Air-fed breathing apparatus for two-pot paint", "flags": "i" }]
+          "rubric": [
+            { "points": 1, "check": "Air-fed breathing apparatus for two-pot paint", "flags": "i" }
+          ]
         }
       ]
     }

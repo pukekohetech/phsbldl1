@@ -215,8 +215,11 @@
       ],
       "rubric": [
         { "points": 1, "check": "^4", "flags": "i" }
+           ]
+        }
       ]
     }
+  ] 
   ]
 
 

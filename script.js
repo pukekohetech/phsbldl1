@@ -877,29 +877,31 @@ async function emailWork() {
     const imgData = canvas.toDataURL("image/png");
     const imgProps = pdf.getImageProperties(imgData);
 
-    let imgWidth = pageWidth - marginLeft - marginRight;
-    let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+  // Start from a max width based on margins
+const maxContentWidth = pageWidth - marginLeft - marginRight;
+let imgWidth = maxContentWidth;
+let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-    // If this block is taller than ~90% of the usable space, scale it down a bit
-    // so it doesn't completely dominate the page visually.
-    const maxBlockHeight = usableHeight * 0.9;
+// If this block is taller than ~90% of the usable space, scale it down a bit
+const maxBlockHeight = usableHeight * 0.9;
+if (imgHeight > maxBlockHeight) {
+  const scale = maxBlockHeight / imgHeight;
+  imgWidth *= scale;
+  imgHeight = maxBlockHeight;
+}
 
-    if (imgHeight > maxBlockHeight) {
-      const scale = maxBlockHeight / imgHeight;
-      imgWidth *= scale;
-      imgHeight = maxBlockHeight;
-    }
+// Center horizontally on the page
+const xPos = (pageWidth - imgWidth) / 2;
 
-    // If it won't fit on the current page, go to a new page
-    if (currentY + imgHeight > pageHeight - marginBottom) {
-      pdf.addPage();
-      drawHeader(false);
-      currentY = marginTop;
-    }
+// If it won't fit on the current page, go to a new page
+if (currentY + imgHeight > pageHeight - marginBottom) {
+  pdf.addPage();
+  drawHeader(false);
+  currentY = marginTop;
+}
 
-    pdf.addImage(imgData, "PNG", marginLeft, currentY, imgWidth, imgHeight);
-    currentY += imgHeight + 5; // 5mm gap between blocks
-  }
+pdf.addImage(imgData, "PNG", xPos, currentY, imgWidth, imgHeight);
+currentY += imgHeight + 5; // 5mm gap between blocks
 
   // ---------- PAGE NUMBERS IN FOOTER ----------
   const pageCount = pdf.getNumberOfPages();

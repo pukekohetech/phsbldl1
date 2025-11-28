@@ -1,0 +1,80 @@
+{
+  "APP_ID": "US24352_SAFETY",
+  "VERSION": "2025",
+  "APP_TITLE": "US 24352 – Safety Knowledge",
+  "APP_SUBTITLE": "PHS - L1 Building – Assessment",
+  "DEADLINE": {
+    "day": 17,
+    "month": 12,
+    "label": "Submission deadline"
+  },
+  "TEACHERS": [
+    {
+      "id": "RY",
+      "name": "Mr Reynolds",
+      "email": "ry@pukekohehigh.school.nz"
+    },
+    {
+      "id": "RNR",
+      "name": "Mr Ranson",
+      "email": "rnr@pukekohehigh.school.nz"
+    },
+    {
+      "id": "Other",
+      "name": "Other Teacher",
+      "email": "technology@pukekohehigh.school.nz"
+    }
+  ],
+  "ASSESSMENTS": [
+    {
+      "id": "new Ass",
+      "title": "coolass",
+      "subtitle": "this ass",
+      "questions": [
+        {
+          "id": "new q",
+          "text": "asdfgndsbd",
+          "image": "blank.jpg",
+          "hint": "aarewwrbwrwbrg",
+          "type": "mc",
+          "maxPoints": 1,
+          "rubric": [
+            {
+              "points": 1,
+              "check": "one",
+              "flags": "i"
+            }
+          ],
+          "options": [
+            "one",
+            "two",
+            "three",
+            "four"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "sfva",
+      "subtitle": "afg",
+      "questions": [
+        {
+          "id": "afga",
+          "text": "aerga",
+          "image": "blank.jpg",
+          "hint": "rf",
+          "type": "short",
+          "maxPoints": 1,
+          "rubric": [
+            {
+              "points": 1,
+              "check": "dude sweet nice",
+              "flags": "i"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

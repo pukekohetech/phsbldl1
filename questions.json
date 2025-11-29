@@ -28,7 +28,7 @@
   "ASSESSMENTS": [
     {
       "id": "US 25920 (v3)",
-      "title": "Knowledge Assessment -",
+      "title": "US 25920 v3 Knowledge Assessment -",
       "subtitle": "Use joints for a BCATS project",
       "usNumber": "US 25920",
       "usVersion": "3",
@@ -390,13 +390,13 @@
           "rubric": [
             {
               "points": 1,
-              "check": "(accurate|accuracy|careful|precise|precision).*(line up|match up|line-up|align|in line|in-line|fit together|fit properly|fit correctly|go together|join properly|join correctly)|(line up|match up|line-up|align|in line|in-line|fit together|fit properly|fit correctly|go together|join properly|join correctly)",
-              "flags": "i"
+      "check": "(accurate|accuracy|accurately|precise|precision|precisely|careful|carefully|exact|spot.?on|bang.?on|dead.?on).*(holes?|positions?|centres?|centers?|marking|setting out|drilling|drill|dowel points?)|(holes?|positions?|centres?|centers?|marking|setting out|drilling|drill|dowel points?).*(accurate|accuracy|accurately|precise|precision|precisely|careful|carefully|exact|spot.?on|bang.?on|dead.?on)",
+      "flags": "i"
             },
             {
-              "points": 1,
-              "check": "(line up|match up|line-up|align|in line|in-line|fit together|fit properly|fit correctly|go together).*(assembled|put together|when joined|glued|assembled together|finally assembled)",
-              "flags": "i"
+             "points": 1,
+      "check": "(so|because|then|if|means|need|must|has to).*(dowel|peg|joint|pieces?|parts?|boards?|halves?).*(line.?up|align|match.?up|flush|straight|square|fit|join|go.?together|tight|properly|correctly|evenly|even|level|flat|not twist|no gap|gap.?free|gaps?|no gaps?)|line.?up|align|match.?up|flush|straight|square|fit|join|go.?together|tight|properly|correctly|evenly|even|level|flat|not twist|no gap|gap.?free|gaps?|no gaps?",
+      "flags": "i"
             }
           ]
         },

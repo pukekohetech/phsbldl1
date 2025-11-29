@@ -45,133 +45,19 @@
           "rubric": [
             {
               "points": 1,
-              "check": "defect",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "blemish",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "knot",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "imperfection",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "fault",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "crack",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "split",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "warp",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "cupp",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "bow",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "twist",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "grain pattern",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "figure of the wood",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "grain match",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "grain direction",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "appearance of the wood",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "final appearance",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "Surface finish",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "quality",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "finish of the timber",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "rot",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "termite",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "lenght, width, thickness, long enough, wide enough",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "straight and square",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "square the ends",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "squared off",
-              "flags": "i"
+      "check": "warp|cupp?ing|bow|twist|straight|flat|true|wind|crook|bend|curved|curving|distorted?|bent",
+      "flags": "i"
+    },
+    {
+      "points": 1,
+      "check": "grain.*(pattern|direct|match|figure)|figure.*wood|match.*grain|appearance|look|colour|color|finish|surface|pretty|nice|beautiful|consistent",
+      "flags": "i"
+    },
+    {
+      "points": 1,
+      "check": "size|dimension|length|width|thick|long.*enough|wide.*enough|big.*enough|square|straight.*square|ends?.*square|measure|check.*measurement|right.*size",
+      "flags": "i"
+     
             }
           ]
         },

@@ -96,98 +96,13 @@
           "rubric": [
             {
               "points": 1,
-              "check": "pull apart",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "come apart",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "cannot be pulled",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "won't pull apart",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "locked together",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "mechanical strength",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "strong joint",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "resists pulling",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "repeat pulling",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "frequent use",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "constant use",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "hidden joint",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "concealed joint",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "not visible from the front",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "Clean appearance on the front face",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "clean front",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "drawer front",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "drawer face",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "front of the drawer",
-              "flags": "i"
+      "check": "strong|strength|mechanical|resist|lock|won't.? ?pull|cant.? ?pull|can't.? ?come|won't.? ?come|pull.*apart|come.*apart|apart.*pull|apart.*come|hold.*together|tight|tension|durable|hard.?wearing|long.?lasting|daily.?use|everyday.?use|frequent|frequent.*use|constant|repeat|opening|closing|drawer.*use",
+      "flags": "i"
+    },
+    {
+      "points": 1,
+      "check": "hidden|concealed|secret|not.? ?visible|can't.? ?see|not.? ?seen|invisible|cover|hide|hides|hiding|clean.*front|clean.*face|nice.*front|smooth.*front|no.*joint.*front|no.*dovetail.*front|front.*clean|front.*smooth|front.*nice|drawer.*front.*clean|drawer.*face.*clean|look.*good|looks.*good|neat.*front|tidy.*front|professional.*look",
+      "flags": "i"
             }
           ]
         },

@@ -45,17 +45,17 @@
           "rubric": [
             {
               "points": 1,
-      "check": "warp?ed|cupp?ing|bow?ed|twist?ed|straight|flat|true|wind|crook?ed|bend?nt|curve?d|curving|distorted?|bent|bend",
+      "check": "warp(ed|ing)?|cupp?ing|bow(ed|ing)?|twist(ed|ing)?|crook(ed)?|wind|bent|bend|curve|curved|curving|distort|spring|sprung|(not|no|n't)\s*(straight|flat|true|square|level|even)|twisted?\s*up|bowed?\s*out|cupped?\s*up",
       "flags": "i"
     },
     {
       "points": 1,
-      "check": "grain.*(pattern|direct?ion|match?es|figure)|figure.*wood|match.*grain|appearance|look|colour|color|defect?s|finish|surface|pretty|nice|beautiful|consistent",
+      "check": "(good|nice|best|pretty|beautiful|consistent|even|uniform|same|matching|match|similar|straight|run|flow|clear|clean|no.*defect|defect.*free|blemish.*free|knot.*free|figure|attractive|cool|awesome|epic|perfect|lovely|excellent|great).*(grain|figure|colour|color|pattern|direction|appearance|look|surface|finish|wood)|grain.*(pattern|direct?ion|match|figure|flow|run|look|colour|color|appearance|finish|surface|good|nice|best|pretty|consistent|even|same|straight|clear|clean|beautiful)|(figure|colour|color).*(wood|grain|match|same|consistent|good|nice|beautiful|even)|match.*(grain|colour|color|pattern|figure)|appearance|look|colour|color|defect|blemish|knot|crack|split|stain|mark|damage|finish|surface|smooth|rough|pretty|nice|beautiful|consistent|even|uniform",
       "flags": "i"
     },
     {
       "points": 1,
-      "check": "size|dimension|length|width|thick|long.*enough|wide.*enough|big.*enough|square|straight.*square|ends?.*square|measure|check.*measurement|right.*size",
+      "check": "(good|right|correct|proper|exact|perfect|big|small|long|wide|thick|enough|sufficient).*(size|dimension|length|width|thickness|thick|square|measurement)|size|dimension|length|width|thick|thickness|long.*enough|wide.*enough|big.*enough|small.*enough|thick.*enough|right.*size|correct.*size|proper.*size|square.*enough|square|squared|squareness|straight.*square|ends?.*square|ends?.*squared|face.*square|edge.*square|90.*degree|right.*angle|measure|measurement|check.*(size|length|width|thick|square)|big.*enough|fit.*project|fit.*plan|matches.*drawing|matches.*plan|correct.*dimension|actual.*size",
       "flags": "i"
      
             }

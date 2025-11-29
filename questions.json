@@ -39,13 +39,158 @@
           "id": "1_two_checks",
           "text": "What are two checks you can make on timber you have selected for a project?",
           "image": "blank.jpg",
-          "hint": "",
+          "hint": "Take a look at Wood joints page 14.",
           "type": "long",
           "maxPoints": 3,
           "rubric": [
             {
-              "points": 1,
-              "check": "(defects|blemishes|final appearance|grain patterns|preparation of the timber|square)",
+              "points": 3,
+              "check": "(defect|blemish|knot|imperfection|fault|crack|split|warp|cupp|bow|twist|grain pattern|grain direction|grain match|figure of the wood|appearance of the wood|final appearance|finish of the timber|preparation of the timber|prepare the timber|prepare the wood|straight and square|square the ends|squared off)",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "2_joint_mitre_angle",
+          "text": "What is the name of the joint used to join mouldings around a rectangular doorway and what is the angle of the cut?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Mitre joints page 16 and 17.",
+          "type": "short",
+          "maxPoints": 3,
+          "rubric": [
+            {
+              "points": 3,
+              "check": "(?=.*mi?tre)(?=.*(45\\s*(degree|deg|°)|forty[- ]five)).*",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "3_lap_dovetail_reasons",
+          "text": "Give two reasons why lap dovetail joints are used for drawer fronts.",
+          "image": "blank.jpg",
+          "hint": "Take a look at Dovetail joints and Lap dovetail page 18 and 19.",
+          "type": "long",
+          "maxPoints": 3,
+          "rubric": [
+            {
+              "points": 3,
+              "check": "(pull apart|come apart|cannot be pulled|won't pull apart|locked together|mechanical strength|strong joint|resists pulling|hidden joint|concealed joint|not visible from the front|clean front|drawer front|drawer face|front of the drawer|repeat pulling|frequent use|constant use)",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "4_stopped_housing",
+          "text": "What is the name of the housing joint where the trench does not extend right across the face of the vertical board?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Housing joints page 20.",
+          "type": "short",
+          "maxPoints": 2,
+          "rubric": [
+            {
+              "points": 2,
+              "check": "(stopped housing|stop housing|stopped housing joint)",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "5_mortise_tenon_types",
+          "text": "What are the specific names of the following mortise and tenon joints?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Mortise and tenon joints page 23.",
+          "type": "long",
+          "maxPoints": 6,
+          "rubric": [
+            {
+              "points": 2,
+              "check": "haunch(ed)?( tenon)?",
+              "flags": "i"
+            },
+            {
+              "points": 2,
+              "check": "(stub( tenon)?|stopped( tenon)?|blind( tenon)?)",
+              "flags": "i"
+            },
+            {
+              "points": 2,
+              "check": "(through( tenon)?|through joint)",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "6_dowel_accuracy",
+          "text": "Why is it necessary to be accurate when setting out a dowel joint?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Dowelled joints page 27.",
+          "type": "long",
+          "maxPoints": 2,
+          "rubric": [
+            {
+              "points": 2,
+              "check": "((accurate|accuracy|careful|precise|precision).*(line up|match up|line-up|align|in line|in-line|fit together|fit properly|fit correctly|go together|join properly|join correctly)|(line up|match up|line-up|align|in line|in-line|fit together|fit properly|fit correctly|go together).*(assembled|put together|when joined))",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "7_biscuit_joiner",
+          "text": "What is the name of the portable power tool used make a biscuit joint?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Biscuit joints page 29.",
+          "type": "short",
+          "maxPoints": 2,
+          "rubric": [
+            {
+              "points": 2,
+              "check": "(biscuit\\s*(joiner|jointer|cutter)|plate\\s*joiner|biscuit machine)",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "8_three_welded_joints",
+          "text": "Name three of the five basic welded joints.",
+          "image": "blank.jpg",
+          "hint": "Take a look at Metal joints and Welding page 31 and 32.",
+          "type": "long",
+          "maxPoints": 3,
+          "rubric": [
+            {
+              "points": 3,
+              "check": "(butt\\s*joint|corner\\s*joint|tee\\s*joint|t\\s*-?joint|lap\\s*joint|edge\\s*joint)",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "9_two_gases",
+          "text": "What are the two most common gases used in gas welding?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Gas welding page 33.",
+          "type": "short",
+          "maxPoints": 2,
+          "rubric": [
+            {
+              "points": 2,
+              "check": "(?=.*(oxygen|oxy\\b))(?=.*(acetylene|acetalene|acetalyne)).*",
+              "flags": "i"
+            }
+          ]
+        },
+        {
+          "id": "10_quality_project_key",
+          "text": "What is the key to producing a quality project?",
+          "image": "blank.jpg",
+          "hint": "Take a look at Wood joints page 14.",
+          "type": "long",
+          "maxPoints": 3,
+          "rubric": [
+            {
+              "points": 3,
+              "check": "(preparation of the timber|prepare the timber|prepare the wood|good preparation|well prepared|careful preparation|accurate|accuracy|square|straight and true|straight and square|true and square|careful measuring|sawn and planed accurately)",
               "flags": "i"
             }
           ]

@@ -50,7 +50,7 @@
     },
     {
       "points": 1,
-      "check": "grain.*(pattern|direct?ion|match?es|figure)|figure.*wood|match.*grain|appearance|look|colour|color|finish|surface|pretty|nice|beautiful|consistent",
+      "check": "grain.*(pattern|direct?ion|match?es|figure)|figure.*wood|match.*grain|appearance|look|colour|color|defect?s|finish|surface|pretty|nice|beautiful|consistent",
       "flags": "i"
     },
     {

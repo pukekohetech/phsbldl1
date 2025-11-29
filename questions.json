@@ -45,12 +45,12 @@
           "rubric": [
             {
               "points": 1,
-      "check": "warp|cupp?ing|bow|twist|straight|flat|true|wind|crook|bend|curved|curving|distorted?|bent",
+      "check": "warp?ed|cupp?ing|bow?ed|twist?ed|straight|flat|true|wind|crook?ed|bend?nt|curve?d|curving|distorted?|bent|bend",
       "flags": "i"
     },
     {
       "points": 1,
-      "check": "grain.*(pattern|direct|match|figure)|figure.*wood|match.*grain|appearance|look|colour|color|finish|surface|pretty|nice|beautiful|consistent",
+      "check": "grain.*(pattern|direct?ion|match?es|figure)|figure.*wood|match.*grain|appearance|look|colour|color|finish|surface|pretty|nice|beautiful|consistent",
       "flags": "i"
     },
     {

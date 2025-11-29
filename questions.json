@@ -44,7 +44,7 @@
           "maxPoints": 2,
           "rubric": [
             {
-             {
+             
   "points": 1,
   "check": "warp(ed|ing)?|warped|warping|cupp?ing|cupped|bow(ed|ing)?|bowed|twist(ed|ing)?|twisted|crook(ed)?|crooked|wind|bent|bend|curve|curved|curving|distort|spring|sprung|(not|no|n't) ?(straight|flat|true|square|level|even)|twisted? up|bowed? out|cupped? up|not straight|not flat|no twist|no bow|no cup",
   "flags": "i"

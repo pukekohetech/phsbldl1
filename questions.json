@@ -190,12 +190,12 @@
             },
             {
               "points": 1,
-              "check": "45, forty five",
+              "check": "(45|forty five)",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "deg, degrees",
+              "check": "(deg|degrees)",
               "flags": "i"
             }
           ]

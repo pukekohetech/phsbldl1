@@ -830,18 +830,18 @@
           "rubric": [
             {
               "points": 1,
-              "check": "Flying particles",
+              "check": "Flying particles|Noise Dust|Sharp tools or edges|Heavy lifting or Manual handling| Slips, trips, falls|Electricity Machinery hazards|Fumes or Vapors",
               "flags": "i"
             }
           ],
           "options": [
             "Flying particles",
             "Noise Dust",
-            "Sharp tools /edges",
-            "Heavy lifting/ Manual handling",
+            "Sharp tools or edges",
+            "Heavy lifting or Manual handling",
             "Slips, trips, falls",
             "Electricity Machinery hazards",
-            "Fumes / Vapors"
+            "Fumes or Vapors"
           ]
         },
         {

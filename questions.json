@@ -825,64 +825,21 @@
           "text": "What Hazard did you encounter",
           "image": "blank.jpg",
           "hint": "select the type of hazard encountered",
-          "type": "mc",
+          "type": "long",
           "maxPoints": 1,
           "rubric": [
-            {
-              "points": 1,
-              "check": ".+",
-              "flags": "i"
-            }
-          ],
-          "options": [
-            "Flying particles",
-            "Noise Dust",
-            "Sharp tools or edges",
-            "Heavy lifting or Manual handling",
-            "Slips trips or falls",
-            "Electricity Machinery hazards",
-            "Fumes or Vapors"
-          ]
-        },
-        {
-          "id": "control_a",
-          "text": "What did you do (or what should be done) to control or reduce this hazard?",
-          "image": "blank.jpg",
-          "hint": "",
-          "type": "long",
-          "maxPoints": 2,
-          "rubric": [
-            {
-              "points": 1,
-              "check": "eliminat|remove|rid|get.?rid|throw.*away|don'?t.*use|not.*use|take.*away|ban|stop.*using|no.*longer.*use|replace.*completely",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "substitut|safer.*(material|chemical|tool|product|option|alternative)|less.*(hazard|danger|toxic|harmful|risk)|different.*(chemical|material|product|glue|paint|solvent)|use.*instead|swap.*for|change.*to|use.*low|use.*water.*based|use.*non",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "isolat|separate|keep.*away|restrict.*access|barricade|fence.*off|lock.*away|keep.*out|out.*of.*bounds|restricted.*area|isolated.*area|separate.*zone|cord.*off|barrier|enclose|enclosure",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "guard|blade.?guard|guard.?on|dust.*extract|extract.*system|extractor|ventilation|fan|exhaust|clamp|secure.*work|push.*stick|push.*block|jig|fixture|stop.*block|light|better.*light|improv.*light|local.*light|fixed|bench.*stop|fence.*on|guard.*machine",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "rule|training|sop|procedure|follow.*(rule|procedure|sop|instruction|method)|tidy|clean|store.*tool|put.*away|correct.*lift|team.*lift|two.*person|don'?t.*rush|take.*time|supervision|teacher.*watch|sign|signage|warning|danger.*sign|caution|restricted",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "ppe|glasses|safety.*glasses|goggles|ear.*muffs|ear.*plugs|mask|respirator|dust.*mask|boots|steel.*cap|gloves|overalls|apron|face.*shield|helmet|hard.*hat|protect|wear.*(glass|ear|mask|boot|glove)",
-              "flags": "i"
-            }
-          ]
+  {
+    "points": 1,
+    "check": "\\b(?:broken|broke|crack(?:ed|ing|s)?|split|damag(?:e|ed|ing|es)?|fault(?:y|ies)?|worn|blunt|loose|unsecure|unstable|frayed|danger(?:ous)?|unsafe|hazard(?:ous)?|risk(?:y|ier)?|dust(?:y)?|saw ?dust|wood ?dust|grinding ?dust|fine ?dust|airborne ?dust|fumes?|vapou?r|smell|smells|solvent|thinner|turps?|acetone|chemical|toxic|poison(?:ous)?|noise|noisy|loud|hearing|ringing|buzzing|sharp|blade?s?|edge?s?|splinter(?:s)?|shaving(?:s)?|swarf|chip(?:s)?|spark(?:s)?|particle(?:s)?|flying ?chips?|hot|burn(?:s|t)?|scald(?:s|ed|ing)?|lift|lifting|heavy|manual ?handling|back ?(?:strain|pain|injury)|slip(?:s|ped|ping)?|trip(?:s|ped|ping)?|fall(?:s|ing|en)?|wet ?floor|slippery|slippy|spill(?:s|age)?|oil ?spill|water ?spill|mess|messy|clutter|cluttered|untidy|dirty|blocked ?(?:walkway|exit|doorway)|electric|electrical|shock|live ?wire|exposed ?wire|unguarded|guard ?(?:off|missing|removed|loose)|hair|long ?hair|loose ?clothing|sleeve?s?|jewell?ery|necklace|bracelet|ring|open ?toe(?:d)? ?shoe?s?|jandal?s?|compressed ?air|air ?hose|welding|uv|flash|arc ?eye)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(?:tool|tools|hand ?tool|power ?tool|machine|machines|equipment|saw|saws|handsaw|band ?saw|circular ?saw|drop ?saw|mitre ?saw|table ?saw|panel ?saw|jigsaw|scroll ?saw|drill|drills|pillar ?drill|drill ?press|lathe|lathes|sander|sanders|disc ?sander|belt ?sander|linisher|router|router ?table|thicknesser|planer|bench ?grinder|grinder|chisel|chisels|gouge|plane|planes|file|rasp|clamp|clamps|vice|vise|bench|workbench|work ?bench|workshop|wood ?room|wood|timber|timbers|board|boards|sheet|sheets|panel|panels|offcut|offcuts|plug|plugs|cable|cables|cord|cords|lead|leads|socket|sockets|outlet|outlets|extension ?lead|extension ?cord|power ?board|multi ?board|floor|flooring|walkway|walkways|path|paths|aisle|aisles|stair|stairs|ladder|ladders|scaffold|scaffolding|storeroom|rack|racking|shelf|shelves|doorway|doorways|entrance|exit|exits|corner|corners|workspace|work ?area|storage ?area)\\b",
+    "flags": "i"
+  }
+]
+
         },
         {
           "id": "ppe_required_a",

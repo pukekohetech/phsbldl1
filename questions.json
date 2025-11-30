@@ -37,15 +37,15 @@
       "questions": [
         {
           "id": "q1a_face_shields",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Polycarbonate face shields – write the best hazard number (1–6) for this PPE.",
+          "text": "Match the appropriate eye protection PPE to the hazard by selecting it from below\n\nPPE Type: Polycarbonate face shields ",
           "image": "blank.jpg",
-          "hint": "Hazard 1: Low velocity hazard flying particles and objects.",
+          "hint": "often made from extremely hard polycarbonate",
           "type": "mc",
           "maxPoints": 1,
           "rubric": [
             {
               "points": 1,
-              "check": "Low velocity flying particles and objects",
+              "check": "High velocity particles",
               "flags": "i"
             }
           ],
@@ -60,15 +60,15 @@
         },
         {
           "id": "q1b_hood_helmet",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Hood and helmet (completely sealing the face) – write the best hazard number (1–6) for this PPE.",
+          "text": "Match the appropriate eye protection PPE to the hazard by selecting it from below\n\nPPE Type: Hood and helmet (completely sealing the face) ",
           "image": "blank.jpg",
-          "hint": "Hazard 2: Medium velocity hazard small flying particles.",
+          "hint": "why would it seal to the face?",
           "type": "mc",
           "maxPoints": 1,
           "rubric": [
             {
               "points": 1,
-              "check": "Medium velocity small flying particles",
+              "check": "Gas vapours, dust and fumes",
               "flags": "i"
             }
           ],
@@ -83,15 +83,15 @@
         },
         {
           "id": "q1c_wide_goggles",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Wide vision goggles – write the best hazard number (1–6) for this PPE.",
+          "text": "Match the appropriate eye protection PPE to the hazard by selecting it from below\n\nPPE Type: Wide vision goggles",
           "image": "blank.jpg",
-          "hint": "Hazard 3: High velocity hazards particles.",
+          "hint": "stronger than your average safety googles",
           "type": "mc",
           "maxPoints": 1,
           "rubric": [
             {
               "points": 1,
-              "check": "High velocity particles",
+              "check": "Medium velocity small flying particles",
               "flags": "i"
             }
           ],
@@ -106,15 +106,15 @@
         },
         {
           "id": "q1d_safety_glasses",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Safety glasses – write the best hazard number (1–6) for this PPE.",
+          "text": "Match the appropriate eye protection PPE to the hazard by selecting it from below\n\nPPE Type: Safety glasses",
           "image": "blank.jpg",
-          "hint": "Hazard 4: Gas vapours. Properly fitting safety glasses or goggles can help prevent injuries from dust, fumes, and vapours (page 30).",
+          "hint": "general use in the workshop",
           "type": "mc",
           "maxPoints": 1,
           "rubric": [
             {
               "points": 1,
-              "check": "Gas vapours, dust and fumes",
+              "check": "Low velocity flying particles and objects",
               "flags": "i"
             }
           ],
@@ -129,9 +129,9 @@
         },
         {
           "id": "q1e_filter_lens",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Safety glasses/goggles with filter lens – write the best hazard number (1–6) for this PPE.",
+          "text": "Match the appropriate eye protection PPE to the hazard by selecting it from below\n\nPPE Type: Safety glasses/goggles with filter lens",
           "image": "blank.jpg",
-          "hint": "Hazard 5: Non-ionizing radiation only. Shaded safety glasses to protect your eyes from glare must be worn when brazing or using an oxy-acetylene set (page 30).",
+          "hint": "Shaded safety glasses to protect your eyes from glare must be worn when brazing or using an oxy-acetylene set",
           "type": "mc",
           "maxPoints": 1,
           "rubric": [
@@ -152,15 +152,15 @@
         },
         {
           "id": "q1f_welding_helmet",
-          "text": "Q1: Match the appropriate eye protection PPE to the hazard by writing the identifying hazard number beneath the appropriate eye protection (in the space provided).\n\nPPE Type: Welding helmet – write the best hazard number (1–6) for this PPE.",
+          "text": "Match the appropriate eye protection PPE to the hazard by selecting it from below\n\nPPE Type: Welding helmet",
           "image": "blank.jpg",
-          "hint": "Hazard 6: Infrared and UV radiation. For arc welding, a welding helmet with the correct lenses must be worn (page 31).",
+          "hint": "For arc welding, a welding helmet with the correct lenses must be worn.",
           "type": "mc",
           "maxPoints": 1,
           "rubric": [
             {
               "points": 1,
-              "check": "Non-ionizing radiation and glare",
+              "check": "Infrared and UV radiation \\(arc welding\\)",
               "flags": "i"
             }
           ],
@@ -175,7 +175,7 @@
         },
         {
           "id": "q2a_sanding_timber",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 1 Sanding timber – what is the appropriate respiratory protection?",
+          "text": "Activity: 1 Sanding timber – what is the appropriate respiratory protection?",
           "image": "blank.jpg",
           "hint": "Use the extraction system and wear a dust mask over the nose and mouth (page 35).",
           "type": "mc",
@@ -196,7 +196,7 @@
         },
         {
           "id": "q2b_arc_welding",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 2 Arc welding – what is the appropriate respiratory protection?",
+          "text": "Activity: 2 Arc welding – what is the appropriate respiratory protection?",
           "image": "blank.jpg",
           "hint": "Wear an appropriate respirator (page 36).",
           "type": "mc",
@@ -217,7 +217,7 @@
         },
         {
           "id": "q2c_spraying_glue",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 3 Spraying glue – what is the appropriate respiratory protection?",
+          "text": "Activity: 3 Spraying glue – what is the appropriate respiratory protection?",
           "image": "blank.jpg",
           "hint": "Wear a respirator fitted with filters appropriate to the job. Dust masks are not suitable (page 37).",
           "type": "mc",
@@ -238,7 +238,7 @@
         },
         {
           "id": "q2d_spraying_two_pot",
-          "text": "Q2: From the photos below, select the appropriate equipment for: 1 Sanding timber 2 Arc welding 3 Spraying glue 4 Spraying ‘two-pot’ paint Write the identifying number beneath the appropriate respiratory protection.\n\nActivity: 4 Spraying ‘two-pot’ paint – what is the appropriate respiratory protection?",
+          "text": "Activity: 4 Spraying ‘two-pot’ paint – what is the appropriate respiratory protection?",
           "image": "blank.jpg",
           "hint": "You must wear a special breathing apparatus that has its own pure air supply (page 37).",
           "type": "mc",
@@ -270,30 +270,60 @@
       "questions": [
         {
           "id": "q1_rules",
-          "text": "Q1: Compile a list of rules/codes of conduct that would ensure safe working practices in a BCATS environment. E.g. wear the appropriate eye protection at all times.",
+          "text": "Compile a list of rules/codes of conduct that would ensure safe working practices in a BCATS environment. E.g. wear the appropriate eye protection at all times.",
           "image": "blank.jpg",
           "hint": "Include rules such as: always think about possible hazards and act accordingly; make a habit of always wearing appropriate PPE; do not wear loose or dangling clothing or jewellery; tie back long hair before operating machines.",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 8,
           "rubric": [
             {
               "points": 1,
-              "check": "always think.*possible hazards|think first.*hazard|stop and think.*hazards",
+              "check": "think|hazard|risk|danger|stop.*think|assess|plan|careful|safe first",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "always wear.*(PPE|personal protective equipment|eye protection|earmuffs|ears?|mask|boots)",
+              "check": "PPE|wear.*(glasses|goggles|ear ?muffs|ear ?plugs|mask|respirator|boots|gloves|shield|helmet|apron|overalls)",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "do not wear.*(loose|baggy|dangling).*(clothing|clothes|jewellery|jewelry)|no loose (clothes|clothing|sleeves)|no dangling (chains?|necklaces?)",
+              "check": "no.*(loose|baggy|dangling).*(cloth|sleeve|jewel|chain|necklace|bracelet|ring)|remove.*jewel|no.*jewel|tie.*sleeve",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "tie back.*long hair|long hair.*(tied|tie).*back|wear a hat.*long hair",
+              "check": "tie.*back.*hair|long hair.*(tied|tie).*back|hair.*tied|hat.*hair|cap.*hair",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "no.*(running|fooling|horseplay|mucking|mess.*about|play|distract|throw)",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "tidy|clean|store.*tool|put.*away|pack.*away|sweep|wipe|clear|bench.*clear|floor.*clear",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "lift.*(correct|proper|safe)|bend.*knee|team.*lift|two.*person|ask.*help|heavy",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "no.*(alone|unsupervised|without.*teacher|without.*permission)|ask.*teacher|supervision|teacher.*watch",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "don'?t.*rush|take.*time|slow|careful|no.*hurry|concentrate|focus",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "report|tell.*teacher|broken|fault|damage|danger|spill|hazard|problem",
               "flags": "i"
             }
           ]
@@ -304,26 +334,56 @@
           "image": "blank.jpg",
           "hint": "Think about what could happen if PPE is not worn, if loose clothing or jewellery is worn, or if hair is not tied back.",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 8,
           "rubric": [
             {
               "points": 1,
-              "check": "eye injur(y|ies)|damage to (an )?eye|loss of sight|blind(ness)?",
+              "check": "eye|blind|sight|vision|particle|chip|spark|chemical|flash|damage.*eye|injured.*eye|lose.*eye",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "hair.*caught.*machine|scalp.*(ripped|torn|peeled)|hair.*(ripped out|pulled out)",
+              "check": "ear|hearing|deaf|ringing|noise|damage.*ear|hearing.*loss|loud|sound",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "caught.*machinery|pulled into machine|entangle(d|ment).*clothing|dragged into",
+              "check": "hair.*(caught|pulled|ripped|scalp|machine)|scalp|hair.*(torn|peeled|ripped out)",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "lung (disease|damage|problems?)|breathing problems?|respiratory (illness|issues?)|cancer|serious health.*problems?|long.?term health damage",
+              "check": "cloth|jewel|sleeve|necklace|bracelet|caught.*machine|pulled.*machine|entangle|dragged.*machine",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "horseplay|running|fooling|distract|trip|fall|slip|injured|hurt|accident|someone.*hurt",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "mess|clutter|trip|slip|fall|spill|tool.*floor|obstruct|someone.*hurt",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "back|strain|lift|heavy|pain|injured.*back|hernia|hurt.*back|spine",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "alone|unsupervised|accident|no help|serious.*injury|die|death|no one.*help|teacher.*not there",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "rush|hurry|mistake|accident|cut|injured|hurt|careless|wrong|damage",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "lung|breath|dust|respirator|mask|cancer|asthma|silicosis|poison|chemical|health|long.*term|fumes|damage.*lung",
               "flags": "i"
             }
           ]
@@ -338,12 +398,7 @@
           "rubric": [
             {
               "points": 1,
-              "check": "offer (minimal|little|no) protection.*feet|do not protect.*feet|bare feet.*exposed",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "open toes?|toes.*exposed|injury from (falling objects?|nails?|sharp objects?)",
+              "check": "no.?protect|little.?protect|minimal.?protect|not.?protect|bare.*feet|open.*toe|toe.*exposed|exposed.*(toe|foot)|fall.*object|drop.*(tool|weight|timber)|nail|step.*nail|screw|sharp|crush|toe.*crush|foot.*crush|injured.*(foot|toe)|hurt.*(foot|toe)|broken.*(toe|foot)|cut.*(toe|foot)|jandal.*flip|sandal|thong|slippers?",
               "flags": "i"
             }
           ]

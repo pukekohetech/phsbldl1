@@ -809,7 +809,7 @@
           "rubric": [
             {
               "points": 1,
-              "check": "Tool Box",
+              "check": ".+",
               "flags": "i"
             }
           ],
@@ -830,7 +830,7 @@
           "rubric": [
             {
               "points": 1,
-              "check": "Flying particles",
+              "check": ".+",
               "flags": "i"
             }
           ],
@@ -915,6 +915,57 @@
             {
               "points": 1,
               "check": "(damage|damag|break|broke|broken|breaking|ruin|scratch|destroy|wreck|burn(t|ed|ing)?|fire|explod|spill|mess|waste|cost|money|replace|stop|halt|delay|shut.?down|close.?workshop|get.?in.?trouble|told.?off|sent.?home|detention|principal|parent|report|fail|no.?credit|lose.?marks|accident|near.?miss|danger|unsafe|hazard|trip|someone|insurance|worksafe|inspector)",
+              "flags": "i"
+            },
+           
+            {
+              "points": 1,
+              "check": "eye|blind|sight|vision|particle|chip|spark|chemical|flash|damage.*eye|injured.*eye|lose.*eye",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "ear|hearing|deaf|ringing|noise|damage.*ear|hearing.*loss|loud|sound",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "hair.*(caught|pulled|ripped|scalp|machine)|scalp|hair.*(torn|peeled|ripped out)",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "cloth|jewel|sleeve|necklace|bracelet|caught.*machine|pulled.*machine|entangle|dragged.*machine",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "horseplay|running|fooling|distract|trip|fall|slip|injured|hurt|accident|someone.*hurt",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "mess|clutter|trip|slip|fall|spill|tool.*floor|obstruct|someone.*hurt",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "back|strain|lift|heavy|pain|injured.*back|hernia|hurt.*back|spine",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "alone|unsupervised|accident|no help|serious.*injury|die|death|no one.*help|teacher.*not there",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "rush|hurry|mistake|accident|cut|injured|hurt|careless|wrong|damage",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "lung|breath|dust|respirator|mask|cancer|asthma|silicosis|poison|chemical|health|long.*term|fumes|damage.*lung",
               "flags": "i"
             }
           ]

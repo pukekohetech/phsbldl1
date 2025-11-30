@@ -907,40 +907,40 @@
           "image": "blank.jpg",
           "hint": "Pick any 3 reasons from the list and say why radiata works well for a school file box project.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             {
-              "points": 2,
+              "points": 1,
               "check": "aesthetic|appearance|look|natural|warm|wood.*look|grain|knots|rustic|painted finish|traditional|timber look|nice when stained",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "ergonomic|light ?weight|lightweight|easy to (handle|lift|carry|move|work with)|low weight|not heavy|easy for one person",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "cost|cheap|inexpensive|affordable|low cost|budget|cheapest|good value|price|plantation|economical",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "availab|easy to (get|buy|source)|stocked|common|readily available|Bunnings|Mitre 10|hardware store|local|standard size|in stock",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "joint|fixing|joining|nail|screw|glue|butt|housing|easy to nail|screws? well|glues? well|good holding|takes? fixings?|dowel|biscuit",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "durab|strong enough|structural|last|long ?lasting|treated.*rot|won't rot|H1|H2|H3|boric|LOS P|hard ?wearing|construction grade",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "safety|safe|non ?toxic|no chemicals|untreated.*safe|low VOC|food safe|child safe|smooth|no splinters? when finished|softwood.*dent",
               "flags": "i"
             },
@@ -1177,40 +1177,40 @@
           "image": "blank.jpg",
           "hint": "Why did we choose thin plywood instead of MDF or solid wood for the panels? Pick any 3 reasons from the list.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             {
-              "points": 2,
+              "points": 1,
               "check": "aesthetic|appearance|look|nice|attractive|natural|wood ?grain|warm|smooth finish|paint|varnish|modern|clean|professional|visually? appealing",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "ergonomic|light ?weight|lightweight|easy to (handle|carry|lift|move)|low weight|comfortable|not heavy|portable|easy for user",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "cost|cheap|inexpensive|affordable|low cost|budget|price|good value|cheaper than|less expensive than|economical",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "available|easy to (get|buy|source)|stocked|readily available|common|hardware store|Bunnings|Mitre 10|in stock|local supplier",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "joint|fixing|joining|glue|nail|screw|butt joint|housing joint|easy to (join|fix|assemble)|screws? well|glues? well|good screw holding",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "durab|strong|stable|rigid|long ?lasting|won't break|structural|cross ?grained|dimensionally? stable|resists? warping|doesn't twist|hard ?wearing",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "safety|safe|no sharp edges|smooth|non ?toxic|low formaldehyde|E0|E1|food safe|child safe|splinters? sealed|no harmful|doesn't splinter when finished",
               "flags": "i"
             },
@@ -1412,40 +1412,40 @@
           "image": "blank.jpg",
           "hint": "Why PVA instead of PU or epoxy for a school project? Think safety, cost, ease of use.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             {
-              "points": 2,
+              "points": 1,
               "check": "aesthetic|appearance|clear bond|dries?.*clear|invisible joint|clean finish|no yellow|doesn'?t stain|transparent|neat|professional look",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "ergonomic|easy to use|easy to apply|squeez.?bottle|spreads?.*easily|no mess|water.?clean|comfortable|no fumes|pleasant",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "cost|cheap|inexpensive|affordable|low cost|budget|cheapest|good value|under.*\\$10",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "availab|easy to (get|buy|find)|everywhere|hardware store|Bunnings|school|stocked|common|readily available",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "joint|strong bond|stronger than wood|wood failure|perfect for timber|interior joint|good adhesion|holds?.*well|permanent",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "durab|strong enough|long.?lasting|permanent|interior use|won't fail indoors|reliable|lasts?.*years",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "safety|safe|non.?toxic|food safe|child safe|school safe|low VOC|no fumes|wash.*water|no harm|student.?friendly",
               "flags": "i"
             },
@@ -1642,40 +1642,40 @@
           "image": "blank.jpg",
           "hint": "Why hand-nail with jolt heads instead of using a brad nailer or screws? Think school workshop, cost, no power tools, neat finish after putty.",
           "type": "long",
-          "maxPoints": 8,
+          "maxPoints": 4,
           "rubric": [
             {
-              "points": 2,
+              "points": 1,
               "check": "aesthetic|neat|tidy|small hole|punched?.*putty|filled?.*putty|clean finish|flat head.*fill|almost invisible|professional look|head.*countersunk",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "ergonomic|easy to (hammer|drive|use)|hand nail|no power tool|light hammer|quick|fast|one hand|simple|no compressor",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "cost|cheap|cheapest|inexpensive|low cost|few cents|packet.*cheap|budget|affordable|under.*\\$5",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "availab|everywhere|hardware store|Bunnings|classroom|stocked|common|easy to (get|buy|find)|always.*stock",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "joint|hold.*thin|fixing.*ply|fixing.*mdf|fixing.*hardboard|good for thin material|large head.*pull|quick joint|temporary fix|light duty",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "durab|strong enough|holds?.*well|won't pull through|good shear|lasts?.*indoors|sufficient strength|permanent.*indoors",
               "flags": "i"
             },
             {
-              "points": 2,
+              "points": 1,
               "check": "safety|safe|no power tool|no compressor|manual|hammer only|low risk|student safe|school safe|no flying nail",
               "flags": "i"
             },

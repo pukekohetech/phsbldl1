@@ -455,17 +455,17 @@
           "hint": "Spray painting or fibre-glassing requires overalls for complete body protection from paint, over-spray and chemicals.",
           "type": "short",
           "maxPoints": 1,
-          "rubric": [
-            {
-              "points": 1,
-              "check": "no overalls|shorts and t.?shirt|normal clothes|everyday clothes|uncovered skin|bare arms|bare legs",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "clothing that does not cover.*(paint|overspray|chemicals)",
-              "flags": "i"
-            }
+     "rubric": [
+  {
+    "points": 1,
+    "check": "\\b(?:no (?:overalls?|coveralls?|protective clothing)|not wearing (?:overalls?|coveralls?|protective clothing)|wearing (?:shorts?(?: and (?:a )?(?:t[- ]?shirt|tee ?shirt|singlet|tank top))?|a t[- ]?shirt and shorts?|just a t[- ]?shirt|short[- ]sleeve(?:d)? (?:top|shirt)|normal clothes|everyday clothes|casual clothes|street clothes|school uniform)|uncovered skin|exposed skin|bare (?:arms?|legs?|skin))\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(?:bare|exposed|uncovered|not covered|skin (?:showing|exposed))\\b.*\\b(?:paint|over-?spray|overspray|spray(?:ing)?|chemicals?|solvent|resin|fib[re]{2}glass|fumes?)\\b|\\b(?:paint|over-?spray|overspray|spray(?:ing)?|chemicals?|solvent|resin|fib[re]{2}glass|fumes?)\\b.*\\b(?:bare|exposed|uncovered|not covered|skin (?:showing|exposed))\\b",
+    "flags": "i"
+  }
           ]
         },
         {
@@ -476,43 +476,66 @@
           "type": "short",
           "maxPoints": 1,
           "rubric": [
-            {
-              "points": 1,
-              "check": "hair.*caught.*machine",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "ripped out|torn out|pulled out|peeled from (your )?scalp",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "serious scalp injur(y|ies)|head injur(y|ies)",
-              "flags": "i"
-            }
+  {
+    "points": 1,
+    "check": "\\b(?:long ?hair|hair)\\b.*\\b(?:caught|catch(?:es|ing)?|trapped|tangled|entangled|pulled|dragged)\\b.*\\b(?:in|by|into)\\b.*\\b(?:machine|machinery|moving parts?)\\b|\\b(?:machine|machinery|moving parts?)\\b.*\\b(?:catch(?:es|ing)?|grab(?:s|bing)?|entangle(?:s|d|ment)?|pull(?:s|ed|ing)?|drag(?:s|ged|ging)?)\\b.*\\b(?:hair|it)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(?:hair|it)\\b.*\\b(?:ripped|torn|pulled|yanked)\\b.*\\bout\\b|\\b(?:hair|scalp)\\b.*\\b(?:ripped|torn|peeled|pulled)\\b|\\bpeeled from (?:your )?scalp\\b|\\bscalp(?:ed|ing)?\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\bserious (?:scalp|head) injur(?:y|ies)\\b|\\bhead injur(?:y|ies)\\b|\\bmajor head injur(?:y|ies)\\b|\\bsevere (?:injur(?:y|ies)|damage) to (?:the )?(?:head|scalp)\\b",
+    "flags": "i"
+  }
           ]
         },
         {
-          "id": "q5_hi_vis_signage",
-          "text": "Q5: Identify the purpose of the following signage.\n\n(Referring to the function of high-visibility equipment)",
-          "image": "blank.jpg",
-          "hint": "The purpose is to ensure that the wearer can easily be seen by plant operators. This reduces the possibility of injury from moving vehicles and equipment.",
-          "type": "long",
-          "maxPoints": 2,
-          "rubric": [
-            {
-              "points": 1,
-              "check": "ensure.*(wearer|person).*easily seen|so they can be seen|make.*visible|high visibility",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "reduce(s)? the possibility of injury|prevent (accidents?|injury)|avoid being hit|moving vehicles?|moving equipment|plant operators?",
-              "flags": "i"
-            }
-          ]
-        },
+  "id": "q5a_moving_machinery_signage",
+  "text": "Q5a: Identify the purpose of the following signage.\n\n(Warning to keep clear of moving machinery)",
+  "image": "c8599226-6a92-4b85-b323-b90139633834.png",
+  "hint": "The purpose is to warn people to stay clear of moving parts to prevent entanglement or crushing injuries.",
+  "type": "long",
+  "maxPoints": 2,
+  "rubric": [
+    {
+      "points": 1,
+      "check": "\\b(?:keep clear|stay away|avoid going near|do not go near|keep distance|warns? you to keep (?:clear|away)|warning.*moving machinery|warning.*moving parts|danger.*moving machinery|danger.*moving parts|be aware of (?:exposed|moving) parts?)\\b",
+      "flags": "i"
+    },
+    {
+      "points": 1,
+      "check": "\\b(?:moving parts?|rotating parts?|exposed parts?|gears?|rollers?|belts?|chains?)\\b.*\\b(?:caught|entangled|trapped|pulled in|dragged in|injur(?:y|ies)|harm|crush(?:ed|ing)?|amputation)\\b|\\b(?:caught|entangled|trapped|pulled|dragged)\\b.*\\b(?:machine|machinery|moving parts?|gears?|rollers?|belts?|chains?)\\b",
+      "flags": "i"
+    }
+  ]
+},
+
+{
+  "id": "q5b_dust_inhalation_signage",
+  "text": "Q5b: Identify the purpose of the following signage.\n\n(Warning about dust inhalation and wearing a mask)",
+  "image": "2d8f2912-0daa-4b9f-b426-7d2b3f0c31d9.png",
+  "hint": "The purpose is to warn about dust inhalation and remind workers to wear a mask to protect their lungs.",
+  "type": "long",
+  "maxPoints": 2,
+  "rubric": [
+    {
+      "points": 1,
+      "check": "\\b(?:wear|use|put on|must wear|need(?:s)? to wear|required to wear|mask required|respirator|face ?mask|dust ?mask|P2 ?mask|protective mask|breathing protection|PPE.*mask)\\b",
+      "flags": "i"
+    },
+    {
+      "points": 1,
+      "check": "\\b(?:dust inhalation|breathing in dust|inhale dust|dust in (?:your )?lungs|fine dust|airborne dust|wood dust|sawdust|lung damage|respiratory (?:damage|problems?|issues?)|protect (?:your )?lungs|dust hazard|dust and fumes|dust exposure)\\b",
+      "flags": "i"
+    }
+  ]
+},
+
+
         {
           "id": "q6_nailing_timber_eye_hazard",
           "text": "Q6: When nailing timber you should always wear eye protection. Describe an eye hazard associated with this activity.",
@@ -804,7 +827,7 @@
           "text": "Name the project you where working on",
           "image": "blank.jpg",
           "hint": "Name the project you where working on",
-          "type": "mc",
+          "type": "short",
           "maxPoints": 1,
           "rubric": [
             {
@@ -812,12 +835,6 @@
               "check": ".+",
               "flags": "i"
             }
-          ],
-          "options": [
-            "Tool Box",
-            "File Box",
-            "Planter",
-            "Other"
           ]
         },
         {
@@ -826,20 +843,19 @@
           "image": "blank.jpg",
           "hint": "select the type of hazard encountered",
           "type": "long",
-          "maxPoints": 1,
+          "maxPoints": 2,
           "rubric": [
-  {
-    "points": 1,
-    "check": "\\b(?:broken|broke|crack(?:ed|ing|s)?|split|damag(?:e|ed|ing|es)?|fault(?:y|ies)?|worn|blunt|loose|unsecure|unstable|frayed|danger(?:ous)?|unsafe|hazard(?:ous)?|risk(?:y|ier)?|dust(?:y)?|saw ?dust|wood ?dust|grinding ?dust|fine ?dust|airborne ?dust|fumes?|vapou?r|smell|smells|solvent|thinner|turps?|acetone|chemical|toxic|poison(?:ous)?|noise|noisy|loud|hearing|ringing|buzzing|sharp|blade?s?|edge?s?|splinter(?:s)?|shaving(?:s)?|swarf|chip(?:s)?|spark(?:s)?|particle(?:s)?|flying ?chips?|hot|burn(?:s|t)?|scald(?:s|ed|ing)?|lift|lifting|heavy|manual ?handling|back ?(?:strain|pain|injury)|slip(?:s|ped|ping)?|trip(?:s|ped|ping)?|fall(?:s|ing|en)?|wet ?floor|slippery|slippy|spill(?:s|age)?|oil ?spill|water ?spill|mess|messy|clutter|cluttered|untidy|dirty|blocked ?(?:walkway|exit|doorway)|electric|electrical|shock|live ?wire|exposed ?wire|unguarded|guard ?(?:off|missing|removed|loose)|hair|long ?hair|loose ?clothing|sleeve?s?|jewell?ery|necklace|bracelet|ring|open ?toe(?:d)? ?shoe?s?|jandal?s?|compressed ?air|air ?hose|welding|uv|flash|arc ?eye)\\b",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "\\b(?:tool|tools|hand ?tool|power ?tool|machine|machines|equipment|saw|saws|handsaw|band ?saw|circular ?saw|drop ?saw|mitre ?saw|table ?saw|panel ?saw|jigsaw|scroll ?saw|drill|drills|pillar ?drill|drill ?press|lathe|lathes|sander|sanders|disc ?sander|belt ?sander|linisher|router|router ?table|thicknesser|planer|bench ?grinder|grinder|chisel|chisels|gouge|plane|planes|file|rasp|clamp|clamps|vice|vise|bench|workbench|work ?bench|workshop|wood ?room|wood|timber|timbers|board|boards|sheet|sheets|panel|panels|offcut|offcuts|plug|plugs|cable|cables|cord|cords|lead|leads|socket|sockets|outlet|outlets|extension ?lead|extension ?cord|power ?board|multi ?board|floor|flooring|walkway|walkways|path|paths|aisle|aisles|stair|stairs|ladder|ladders|scaffold|scaffolding|storeroom|rack|racking|shelf|shelves|doorway|doorways|entrance|exit|exits|corner|corners|workspace|work ?area|storage ?area)\\b",
-    "flags": "i"
-  }
-]
-
+            {
+              "points": 1,
+              "check": "\\b(?:broken|broke|crack(?:ed|ing|s)?|split|damag(?:e|ed|ing|es)?|fault(?:y|ies)?|worn|blunt|loose|unsecure|unstable|frayed|danger(?:ous)?|unsafe|hazard(?:ous)?|risk(?:y|ier)?|dust(?:y)?|saw ?dust|wood ?dust|grinding ?dust|fine ?dust|airborne ?dust|fumes?|vapou?r|smell|smells|solvent|thinner|turps?|acetone|chemical|toxic|poison(?:ous)?|noise|noisy|loud|hearing|ringing|buzzing|sharp|blade?s?|edge?s?|splinter(?:s)?|shaving(?:s)?|swarf|chip(?:s)?|spark(?:s)?|particle(?:s)?|flying ?chips?|hot|burn(?:s|t)?|scald(?:s|ed|ing)?|lift|lifting|heavy|manual ?handling|back ?(?:strain|pain|injury)|slip(?:s|ped|ping)?|trip(?:s|ped|ping)?|fall(?:s|ing|en)?|wet ?floor|slippery|slippy|spill(?:s|age)?|oil ?spill|water ?spill|mess|messy|clutter|cluttered|untidy|dirty|blocked ?(?:walkway|exit|doorway)|electric|electrical|shock|live ?wire|exposed ?wire|unguarded|guard ?(?:off|missing|removed|loose)|hair|long ?hair|loose ?clothing|sleeve?s?|jewell?ery|necklace|bracelet|ring|open ?toe(?:d)? ?shoe?s?|jandal?s?|compressed ?air|air ?hose|welding|uv|flash|arc ?eye)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(?:tool|tools|hand ?tool|power ?tool|machine|machines|equipment|saw|saws|handsaw|band ?saw|circular ?saw|drop ?saw|mitre ?saw|table ?saw|panel ?saw|jigsaw|scroll ?saw|drill|drills|pillar ?drill|drill ?press|lathe|lathes|sander|sanders|disc ?sander|belt ?sander|linisher|router|router ?table|thicknesser|planer|bench ?grinder|grinder|chisel|chisels|gouge|plane|planes|file|rasp|clamp|clamps|vice|vise|bench|workbench|work ?bench|workshop|wood ?room|wood|timber|timbers|board|boards|sheet|sheets|panel|panels|offcut|offcuts|plug|plugs|cable|cables|cord|cords|lead|leads|socket|sockets|outlet|outlets|extension ?lead|extension ?cord|power ?board|multi ?board|floor|flooring|walkway|walkways|path|paths|aisle|aisles|stair|stairs|ladder|ladders|scaffold|scaffolding|storeroom|rack|racking|shelf|shelves|doorway|doorways|entrance|exit|exits|corner|corners|workspace|work ?area|storage ?area)\\b",
+              "flags": "i"
+            }
+          ]
         },
         {
           "id": "ppe_required_a",
@@ -874,7 +890,6 @@
               "check": "(damage|damag|break|broke|broken|breaking|ruin|scratch|destroy|wreck|burn(t|ed|ing)?|fire|explod|spill|mess|waste|cost|money|replace|stop|halt|delay|shut.?down|close.?workshop|get.?in.?trouble|told.?off|sent.?home|detention|principal|parent|report|fail|no.?credit|lose.?marks|accident|near.?miss|danger|unsafe|hazard|trip|someone|insurance|worksafe|inspector)",
               "flags": "i"
             },
-           
             {
               "points": 1,
               "check": "eye|blind|sight|vision|particle|chip|spark|chemical|flash|damage.*eye|injured.*eye|lose.*eye",

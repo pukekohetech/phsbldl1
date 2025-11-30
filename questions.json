@@ -830,7 +830,7 @@
           "rubric": [
             {
               "points": 1,
-              "check": "Flying particles|Noise Dust|Sharp tools or edges|Heavy lifting or Manual handling| Slips, trips, falls|Electricity Machinery hazards|Fumes or Vapors",
+              "check": "Flying particles",
               "flags": "i"
             }
           ],
@@ -839,7 +839,7 @@
             "Noise Dust",
             "Sharp tools or edges",
             "Heavy lifting or Manual handling",
-            "Slips, trips, falls",
+            "Slips trips or falls",
             "Electricity Machinery hazards",
             "Fumes or Vapors"
           ]
@@ -850,7 +850,7 @@
           "image": "blank.jpg",
           "hint": "",
           "type": "long",
-          "maxPoints": 3,
+          "maxPoints": 2,
           "rubric": [
             {
               "points": 1,
@@ -905,11 +905,16 @@
           "image": "blank.jpg",
           "hint": "",
           "type": "long",
-          "maxPoints": 4,
+          "maxPoints": 2,
           "rubric": [
             {
               "points": 1,
               "check": "(could|might|may|can|will|would)\\\\b|\\\\bif\\\\b|\\\\bthen\\\\b|lead to|cause|result in|risk of|chance of|possibility of",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "(damage|damag|break|broke|broken|breaking|ruin|scratch|destroy|wreck|burn(t|ed|ing)?|fire|explod|spill|mess|waste|cost|money|replace|stop|halt|delay|shut.?down|close.?workshop|get.?in.?trouble|told.?off|sent.?home|detention|principal|parent|report|fail|no.?credit|lose.?marks|accident|near.?miss|danger|unsafe|hazard|trip|someone|insurance|worksafe|inspector)",
               "flags": "i"
             }
           ]

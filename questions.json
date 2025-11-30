@@ -836,11 +836,12 @@
           ],
           "options": [
             "Flying particles",
-            "Noise Dust Fumes / Vapors",
+            "Noise Dust",
             "Sharp tools /edges",
             "Heavy lifting/ Manual handling",
             "Slips, trips, falls",
-            "Electricity Machinery hazards"
+            "Electricity Machinery hazards",
+            "Fumes / Vapors"
           ]
         },
         {

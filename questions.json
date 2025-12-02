@@ -1,8 +1,8 @@
 {
-  "APP_ID": "US24352_SAFETY",
+  "APP_ID": "BriefWriting",
   "VERSION": "2025",
-  "APP_TITLE": "US 24352 – Safety Knowledge",
-  "APP_SUBTITLE": "PHS - L1 Building – Assessment",
+  "APP_TITLE": "Brief writing",
+  "APP_SUBTITLE": "PHS - L1 Technology – Assessment",
   "DEADLINE": {
     "day": 17,
     "month": 12,

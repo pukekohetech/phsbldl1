@@ -41,7 +41,7 @@
           "image": "blank.jpg",
           "hint": "",
           "type": "long",
-          "maxPoints": 20,
+          "maxPoints": 15,
           "rubric": [
             {
               "points": 1,

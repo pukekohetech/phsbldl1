@@ -1,7 +1,7 @@
 {
   "APP_ID": "BriefWriting",
   "VERSION": "2025",
-  "APP_TITLE": "Brief writing",
+  "APP_TITLE": "Brief Writing (NZQA 92012 Aligned)",
   "APP_SUBTITLE": "PHS - L1 Technology – Assessment",
   "DEADLINE": {
     "day": 17,
@@ -27,200 +27,93 @@
   ],
   "ASSESSMENTS": [
     {
-      "id": "PurposeFunction",
-      "title": "Key Purpose / Function",
+      "id": "SituationContext",
+      "title": "Explain the Problem / Situation",
       "subtitle": "",
-      "usNumber": "",
-      "usVersion": "",
-      "credits": null,
-      "standardType": "",
       "questions": [
         {
-          "id": "PurposeQ",
-          "text": "<h2><b>Key Purpose / Function</b></h2><p>Explain <b>what your product must do</b> and <b>why it is needed</b>.</p><p>Example: The phone stand must hold a smartphone at a readable angle for hands-free viewing.</p>",
-          "image": "blank.jpg",
-          "hint": "",
+          "id": "SituationQ",
           "type": "long",
+          "text": "<h2><b>1. Explain the Problem or Situation</b></h2><p>Describe the <b>authentic context</b> that creates a need for a technological outcome. Explain the <b>problem, issue, opportunity, or situation</b> and why an outcome is required for the end user(s).</p><p>Think about:<ul><li>What is happening in the situation?</li><li>What problem needs solving?</li><li>Why is a new or improved outcome needed?</li></ul></p>",
+          "image": "blank.jpg",
+          "hint": "To score highly, clearly explain the REAL situation the end user faces. Describe the problem, why it matters, and what makes the context authentic (where, when, why).",
           "maxPoints": 5,
           "rubric": [
-            {
-              "points": 1,
-              "check": "purpose|aim|goal|objective|intention|for the purpose of",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "function|functional|role|job",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "must\\s+do|needs?\\s+to|designed\\s+to|intended\\s+to|so\\s+that",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "problem|issue|need|needs|solve|improve|help",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "user|stakeholder|end\\s+user|client",
-              "flags": "i"
-            }
+            { "points": 1, "check": "problem|issue|situation|context|authentic|need", "flags": "i" },
+            { "points": 1, "check": "end user|stakeholder|client|person|people", "flags": "i" },
+            { "points": 1, "check": "why|because|so that|in order to", "flags": "i" },
+            { "points": 1, "check": "improve|solve|fix|help|support", "flags": "i" },
+            { "points": 1, "check": "environment|setting|where|location", "flags": "i" }
           ]
         }
       ]
     },
     {
-      "id": "StakeholderNeeds",
-      "title": "Stakeholder Needs",
+      "id": "DevelopBrief",
+      "title": "Develop a Technological Brief",
       "subtitle": "",
-      "usNumber": "",
-      "usVersion": "",
-      "credits": null,
-      "standardType": "",
       "questions": [
         {
-          "id": "StakeholderQ",
-          "text": "<h2><b>Stakeholder Needs</b></h2><p>Identify at least one <b>stakeholder</b> and describe their:</p><ul><li><b>Needs</b> (must-haves)</li><li><b>Wants</b> (nice-to-haves)</li><li><b>Preferences</b> (style, colours, materials)</li></ul>",
-          "image": "blank.jpg",
-          "hint": "",
+          "id": "BriefQ",
           "type": "long",
+          "text": "<h2><b>2. Create a Technological Brief</b></h2><p>A <b>brief</b> is a <b>statement of intent</b> that identifies:</p><ul><li>The <b>purpose</b> of the outcome</li><li>The <b>end user(s)</b></li><li>The <b>intended environment</b> where it will be used</li></ul><p>Write a clear brief that explains the technological intent of your proposed outcome.</p>",
+          "image": "blank.jpg",
+          "hint": "Mention the purpose, the specific end user, and the exact environment where the outcome will be used. Use formal technological language like 'statement of intent' and 'fitness for purpose'.",
           "maxPoints": 5,
           "rubric": [
-            {
-              "points": 1,
-              "check": "stakeholder|stakeholders|end\\s+user|end\\s+users|client|customer|user|consumer|target\\s+user|audience",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "need|needs|must[-\\s]?have",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "want|wants|nice[-\\s]?to[-\\s]?have",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "preference|preferences|likes|dislikes|favourite|style|colour|colours|material|materials",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "feedback|talked\\s+to|interview(ed)?|survey(ed)?",
-              "flags": "i"
-            }
+            { "points": 1, "check": "brief|statement of intent|intent", "flags": "i" },
+            { "points": 1, "check": "purpose|aim|goal|objective|intention", "flags": "i" },
+            { "points": 1, "check": "end user|stakeholder|client|user", "flags": "i" },
+            { "points": 1, "check": "environment|setting|context|where", "flags": "i" },
+            { "points": 1, "check": "fit(ness)? for purpose|fit for purpose", "flags": "i" }
           ]
         }
       ]
     },
     {
-      "id": "PerformanceSpecifications",
-      "title": "Performance Specifications",
+      "id": "WriteSpecifications",
+      "title": "Write Specifications (Physical & Functional)",
       "subtitle": "",
-      "usNumber": "",
-      "usVersion": "",
-      "credits": null,
-      "standardType": "",
       "questions": [
         {
-          "id": "PerfSpecQ",
-          "text": "<h2><b>Performance Specifications</b></h2><p>Use correct terminology to write <b>measurable requirements</b> your product must meet:</p><ul><li><b>Functional attributes</b> – how it works</li><li><b>Aesthetic attributes</b> – colour, style, appearance</li><li><b>Technical attributes</b> – materials, durability, safety, strength, dimensions</li><li><b>Quality standards</b> – finish, accuracy, stability</li><li><b>Constraints</b> – time, cost, tools, size limits, materials available</li></ul>",
-          "image": "blank.jpg",
-          "hint": "",
+          "id": "SpecsQ",
           "type": "long",
+          "text": "<h2><b>3. Write the Specifications</b></h2><p>Specifications are <b>short, precise, measurable</b> statements describing what the outcome <b>must be or do</b>.</p><p>You must include:</p><ul><li><b>Physical requirements</b> (materials, size, durability, safety, construction)</li><li><b>Functional requirements</b> (what it must do, how it must perform)</li></ul><p>Write at least 6–10 measurable specifications.</p>",
+          "image": "blank.jpg",
+          "hint": "High-scoring specs are measurable (e.g., dimensions, weight limits, materials). Avoid vague words like ‘nice’ or ‘good’. Use numbers, tolerances, materials, and performance verbs.",
           "maxPoints": 8,
           "rubric": [
-            {
-              "points": 1,
-              "check": "performance\\s+specifications?|specifications?|specification",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "functional\\s+attributes?|function|functional|how it works",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "aesthetic\\s+attributes?|aesthetic|aesthetics|appearance|visual|style|look|looks|colour|colours",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "technical\\s+attributes?|material|materials|durable|durability|strong|strength|safety|safe|dimensions?|measurement|measurements|tolerance",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "quality\\s+standards?|quality|high\\s+standard|well\\s+made|finish|accuracy|accurate|stable|stability|precision|precise|clean\\s+finish|smooth\\s+finish|even\\s+finish|clean\\s+assembly",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "constraint|constraints|limit|limits|limitations",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "time\\s+frame|time\\s+limit|deadline",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "budget|cost|materials\\s+available|tools\\s+available|size\\s+limits?",
-              "flags": "i"
-            }
+            { "points": 1, "check": "specification|specifications|specs", "flags": "i" },
+            { "points": 1, "check": "measurable|specific|precise|criteria", "flags": "i" },
+            { "points": 1, "check": "physical|material|dimension|size|durable|durability|safety|strength|tolerance", "flags": "i" },
+            { "points": 1, "check": "functional|function|performance|must do|needs to|designed to", "flags": "i" },
+            { "points": 1, "check": "quality|finish|accuracy|standard|stability", "flags": "i" },
+            { "points": 1, "check": "constraints?|cost|budget|tools available|materials available|time frame", "flags": "i" },
+            { "points": 1, "check": "environment|conditions|intended environment", "flags": "i" },
+            { "points": 1, "check": "fit(ness)? for purpose", "flags": "i" }
           ]
         }
       ]
     },
     {
-      "id": "SuccessCriteria",
-      "title": "Success Criteria",
+      "id": "EvaluateSpecifications",
+      "title": "Evaluate Specifications (Met / Not Met)",
       "subtitle": "",
-      "usNumber": "",
-      "usVersion": "",
-      "credits": null,
-      "standardType": "",
       "questions": [
         {
-          "id": "SuccessQ",
-          "text": "<h2><b>Success Criteria</b></h2><p>State <b>how you will know the project is successful</b> and link these to your performance specifications.</p>",
-          "image": "blank.jpg",
-          "hint": "",
+          "id": "EvalQ",
           "type": "long",
-          "maxPoints": 5,
+          "text": "<h2><b>4. Evaluate the Specifications</b></h2><p>Explain whether each specification was <b>met</b> or <b>not met</b>, and justify your judgement.</p><p>You must:</p><ul><li>Refer to <b>evidence</b> (measurements, testing, user feedback)</li><li>Explain <b>why</b> each specification was met or not met</li><li>Discuss fitness for purpose in the <b>end user’s environment</b></li></ul>",
+          "image": "blank.jpg",
+          "hint": "To achieve Excellence, link your judgement to clear evidence (testing, measurements, user feedback). Explain WHY it was met/not met and discuss fitness for purpose in the real environment.",
+          "maxPoints": 6,
           "rubric": [
-            {
-              "points": 1,
-              "check": "success\\s+criteria|success|successful",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "meets\\s+requirements?|meets\\s+the\\s+brief|meets\\s+the\\s+specifications?|meets\\s+the\\s+specs?",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "measure|measured|measurement|check|checked|checking|test|tests|tested|testing",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "evaluation|evaluate|evaluated|review|assess|assessment",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "feedback|user\\s+feedback|stakeholder\\s+feedback|end\\s+user\\s+feedback",
-              "flags": "i"
-            }
+            { "points": 1, "check": "met|not met|partially met", "flags": "i" },
+            { "points": 1, "check": "evaluate|evaluation|judgement|assess", "flags": "i" },
+            { "points": 1, "check": "evidence|measurement|tested|testing|feedback|results", "flags": "i" },
+            { "points": 1, "check": "fit for purpose|fitness for purpose", "flags": "i" },
+            { "points": 1, "check": "end user|environment|context", "flags": "i" },
+            { "points": 1, "check": "successful|success criteria|effective", "flags": "i" }
           ]
         }
       ]

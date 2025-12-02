@@ -37,7 +37,7 @@
       "questions": [
         {
           "id": "TechBrief",
-          "text": "<h2><b>TECHBRIEF: Assessment Task – Writing a Technological Brief</b></h2><p>Write a complete <b>Technological Brief</b> for a physical product of your choice.</p><p><b>Examples include:</b></p><ul><li>Phone stand</li><li>Bedside lamp</li><li>Storage organiser</li><li>Planter box</li><li>Pet feeder</li><li>Desk tidy</li><li>Small furniture (stool, shelf, side table)</li><li>Wearable item (key tag, badge, simple accessory)</li></ul><p>You may choose <b>any other physical, manufactured outcome</b> that you can realistically design and make.</p><hr><h2><b>Your Brief Must Include the Following Sections</b></h2><h3>✔️ <b>1. Key Purpose / Function</b></h3><p>Explain <b>what your product must do</b> and <b>why it is needed</b>.<br>Example: The phone stand must hold a smartphone at a readable angle for hands-free viewing.</p><h3>✔️ <b>2. Stakeholder Needs</b></h3><p>Identify at least one <b>stakeholder</b> and describe their:</p><ul><li><b>Needs</b> (must-haves)</li><li><b>Wants</b> (nice-to-haves)</li><li><b>Preferences</b> (style, colours, materials)</li></ul><h3>✔️ <b>3. Performance Specifications</b></h3><p>Use correct terminology to write measurable requirements:</p><ul><li><b>Functional attributes</b> – how it works</li><li><b>Aesthetic attributes</b> – colour, style, appearance</li><li><b>Technical attributes</b> – materials, durability, safety, strength, dimensions</li><li><b>Quality standards</b> – finish, accuracy, stability</li><li><b>Constraints</b> – time, cost, tools, size limits, materials available</li></ul><h3>✔️ <b>4. Success Criteria</b></h3><p>State <b>how you will know the project is successful</b> and link these to your performance specifications.</p><hr><h2><b>Glossary of Useful Technological Terms</b></h2><p><b>Stakeholder</b> – Person who needs the outcome and gives feedback.<br><b>Attributes</b> – Functional, aesthetic, and technical features of the product.<br><b>Functional attribute</b> – How the product must work.<br><b>Aesthetic attribute</b> – How it looks or feels.<br><b>Technical attribute</b> – Materials, construction, safety, strength.<br><b>Performance specifications</b> – Measurable requirements.<br><b>Constraints</b> – Limits such as time, cost, materials, tools.<br><b>Quality standards</b> – Expectations for accuracy, finish, durability.<br><b>Success criteria</b> – How you judge if the product meets the brief.<br><b>End-user</b> – Person who will use the product.<br><b>Aesthetics</b> – Visual style or appearance.<br><b>Ergonomics</b> – Comfort and ease of use.<br><b>Durability</b> – How long the product lasts.<br><b>Sustainability</b> – Environmental impact of materials and processes.</p><hr><p>Write your brief in clear, formal <b>technological language</b> so another designer can understand exactly what needs to be produced.</p>"
+          "text": "<h2><b>TECHBRIEF: Assessment Task – Writing a Technological Brief</b></h2><p>Write a complete <b>Technological Brief</b> for a physical product of your choice.</p><p><b>Examples include:</b></p><ul><li>Phone stand</li><li>Bedside lamp</li><li>Storage organiser</li><li>Planter box</li><li>Pet feeder</li><li>Desk tidy</li><li>Small furniture (stool, shelf, side table)</li><li>Wearable item (key tag, badge, simple accessory)</li></ul><p>You may choose <b>any other physical, manufactured outcome</b> that you can realistically design and make.</p><hr><h2><b>Your Brief Must Include the Following Sections</b></h2><h3>✔️ <b>1. Key Purpose / Function</b></h3><p>Explain <b>what your product must do</b> and <b>why it is needed</b>.<br>Example: The phone stand must hold a smartphone at a readable angle for hands-free viewing.</p><h3>✔️ <b>2. Stakeholder Needs</b></h3><p>Identify at least one <b>stakeholder</b> and describe their:</p><ul><li><b>Needs</b> (must-haves)</li><li><b>Wants</b> (nice-to-haves)</li><li><b>Preferences</b> (style, colours, materials)</li></ul><h3>✔️ <b>3. Performance Specifications</b></h3><p>Use correct terminology to write measurable requirements:</p><ul><li><b>Functional attributes</b> – how it works</li><li><b>Aesthetic attributes</b> – colour, style, appearance</li><li><b>Technical attributes</b> – materials, durability, safety, strength, dimensions</li><li><b>Quality standards</b> – finish, accuracy, stability</li><li><b>Constraints</b> – time, cost, tools, size limits, materials available</li></ul><h3>✔️ <b>4. Success Criteria</b></h3><p>State <b>how you will know the project is successful</b> and link these to your performance specifications.</p><hr><h2><b>Glossary of Useful Technological Terms</b></h2><p><b>Stakeholder</b> – Person who needs the outcome and gives feedback.<br><b>Attributes</b> – Functional, aesthetic, and technical features of the product.<br><b>Functional attribute</b> – How the product must work.<br><b>Aesthetic attribute</b> – How it looks or feels.<br><b>Technical attribute</b> – Materials, construction, safety, strength.<br><b>Performance specifications</b> – Measurable requirements.<br><b>Constraints</b> – Limits such as time, cost, materials, tools.<br><b>Quality standards</b> – Expectations for accuracy, finish, durability.<br><b>Success criteria</b> – How you judge if the product meets the brief.<br><b>End-user</b> – Person who will use the product.<br><b>Aesthetics</b> – Visual style or appearance.<br><b>Ergonomics</b> – Comfort and ease of use.<br><b>Durability</b> – How long the product lasts.<br><b>Sustainability</b> – Environmental impact of materials and processes.</p><hr><p>Write your brief in clear, formal <b>technological language</b> so another designer can understand exactly what needs to be produced.</p>",
           "image": "blank.jpg",
           "hint": "",
           "type": "long",
@@ -45,151 +45,104 @@
           "rubric": [
             {
               "points": 1,
-              "check": "purpose|function|functional|must\\s+do|designed?\\s+to|intended\\s+to|needs?\\s+to|so\\s+that|for\\s+the\\s+purpose\\s+of",
+              "check": "purpose|aim|goal|objective|intention|for the purpose of",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "stakeholder|stakeholders|end[-\\s]?user|end[-\\s]?users|client|user\\s+needs?|user\\s+wants?|preferences?|requirements?|feedback|target\\s+user|audience",
+              "check": "function|functional|role|job",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "functional|ergonomic|ergonomics|stable|holds?|holding|supports?|operates?|operating|fits?",
+              "check": "design|develop|development|prototype|outcome",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "material|materials|dimension|dimensions|measurement|measurements|durable|durability|strength|safe|safety|construction|tolerance|accuracy",
+              "check": "stakeholder|stakeholders|end user|end users|client|user|customer|consumer|target user|audience",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "material|materials|dimension|dimensions|measurement|measurements|durable|durability|strength|safe|safety|construction|tolerance|accuracy",
+              "check": "need|needs|want|wants|preference|preferences|requirement|requirements",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "quality|standards?|accuracy|precision|smooth\\s+finish|consistent",
+              "check": "aesthetic|aesthetics|appearance|visual|style|look|looks|colour|colours",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "constraint|constraints|limit|limits|limitations|time\\s+frame|budget|cost|materials?\\s+available|tools?\\s+available",
+              "check": "material|materials|durable|durability|strong|strength|robust|sturdy|hard wearing|long lasting|solid|durable materials",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "success\\s+criteria|measure|measured|measurement|must\\s+meet|successful\\s+if|checking|checked|evaluate|evaluated|evaluation|test|tested|testing",
+              "check": "dimension|dimensions|measurement|measurements|size|maximum size|tolerance",
               "flags": "i"
             },
             {
               "points": 1,
-              "check": "prototype|design\\s+brief|development|develop|outcome|specification|specifications|attribute|attributes|sustainable|sustainability|ergonomic|ergonomics",
+              "check": "safe|safety|safe to use|extra safe|child safe|non toxic|risk free|non hazardous",
               "flags": "i"
             },
-              {
-    "points": 1,
-    "check": "purpose|aim|goal|objective|intention|for the purpose of",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "function|functional|role|job",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "design|develop|development|prototype|outcome",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "stakeholder|stakeholders|end user|end users|client|user|customer|consumer|target user|audience",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "need|needs|want|wants|preference|preferences|requirement|requirements",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "aesthetic|aesthetics|appearance|visual|style|look|looks|colour|colours",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "material|materials|durable|durability|strong|strength|robust|sturdy|hard wearing|long lasting|solid|durable materials",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "dimension|dimensions|measurement|measurements|size|maximum size|tolerance",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "safe|safety|safe to use|extra safe|child safe|non toxic|risk free|non hazardous",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "comfortable|comfortable to use|comfortable grip|ergonomic|ergonomics|ergonomic grip|fits comfortably",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "portable|compact|foldable|collapsible|space saving|travel friendly|pocket sized|easy to carry|lightweight|light to carry|easy to move",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "sustainable|sustainability|eco friendly|environmentally friendly|responsible materials|low waste",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "constraint|constraints|limit|limits|limitations|time frame|budget|cost|materials available|tools available",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "quality|standard|standards|high standard|well made|precision|precise|accurate|accuracy|clean finish|smooth finish|even finish|clean assembly",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "performance specifications|performance specification|specifications|specification|functional attributes|aesthetic attributes|technical attributes|attributes",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "success criteria|success|effective|meets requirements|measure|measured|testing|tested|test|successful if|evaluation|evaluate|evaluated|feedback",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "easy to use|simple to use|quick to use|user friendly|intuitive|easy to operate|simple to operate",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "water resistant|waterproof|tear resistant|shock proof|impact resistant|weather resistant",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "easy to clean|simple to clean|wipe clean|hygienic",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "extra function|extra functions|additional function|additional functions|multifunction|multi function|multi functional",
-    "flags": "i"
-  }
-
-
+            {
+              "points": 1,
+              "check": "comfortable|comfortable to use|comfortable grip|ergonomic|ergonomics|ergonomic grip|fits comfortably",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "portable|compact|foldable|collapsible|space saving|travel friendly|pocket sized|easy to carry|lightweight|light to carry|easy to move",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "sustainable|sustainability|eco friendly|environmentally friendly|responsible materials|low waste",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "constraint|constraints|limit|limits|limitations|time frame|budget|cost|materials available|tools available",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "quality|standard|standards|high standard|well made|precision|precise|accurate|accuracy|clean finish|smooth finish|even finish|clean assembly",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "performance specifications|performance specification|specifications|specification|functional attributes|aesthetic attributes|technical attributes|attributes",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "success criteria|success|effective|meets requirements|measure|measured|testing|tested|test|successful if|evaluation|evaluate|evaluated|feedback",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "easy to use|simple to use|quick to use|user friendly|intuitive|easy to operate|simple to operate",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "water resistant|waterproof|tear resistant|shock proof|impact resistant|weather resistant",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "easy to clean|simple to clean|wipe clean|hygienic",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "extra function|extra functions|additional function|additional functions|multifunction|multi function|multi functional",
+              "flags": "i"
+            }
           ]
         }
       ]

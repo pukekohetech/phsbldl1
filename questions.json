@@ -88,11 +88,108 @@
               "check": "prototype|design\\s+brief|development|develop|outcome|specification|specifications|attribute|attributes|sustainable|sustainability|ergonomic|ergonomics",
               "flags": "i"
             },
-            {
-              "points": 1,
-              "check": "\\b(?:purpose|design|develop|functional|hold|holds|ergonomic|stable|support|adjustable|fits|smooth\\s+finish|stakeholder|end\\s+user|client|needs?|preferences?|aesthetic|colour|compact|safe|comfortable\\s+to\\s+use|functional\\s+attributes?|aesthetic\\s+attributes?|technical\\s+attributes?|durable|durability|strength|dimensions?|tolerance|sustainability|sustainable|materials?|budget|cost|time\\s+frame|limits?|maximum\\s+size|accuracy|accurate|precise|consistent|even\\s+finish|clean\\s+assembly|success|measure|measured|testing|tests?|successful\\s+if|feedback|evaluate|evaluation)\\b",
-"flags": "gi"
-            }
+              {
+    "points": 1,
+    "check": "purpose|aim|goal|objective|intention|for the purpose of",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "function|functional|role|job",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "design|develop|development|prototype|outcome",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "stakeholder|stakeholders|end user|end users|client|user|customer|consumer|target user|audience",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "need|needs|want|wants|preference|preferences|requirement|requirements",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "aesthetic|aesthetics|appearance|visual|style|look|looks|colour|colours",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "material|materials|durable|durability|strong|strength|robust|sturdy|hard wearing|long lasting|solid|durable materials",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "dimension|dimensions|measurement|measurements|size|maximum size|tolerance",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "safe|safety|safe to use|extra safe|child safe|non toxic|risk free|non hazardous",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "comfortable|comfortable to use|comfortable grip|ergonomic|ergonomics|ergonomic grip|fits comfortably",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "portable|compact|foldable|collapsible|space saving|travel friendly|pocket sized|easy to carry|lightweight|light to carry|easy to move",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "sustainable|sustainability|eco friendly|environmentally friendly|responsible materials|low waste",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "constraint|constraints|limit|limits|limitations|time frame|budget|cost|materials available|tools available",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "quality|standard|standards|high standard|well made|precision|precise|accurate|accuracy|clean finish|smooth finish|even finish|clean assembly",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "performance specifications|performance specification|specifications|specification|functional attributes|aesthetic attributes|technical attributes|attributes",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "success criteria|success|effective|meets requirements|measure|measured|testing|tested|test|successful if|evaluation|evaluate|evaluated|feedback",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "easy to use|simple to use|quick to use|user friendly|intuitive|easy to operate|simple to operate",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "water resistant|waterproof|tear resistant|shock proof|impact resistant|weather resistant",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "easy to clean|simple to clean|wipe clean|hygienic",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "extra function|extra functions|additional function|additional functions|multifunction|multi function|multi functional",
+    "flags": "i"
+  }
+]
+
           ]
         }
       ]

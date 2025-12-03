@@ -38,35 +38,33 @@
           "image": "blank.jpg",
           "hint": "To score highly, clearly explain the REAL situation the end user faces. Describe the problem, why it matters, and what makes the context authentic (where, when, why).",
           "maxPoints": 5,
-         "rubric": [
-  {
-  "points": 1,
-  "check": "\\b(problem|issue|challenge|difficulty|struggle|pain point|frustration|hurdle|obstacle|barrier|gap|need|situation|context|scenario|real-world|authentic|day-to-day|daily struggle|hard to|find it hard|waste time|can['’]t|cannot|unable to|constantly interrupted|juggling|overwhelmed|lack of|shortage of)\\b",
-  "flags": "i"
-},
-
-  {
-    "points": 1,
-    "check": "\\b(end[ -]?users?|stakeholders?|clients?|customers?|users?|patients?|students?|teachers?|parents?|nurses?|mechanics?|technicians?|learners?|writers?|kids?|children|people|person|team|staff|everyone|families|shop|care ?team)\\b",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "\\b(because|so that|in order to|so they can|so it can|so he can|so she can|which leads? to|meaning that|resulting in|leading to|causing|creating|ends? up|delays?|slows?|frustrates?|risks?|hurts?|this causes)\\b",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "\\b(improve|solve|fix|help|support|assist|enable|allow|let|reduce|eliminate|prevent|avoid|minimise|make easier|make faster|make safer|make possible|protect|streamline|speed up|capture|provide|deliver|block|locate|finish faster|perform better|eat better|stay informed)\\b",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "\\b(environment|setting|context|location|space|area|place|situation|at home|at school|in the classroom|in the hospital|in the ER|in the emergency|in the garage|in the workshop|in the shop|in the dorm|outdoors?|indoors?|noisy|crowded|busy|rushed|chaotic|high-?pressure|poorly lit|grimy|evening|weeknights?)\\b",
-    "flags": "i"
-  }
-]
-
+          "rubric": [
+            {
+              "points": 1,
+              "check": "\\b(problem|issue|challenge|difficulty|struggle|pain point|frustration|hurdle|obstacle|barrier|gap|need|situation|context|scenario|real-world|authentic|day-to-day|daily struggle|hard to|find it hard|waste time|can['’]t|cannot|unable to|constantly interrupted|juggling|overwhelmed|lack of|shortage of)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(end[ -]?users?|stakeholders?|clients?|customers?|users?|patients?|students?|teachers?|parents?|nurses?|mechanics?|technicians?|learners?|writers?|kids?|children|people|person|team|staff|everyone|families|shop|care ?team)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(because|so that|in order to|so they can|so it can|so he can|so she can|which leads? to|meaning that|resulting in|leading to|causing|creating|ends? up|delays?|slows?|frustrates?|risks?|hurts?|this causes)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(improve|solve|fix|help|support|assist|enable|allow|let|reduce|eliminate|prevent|avoid|minimise|make easier|make faster|make safer|make possible|protect|streamline|speed up|capture|provide|deliver|block|locate|finish faster|perform better|eat better|stay informed)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(environment|setting|context|location|space|area|place|situation|at home|at school|in the classroom|in the hospital|in the ER|in the emergency|in the garage|in the workshop|in the shop|in the dorm|outdoors?|indoors?|noisy|crowded|busy|rushed|chaotic|high-?pressure|poorly lit|grimy|evening|weeknights?)\\b",
+              "flags": "i"
+            }
+          ]
         }
       ]
     },
@@ -83,11 +81,31 @@
           "hint": "Mention the purpose, the specific end user, and the exact environment where the outcome will be used. Use formal technological language like 'statement of intent' and 'fitness for purpose'.",
           "maxPoints": 5,
           "rubric": [
-            { "points": 1, "check": "brief|statement of intent|intent", "flags": "i" },
-            { "points": 1, "check": "purpose|aim|goal|objective|intention", "flags": "i" },
-            { "points": 1, "check": "end user|stakeholder|client|user", "flags": "i" },
-            { "points": 1, "check": "environment|setting|context|where", "flags": "i" },
-            { "points": 1, "check": "fit(ness)? for purpose|fit for purpose", "flags": "i" }
+            {
+              "points": 1,
+              "check": "\\b(brief|design brief|technological brief|statement of intent|intent)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(purpose|aim|goal|objective|intention)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(end[ -]?user(s)?|stakeholder(s)?|client(s)?|user(s)?|customer(s)?|target user(s)?)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(environment|setting|context|where|room|space|area|indoor(s)?|outdoor(s)?)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "fit(ness)?\\s+for\\s+purpose|suitable for|appropriate for",
+              "flags": "i"
+            }
           ]
         }
       ]
@@ -105,14 +123,46 @@
           "hint": "High-scoring specs are measurable (e.g., dimensions, weight limits, materials). Avoid vague words like ‘nice’ or ‘good’. Use numbers, tolerances, materials, and performance verbs.",
           "maxPoints": 8,
           "rubric": [
-            { "points": 1, "check": "specification|specifications|specs", "flags": "i" },
-            { "points": 1, "check": "measurable|specific|precise|criteria", "flags": "i" },
-            { "points": 1, "check": "physical|material|dimension|size|durable|durability|safety|strength|tolerance", "flags": "i" },
-            { "points": 1, "check": "functional|function|performance|must do|needs to|designed to", "flags": "i" },
-            { "points": 1, "check": "quality|finish|accuracy|standard|stability", "flags": "i" },
-            { "points": 1, "check": "constraints?|cost|budget|tools available|materials available|time frame", "flags": "i" },
-            { "points": 1, "check": "environment|conditions|intended environment", "flags": "i" },
-            { "points": 1, "check": "fit(ness)? for purpose", "flags": "i" }
+            {
+              "points": 1,
+              "check": "\\b(specification|specifications|specs)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(measurable|specific|precise|criteria)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(physical|material|materials|dimension|dimensions|size|durable|durability|safety|safe|strength|tolerance)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(functional|function|performance|must do|needs to|designed to|able to|should be able to)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(quality|finish|accuracy|standard|standards|stability)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(constraints?|limit|limits|cost|budget|tools available|materials available|time frame|deadline)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(environment|conditions|intended environment)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "fit(ness)?\\s+for\\s+purpose",
+              "flags": "i"
+            }
           ]
         }
       ]
@@ -130,12 +180,36 @@
           "hint": "To achieve Excellence, link your judgement to clear evidence (testing, measurements, user feedback). Explain WHY it was met/not met and discuss fitness for purpose in the real environment.",
           "maxPoints": 6,
           "rubric": [
-            { "points": 1, "check": "met|not met|partially met", "flags": "i" },
-            { "points": 1, "check": "evaluate|evaluation|judgement|assess", "flags": "i" },
-            { "points": 1, "check": "evidence|measurement|tested|testing|feedback|results", "flags": "i" },
-            { "points": 1, "check": "fit for purpose|fitness for purpose", "flags": "i" },
-            { "points": 1, "check": "end user|environment|context", "flags": "i" },
-            { "points": 1, "check": "successful|success criteria|effective", "flags": "i" }
+            {
+              "points": 1,
+              "check": "\\b(met|not met|partially met)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(evaluate|evaluation|judgement|assess|assessment)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(evidence|measurement|measurements|tested|testing|feedback|results|data)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(fit for purpose|fitness for purpose|suitable for|appropriate for)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(end user|end users|stakeholder|stakeholders|environment|context)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(successful|success criteria|effective|works well|does not work well|needs improvement)\\b",
+              "flags": "i"
+            }
           ]
         }
       ]

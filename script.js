@@ -81,10 +81,12 @@ const MIN_PCT_FOR_SUBMIT = 100;
 
 // ------------------------------------------------------------
 // Load questions.json (now also extracts APP_ID & VERSION & DEADLINE)
+// with SAFE regex compilation (bad patterns won't kill the app)
 // ------------------------------------------------------------
 async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
   if (loadingEl) loadingEl.textContent = "Loading questions…";
+
   try {
     const res = await fetch("questions.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -102,16 +104,47 @@ async function loadQuestions() {
     TEACHERS = json.TEACHERS;
     DEADLINE = json.DEADLINE || null;
 
+    // ---- build ASSESSMENTS with SAFE RegExp creation ----
     ASSESSMENTS = (json.ASSESSMENTS || []).map(ass => ({
       ...ass,
       questions: ass.questions.map(q => ({
         ...q,
-        rubric: (q.rubric || []).map(r => ({
-          ...r,
-          check: new RegExp(r.check, r.flags || "i")
-        }))
+        rubric: (q.rubric || []).map(r => {
+          // r.check is a STRING from JSON – we want to turn it into a RegExp safely
+          try {
+            const flags = r.flags || "i";
+            const pattern = r.check;
+
+            // Optional extra: basic sanity check to avoid empty patterns
+            if (typeof pattern !== "string" || pattern.trim() === "") {
+              if (DEBUG) {
+                console.warn("Empty or invalid pattern in rubric for question", q.id, r);
+              }
+              // use a regex that will never match
+              return { ...r, check: /$a/ };
+            }
+
+            const compiled = new RegExp(pattern, flags);
+            return { ...r, check: compiled };
+          } catch (e) {
+            console.error(
+              "Bad regex in questions.json.",
+              "Assessment:", ass.id,
+              "Question:", q.id,
+              "Pattern:", r.check,
+              "Flags:", r.flags,
+              e
+            );
+            // Fallback: use a regex that never matches so we don't break grading
+            return {
+              ...r,
+              check: /$a/ // this pattern will never match anything
+            };
+          }
+        })
       }))
     }));
+
     if (DEBUG) console.log("ASSESSMENTS ready:", ASSESSMENTS);
   } catch (err) {
     console.error("Failed to load questions.json:", err);
@@ -127,6 +160,7 @@ async function loadQuestions() {
     if (loadingEl) loadingEl.remove();
   }
 }
+
 
 // ------------------------------------------------------------
 // initApp

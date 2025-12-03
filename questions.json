@@ -40,10 +40,11 @@
           "maxPoints": 5,
          "rubric": [
   {
-    "points": 1,
-    "check": "\\b(problem|issue|challenge|difficulty|struggle|pain point|frustration|hurdle|obstacle|barrier|gap|need|situation|context|scenario|real-world|authentic|day-to-day|daily struggle|hard to|find it hard|waste time|can't|cannot|unable to|constantly interrupted|juggling|overwhelmed|lack of|shortage of)\\b",
-    "flags": "i"
-  },
+  "points": 1,
+  "check": "\\b(problem|issue|challenge|difficulty|struggle|pain point|frustration|hurdle|obstacle|barrier|gap|need|situation|context|scenario|real-world|authentic|day-to-day|daily struggle|hard to|find it hard|waste time|can['’]t|cannot|unable to|constantly interrupted|juggling|overwhelmed|lack of|shortage of)\\b",
+  "flags": "i"
+},
+
   {
     "points": 1,
     "check": "\\b(end[ -]?users?|stakeholders?|clients?|customers?|users?|patients?|students?|teachers?|parents?|nurses?|mechanics?|technicians?|learners?|writers?|kids?|children|people|person|team|staff|everyone|families|shop|care ?team)\\b",

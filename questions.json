@@ -41,30 +41,31 @@
          "rubric": [
   {
     "points": 1,
-    "check": "problem|issue|opportunity|challenge|need(s)?|situation|context|authentic",
+    "check": "\\b(problem|issue|challenge|difficulty|struggle|pain point|frustration|hurdle|obstacle|barrier|gap|need|situation|context|scenario|real-world|authentic|day-to-day|daily struggle|hard to|find it hard|waste time|can't|cannot|unable to|constantly interrupted|juggling|overwhelmed|lack of|shortage of)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "end user(s)?|stakeholder(s)?|client(s)?|customer(s)?|user(s)?|people|person",
+    "check": "\\b(end[ -]?users?|stakeholders?|clients?|customers?|users?|patients?|students?|teachers?|parents?|nurses?|mechanics?|technicians?|learners?|writers?|kids?|children|people|person|team|staff|everyone|families|shop|care ?team)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "why|because|so that|in order to|so they can|so it can|so I can|so we can",
+    "check": "\\b(because|so that|in order to|so they can|so it can|so he can|so she can|which leads? to|meaning that|resulting in|leading to|causing|creating|ends? up|delays?|slows?|frustrates?|risks?|hurts?|this causes)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "improve|solve|fix|help|support|reduce|avoid|prevent|make it easier|make it safer",
+    "check": "\\b(improve|solve|fix|help|support|assist|enable|allow|let|reduce|eliminate|prevent|avoid|minimise|make easier|make faster|make safer|make possible|protect|streamline|speed up|capture|provide|deliver|block|locate|finish faster|perform better|eat better|stay informed)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "environment|setting|where|location|space|area|at home|at school|in the classroom|in the workshop|outside|outdoors|indoors",
+    "check": "\\b(environment|setting|context|location|space|area|place|situation|at home|at school|in the classroom|in the hospital|in the ER|in the emergency|in the garage|in the workshop|in the shop|in the dorm|outdoors?|indoors?|noisy|crowded|busy|rushed|chaotic|high-?pressure|poorly lit|grimy|evening|weeknights?)\\b",
     "flags": "i"
   }
 ]
+
         }
       ]
     },

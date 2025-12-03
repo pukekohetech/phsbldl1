@@ -1,0 +1,229 @@
+{
+  "APP_ID": "BriefWriting",
+  "VERSION": "2025",
+  "APP_TITLE": "Brief Writing (NZQA 92012 Aligned)",
+  "APP_SUBTITLE": "PHS - L1 Technology – Assessment",
+  "DEADLINE": {
+    "day": 17,
+    "month": 12,
+    "label": "Submission deadline"
+  },
+  "TEACHERS": [
+    {
+      "id": "RY",
+      "name": "Mr Reynolds",
+      "email": "ry@pukekohehigh.school.nz"
+    },
+    {
+      "id": "RNR",
+      "name": "Mr Ranson",
+      "email": "rnr@pukekohehigh.school.nz"
+    },
+    {
+      "id": "Other",
+      "name": "Other Teacher",
+      "email": "technology@pukekohehigh.school.nz"
+    }
+  ],
+  "ASSESSMENTS": [
+    {
+      "id": "SituationContext",
+      "title": "Explain the Problem / Situation",
+      "subtitle": "",
+      "questions": [
+        {
+          "id": "SituationQ",
+          "type": "long",
+          "text": "<h2><b>1. Explain the Problem or Situation</b></h2><p>Describe the <b>authentic context</b> that creates a need for a technological outcome. Explain the <b>problem, issue, opportunity, or situation</b> and why an outcome is required for the end user(s).</p><p>Think about:<ul><li>What is happening in the situation?</li><li>What problem needs solving?</li><li>Why is a new or improved outcome needed?</li></ul></p>",
+          "image": "blank.jpg",
+          "hint": "To score highly, clearly explain the REAL situation the end user faces. Describe the problem, why it matters, and what makes the context authentic (where, when, why).",
+          "maxPoints": 5,
+          "rubric": [
+           {
+  "points": 1,
+  "check": "\\b(problem(s)?|issue(s)?|challenge(s)?|difficult(y|ies)|struggle(s)?|pain point(s)?|frustration(s)?|hurdle(s)?|obstacle(s)?|barrier(s)?|gap(s)?|need(s)?|situation(s)?|context(s)?|scenario(s)?|real-world|authentic|day-to-day|daily struggle|hard to|find(s)? it hard|waste(s)? time|can['’]t|cannot|unable to|constantly interrupted|juggling|overwhelmed|lacking|lack of|shortage(s)? of)\\b",
+  "flags": "i"
+},
+
+            {
+              "points": 1,
+              "check": "\\b(end[ -]?users?|stakeholders?|clients?|customers?|users?|patients?|students?|teachers?|parents?|nurses?|mechanics?|technicians?|learners?|writers?|kids?|children|people|person|team|staff|everyone|families|shop|care ?team)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(because|so that|in order to|so they can|so it can|so he can|so she can|which leads? to|meaning that|resulting in|leading to|causing|creating|ends? up|delays?|slows?|frustrates?|risks?|hurts?|this causes)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(improve|solve|fix|help|support|assist|enable|allow|let|reduce|eliminate|prevent|avoid|minimise|make easier|make faster|make safer|make possible|protect|streamline|speed up|capture|provide|deliver|block|locate|finish faster|perform better|eat better|stay informed)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(environment|setting|context|location|space|area|place|situation|at home|at school|in the classroom|in the hospital|in the ER|in the emergency|in the garage|in the workshop|in the shop|in the dorm|outdoors?|indoors?|noisy|crowded|busy|rushed|chaotic|high-?pressure|poorly lit|grimy|evening|weeknights?)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DevelopBrief",
+      "title": "Develop a Technological Brief",
+      "subtitle": "",
+      "questions": [
+        {
+          "id": "BriefQ",
+          "type": "long",
+          "text": "<h2><b>2. Create a Technological Brief</b></h2><p>A <b>brief</b> is a <b>statement of intent</b> that identifies:</p><ul><li>The <b>purpose</b> of the outcome</li><li>The <b>end user(s)</b></li><li>The <b>intended environment</b> where it will be used</li></ul><p>Write a clear brief that explains the technological intent of your proposed outcome.</p>",
+          "image": "blank.jpg",
+          "hint": "Mention the purpose, the specific end user, and the exact environment where the outcome will be used. Use formal technological language like 'statement of intent' and 'fitness for purpose'.",
+          "maxPoints": 5,
+          "rubric": [
+            {
+              "points": 1,
+              "check": "\\b(brief|design brief|technological brief|statement of intent|intent)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "\\b(purpose|aim|goal|objective|intention)\\b",
+              "flags": "i"
+            },
+            {
+  "points": 1,
+  "check": "\\b(end[ -]?user(s)?|stakeholder(s)?|client(s)?|user(s)?|customer(s)?|target user(s)?|audience)\\b",
+  "flags": "i"
+},
+
+            {
+              "points": 1,
+              "check": "\\b(environment|setting|context|where|room|space|area|indoor(s)?|outdoor(s)?)\\b",
+              "flags": "i"
+            },
+            {
+              "points": 1,
+              "check": "fit(ness)?\\s+for\\s+purpose|suitable for|appropriate for",
+              "flags": "i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WriteSpecifications",
+      "title": "Write Specifications (Physical & Functional)",
+      "subtitle": "",
+      "questions": [
+        {
+          "id": "SpecsQ",
+          "type": "long",
+          "text": "<h2><b>3. Write the Specifications</b></h2><p>Specifications are <b>short, precise, measurable</b> statements describing what the outcome <b>must be or do</b>.</p><p>You must include:</p><ul><li><b>Physical requirements</b> (materials, size, durability, safety, construction)</li><li><b>Functional requirements</b> (what it must do, how it must perform)</li></ul><p>Write at least 6–10 measurable specifications.</p>",
+          "image": "blank.jpg",
+          "hint": "High-scoring specs are measurable (e.g., dimensions, weight limits, materials). Avoid vague words like ‘nice’ or ‘good’. Use numbers, tolerances, materials, and performance verbs.",
+          "maxPoints": 8,
+          "maxPoints": 8,
+"maxPoints": 8,
+"rubric": [
+ {
+  "points": 1,
+  "check": "\\b(must|should|will|has to|have to|needs to)\\b",
+  "flags": "i"
+},
+
+  {
+    "points": 1,
+    "check": "\\b\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|mg|ml|mL|l|L|seconds?|secs?|minutes?|mins?|weeks?|days?)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(material|materials|thick(ness)?|tall|height|width|length|size|edges?|radius|base|panel|panels|foam|felt|lightweight|durable|stable|sturdy|strength)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(hold|holds|support|supports|store|stores|contain|contains|protect|protects|block|blocks|reduce|reduces|keep|keeps|stand|stands|include|includes|withstand|withstands|remain|remains|allow|allows|let|lets|able to)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(quality|finish|smooth|neat|even|stable|stability|clean|non-reflective|neutral)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(safe|safety|no sharp|sharp edges?|sharp corners?|rounded corners?)\\b",
+    "flags": "i"
+  },
+  {
+  "points": 1,
+  "check": "\\b(constraint(s)?|limit(s)?|limited by|cost(s)?|budget(s)?|time limit|time limits|\\$\\s*\\d+|under\\s*\\$\\s*\\d+)\\b",
+  "flags": "i"
+},
+
+  {
+    "points": 1,
+    "check": "\\b(withstand|withstands|last|lasts|durable|durability|long-lasting|daily use|for at least\\s*\\d+\\s*(week|weeks|day|days|month|months))\\b",
+    "flags": "i"
+  }
+]
+
+
+        }
+      ]
+    },
+    {
+      "id": "EvaluateSpecifications",
+      "title": "Evaluate Specifications (Met / Not Met)",
+      "subtitle": "",
+      "questions": [
+        {
+          "id": "EvalQ",
+          "type": "long",
+          "text": "<h2><b>4. Evaluate the Specifications</b></h2><p>Explain whether each specification was <b>met</b> or <b>not met</b>, and justify your judgement.</p><p>You must:</p><ul><li>Refer to <b>evidence</b> (measurements, testing, user feedback)</li><li>Explain <b>why</b> each specification was met or not met</li><li>Discuss fitness for purpose in the <b>end user’s environment</b></li></ul>",
+          "image": "blank.jpg",
+          "hint": "To achieve Excellence, link your judgement to clear evidence (testing, measurements, user feedback). Explain WHY it was met/not met and discuss fitness for purpose in the real environment.",
+          "maxPoints": 6,
+         "rubric": [
+  {
+    "points": 1,
+    "check": "\\b(met|not met|partially met|met in part|did meet|did not meet|wasn't met|was not met)\\b",
+    "flags": "i"
+  },
+ {
+  "points": 1,
+  "check": "\\b(evidence|measurement(s)?|measured|test(ed|ing)?|testing|test result(s)?|trial(s)?|prototype test(s)?|observation(s)?|data|feedback|user feedback|stakeholder feedback)\\b",
+  "flags": "i"
+},
+
+  {
+  "points": 1,
+  "check": "\\b(\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|min|mins|minutes?|seconds?|secs?|hrs?|hours?|weeks?|days?)|\\d+(\\.\\d+)?(mm|cm|m|g|kg)|within\\s*\\d+|under\\s*\\d+)\\b",
+  "flags": "i"
+},
+  {
+    "points": 1,
+    "check": "\\b(because|as a result|due to|this is because|this meant|which meant|leading to|causing|so|therefore|resulted in)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(fit for purpose|fitness for purpose|effective in|worked well in|did not work well in|real environment|actual environment|intended environment)\\b",
+    "flags": "i"
+  },
+  {
+  "points": 1,
+  "check": "\\b(improve|improvements?|improving|could be improved|make it better|made it better|next time|future version|modify|upgrade|change|fix|adjust|refined)\\b",
+  "flags": "i"
+}
+
+]
+
+        }
+      ]
+    }
+  ]
+}

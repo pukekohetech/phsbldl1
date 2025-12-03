@@ -183,38 +183,39 @@
           "image": "blank.jpg",
           "hint": "To achieve Excellence, link your judgement to clear evidence (testing, measurements, user feedback). Explain WHY it was met/not met and discuss fitness for purpose in the real environment.",
           "maxPoints": 6,
-          "rubric": [
-            {
-              "points": 1,
-              "check": "\\b(met|not met|partially met)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(evaluate|evaluation|judgement|assess|assessment)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(evidence|measurement|measurements|tested|testing|feedback|results|data)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(fit for purpose|fitness for purpose|suitable for|appropriate for)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(end user|end users|stakeholder|stakeholders|environment|context)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(successful|success criteria|effective|works well|does not work well|needs improvement)\\b",
-              "flags": "i"
-            }
-          ]
+         "rubric": [
+  {
+    "points": 1,
+    "check": "\\b(met|not met|partially met|met in part|did meet|did not meet|wasn't met|was not met)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(evidence|measurement|measured|tested|testing|test results?|trial|prototype test|feedback|user feedback|stakeholder feedback)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|min|mins|minutes?|seconds?|hrs?|hours?|weeks?|days?)|within\\s*\\d+|under\\s*\\d+)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(because|as a result|due to|this is because|this meant|which meant|leading to|causing|so|therefore|resulted in)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(fit for purpose|fitness for purpose|effective in|worked well in|did not work well in|real environment|actual environment|intended environment)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(improve|improvement|improving|could be improved|next time|future version|modify|upgrade|change|fix|adjust|refined)\\b",
+    "flags": "i"
+  }
+]
+
         }
       ]
     }

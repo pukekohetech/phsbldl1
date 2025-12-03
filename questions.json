@@ -38,13 +38,33 @@
           "image": "blank.jpg",
           "hint": "To score highly, clearly explain the REAL situation the end user faces. Describe the problem, why it matters, and what makes the context authentic (where, when, why).",
           "maxPoints": 5,
-          "rubric": [
-            { "points": 1, "check": "problem|issue|situation|context|authentic|need", "flags": "i" },
-            { "points": 1, "check": "end user|stakeholder|client|person|people", "flags": "i" },
-            { "points": 1, "check": "why|because|so that|in order to", "flags": "i" },
-            { "points": 1, "check": "improve|solve|fix|help|support", "flags": "i" },
-            { "points": 1, "check": "environment|setting|where|location", "flags": "i" }
-          ]
+         "rubric": [
+  {
+    "points": 1,
+    "check": "problem|issue|opportunity|challenge|need(s)?|situation|context|authentic",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "end user(s)?|stakeholder(s)?|client(s)?|customer(s)?|user(s)?|people|person",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "why|because|so that|in order to|so they can|so it can|so I can|so we can",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "improve|solve|fix|help|support|reduce|avoid|prevent|make it easier|make it safer",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "environment|setting|where|location|space|area|at home|at school|in the classroom|in the workshop|outside|outdoors|indoors",
+    "flags": "i"
+  }
+]
         }
       ]
     },

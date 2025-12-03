@@ -122,48 +122,50 @@
           "image": "blank.jpg",
           "hint": "High-scoring specs are measurable (e.g., dimensions, weight limits, materials). Avoid vague words like ‘nice’ or ‘good’. Use numbers, tolerances, materials, and performance verbs.",
           "maxPoints": 8,
-          "rubric": [
-            {
-              "points": 1,
-              "check": "\\b(specification|specifications|specs)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(measurable|specific|precise|criteria)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(physical|material|materials|dimension|dimensions|size|durable|durability|safety|safe|strength|tolerance)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(functional|function|performance|must do|needs to|designed to|able to|should be able to)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(quality|finish|accuracy|standard|standards|stability)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(constraints?|limit|limits|cost|budget|tools available|materials available|time frame|deadline)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "\\b(environment|conditions|intended environment)\\b",
-              "flags": "i"
-            },
-            {
-              "points": 1,
-              "check": "fit(ness)?\\s+for\\s+purpose",
-              "flags": "i"
-            }
-          ]
+          "maxPoints": 8,
+"rubric": [
+  {
+    "points": 1,
+    "check": "\\b(specification|specifications|specs)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(measurable|specific|precise|criteria)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(physical|material|materials|dimension|dimensions|size|durable|durability|safety|safe|strength|tolerance)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(functional|function|performance|must do|needs to|designed to|able to|should be able to)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(quality|finish|accuracy|standard|standards|stability)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(constraints?|limit|limits|cost|budget|tools available|materials available|time frame|deadline)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "\\b(environment|conditions|intended environment)\\b",
+    "flags": "i"
+  },
+  {
+    "points": 1,
+    "check": "fit(ness)?\\s+for\\s+purpose",
+    "flags": "i"
+  }
+]
+
         }
       ]
     },

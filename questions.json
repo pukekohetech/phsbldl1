@@ -123,48 +123,50 @@
           "hint": "High-scoring specs are measurable (e.g., dimensions, weight limits, materials). Avoid vague words like ‘nice’ or ‘good’. Use numbers, tolerances, materials, and performance verbs.",
           "maxPoints": 8,
           "maxPoints": 8,
+"maxPoints": 8,
 "rubric": [
   {
     "points": 1,
-    "check": "\\b(specification|specifications|specs)\\b",
+    "check": "\\b(must|should|will)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "\\b(measurable|specific|precise|criteria)\\b",
+    "check": "\\b\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|mg|ml|mL|l|L|seconds?|secs?|minutes?|mins?|weeks?|days?)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "\\b(physical|material|materials|dimension|dimensions|size|durable|durability|safety|safe|strength|tolerance)\\b",
+    "check": "\\b(material|materials|thick(ness)?|tall|height|width|length|size|edges?|radius|base|panel|panels|foam|felt|lightweight|durable|stable|sturdy|strength)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "\\b(functional|function|performance|must do|needs to|designed to|able to|should be able to)\\b",
+    "check": "\\b(hold|holds|support|supports|store|stores|contain|contains|protect|protects|block|blocks|reduce|reduces|keep|keeps|stand|stands|include|includes|withstand|withstands|remain|remains|allow|allows|let|lets|able to)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "\\b(quality|finish|accuracy|standard|standards|stability)\\b",
+    "check": "\\b(quality|finish|smooth|neat|even|stable|stability|clean|non-reflective|neutral)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "\\b(constraints?|limit|limits|cost|budget|tools available|materials available|time frame|deadline)\\b",
+    "check": "\\b(safe|safety|no sharp|sharp edges?|sharp corners?|rounded corners?)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "\\b(environment|conditions|intended environment)\\b",
+    "check": "\\b(constraints?|limit|limits|cost|budget|\\$\\s*\\d+|under\\s*\\$\\s*\\d+)\\b",
     "flags": "i"
   },
   {
     "points": 1,
-    "check": "fit(ness)?\\s+for\\s+purpose",
+    "check": "\\b(withstand|withstands|last|lasts|durable|durability|long-lasting|daily use|for at least\\s*\\d+\\s*(week|weeks|day|days|month|months))\\b",
     "flags": "i"
   }
 ]
+
 
         }
       ]

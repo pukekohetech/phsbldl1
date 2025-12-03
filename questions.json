@@ -39,11 +39,12 @@
           "hint": "To score highly, clearly explain the REAL situation the end user faces. Describe the problem, why it matters, and what makes the context authentic (where, when, why).",
           "maxPoints": 5,
           "rubric": [
-            {
-              "points": 1,
-              "check": "\\b(problem|issue|challenge|difficulty|struggle|pain point|frustration|hurdle|obstacle|barrier|gap|need|situation|context|scenario|real-world|authentic|day-to-day|daily struggle|hard to|find it hard|waste time|can['’]t|cannot|unable to|constantly interrupted|juggling|overwhelmed|lack of|shortage of)\\b",
-              "flags": "i"
-            },
+           {
+  "points": 1,
+  "check": "\\b(problem(s)?|issue(s)?|challenge(s)?|difficult(y|ies)|struggle(s)?|pain point(s)?|frustration(s)?|hurdle(s)?|obstacle(s)?|barrier(s)?|gap(s)?|need(s)?|situation(s)?|context(s)?|scenario(s)?|real-world|authentic|day-to-day|daily struggle|hard to|find(s)? it hard|waste(s)? time|can['’]t|cannot|unable to|constantly interrupted|juggling|overwhelmed|lacking|lack of|shortage(s)? of)\\b",
+  "flags": "i"
+},
+
             {
               "points": 1,
               "check": "\\b(end[ -]?users?|stakeholders?|clients?|customers?|users?|patients?|students?|teachers?|parents?|nurses?|mechanics?|technicians?|learners?|writers?|kids?|children|people|person|team|staff|everyone|families|shop|care ?team)\\b",
@@ -92,10 +93,11 @@
               "flags": "i"
             },
             {
-              "points": 1,
-              "check": "\\b(end[ -]?user(s)?|stakeholder(s)?|client(s)?|user(s)?|customer(s)?|target user(s)?)\\b",
-              "flags": "i"
-            },
+  "points": 1,
+  "check": "\\b(end[ -]?user(s)?|stakeholder(s)?|client(s)?|user(s)?|customer(s)?|target user(s)?|audience)\\b",
+  "flags": "i"
+},
+
             {
               "points": 1,
               "check": "\\b(environment|setting|context|where|room|space|area|indoor(s)?|outdoor(s)?)\\b",
@@ -125,11 +127,12 @@
           "maxPoints": 8,
 "maxPoints": 8,
 "rubric": [
-  {
-    "points": 1,
-    "check": "\\b(must|should|will)\\b",
-    "flags": "i"
-  },
+ {
+  "points": 1,
+  "check": "\\b(must|should|will|has to|have to|needs to)\\b",
+  "flags": "i"
+},
+
   {
     "points": 1,
     "check": "\\b\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|mg|ml|mL|l|L|seconds?|secs?|minutes?|mins?|weeks?|days?)\\b",
@@ -156,10 +159,11 @@
     "flags": "i"
   },
   {
-    "points": 1,
-    "check": "\\b(constraints?|limit|limits|cost|budget|\\$\\s*\\d+|under\\s*\\$\\s*\\d+)\\b",
-    "flags": "i"
-  },
+  "points": 1,
+  "check": "\\b(constraint(s)?|limit(s)?|limited by|cost(s)?|budget(s)?|time limit|time limits|\\$\\s*\\d+|under\\s*\\$\\s*\\d+)\\b",
+  "flags": "i"
+},
+
   {
     "points": 1,
     "check": "\\b(withstand|withstands|last|lasts|durable|durability|long-lasting|daily use|for at least\\s*\\d+\\s*(week|weeks|day|days|month|months))\\b",
@@ -189,16 +193,17 @@
     "check": "\\b(met|not met|partially met|met in part|did meet|did not meet|wasn't met|was not met)\\b",
     "flags": "i"
   },
+ {
+  "points": 1,
+  "check": "\\b(evidence|measurement(s)?|measured|test(ed|ing)?|testing|test result(s)?|trial(s)?|prototype test(s)?|observation(s)?|data|feedback|user feedback|stakeholder feedback)\\b",
+  "flags": "i"
+},
+
   {
-    "points": 1,
-    "check": "\\b(evidence|measurement|measured|tested|testing|test results?|trial|prototype test|feedback|user feedback|stakeholder feedback)\\b",
-    "flags": "i"
-  },
-  {
-    "points": 1,
-    "check": "\\b(\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|min|mins|minutes?|seconds?|hrs?|hours?|weeks?|days?)|within\\s*\\d+|under\\s*\\d+)\\b",
-    "flags": "i"
-  },
+  "points": 1,
+  "check": "\\b(\\d+(\\.\\d+)?\\s*(mm|cm|m|g|kg|min|mins|minutes?|seconds?|secs?|hrs?|hours?|weeks?|days?)|\\d+(\\.\\d+)?(mm|cm|m|g|kg)|within\\s*\\d+|under\\s*\\d+)\\b",
+  "flags": "i"
+},
   {
     "points": 1,
     "check": "\\b(because|as a result|due to|this is because|this meant|which meant|leading to|causing|so|therefore|resulted in)\\b",
@@ -210,10 +215,11 @@
     "flags": "i"
   },
   {
-    "points": 1,
-    "check": "\\b(improve|improvement|improving|could be improved|next time|future version|modify|upgrade|change|fix|adjust|refined)\\b",
-    "flags": "i"
-  }
+  "points": 1,
+  "check": "\\b(improve|improvements?|improving|could be improved|make it better|made it better|next time|future version|modify|upgrade|change|fix|adjust|refined)\\b",
+  "flags": "i"
+}
+
 ]
 
         }

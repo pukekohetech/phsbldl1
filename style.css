@@ -1,0 +1,541 @@
+/* Floor Plan Builder – Light Theme (cleaned) */
+
+/* ========== Design tokens ========== */
+:root {
+  /* Surfaces */
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #fbfbfc;
+
+  /* Lines */
+  --border: #d9dee5;
+  --border-2: #d6d6d6;
+
+  /* Text */
+  --text: #111827;
+  --muted: #6b7280;
+
+  /* Brand */
+  --brand: #2563eb;
+  --brand-soft: rgba(37, 99, 235, 0.12);
+  --brand-hover: #1d4ed8;
+  --brand-active: #1e40af;
+
+  /* Danger */
+  --danger: #dc2626;
+  --danger-soft: rgba(220, 38, 38, 0.14);
+
+  /* Depth */
+  --shadow: 0 10px 28px rgba(16, 24, 40, 0.10);
+  --shadow-soft: 0 6px 16px rgba(16, 24, 40, 0.08);
+  --paper-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 28px rgba(0,0,0,0.06);
+
+  /* Shape */
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  /* Touch */
+  --tap: 44px; /* comfortable minimum target */
+}
+
+/* ========== Base reset ========== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding: 1rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Reduce tap highlight on mobile */
+button, a, svg, #floorplanWrapper, #wallsWrapper {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ========== Header ========== */
+#app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+
+  padding: 0.75rem 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 1rem;
+}
+
+#app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--brand);
+}
+
+.school-label {
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: var(--text);
+  opacity: 0.92;
+}
+
+@media (max-width: 600px) {
+  .header-content { flex-direction: column; text-align: center; }
+  #app-header h1 { font-size: 1.3rem; }
+  .school-label { font-size: 1rem; }
+}
+
+/* ========== Layout ========== */
+#app {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* Sidebar width reduced */
+#sidebar {
+  width: 240px;       /* was 300px */
+  max-width: 85vw;    /* prevents overflowing on small screens */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  #app { flex-direction: column; }
+  #sidebar { width: 100%; max-width: 100%; }
+}
+
+/* Optional: slightly slimmer sidebar on phones */
+@media (max-width: 600px) {
+  #sidebar { width: 210px; max-width: 92vw; }
+}
+
+/* ========== Shared panels ========== */
+#controls,
+#sizeEditor,
+#featureInfo,
+#wallsHint,
+#wallsControls {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+#sizeEditor { background: var(--surface-2); }
+#featureInfo { background: rgba(37, 99, 235, 0.06); }
+
+#wallsHint {
+  border-style: dashed;
+  background: #fff;
+  color: var(--muted);
+}
+
+#wallsHint .hint {
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+/* ========== Controls (slimmer toolbar) ========== */
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;        /* slimmer */
+  padding: 8px;    /* slimmer */
+}
+
+#controls button:first-child { margin-bottom: 2px; }
+
+/* Toggle rows */
+.toggle-control {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* label left, switch right */
+  gap: 10px;
+  margin: 6px 0;
+  font-weight: 650;
+}
+
+.toggle-label { font-weight: 600; }
+
+.toggle-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-status {
+  min-width: 28px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Student name + scale */
+.student-name-label,
+.scale-label { width: 100%; }
+
+.student-name-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 650;
+}
+
+.scale-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ========== Inputs ========== */
+#sizeEditor label,
+#featureInfo label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  width: 100%;
+}
+
+input {
+  height: 30px;              /* slimmer */
+  padding: 3px 8px;          /* slimmer */
+  font-size: 13px;           /* slimmer */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text);
+  outline: none;
+}
+
+input:focus {
+  border-color: rgba(37, 99, 235, 0.55);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+}
+
+#roomNameInput { width: 100%; }
+#widthInput,
+#heightInput,
+#featureWidthInput,
+#featureOffsetInput,
+#featureHeadInput { width: 5.5rem; }
+
+#wallsControls input { width: 4.5rem; }
+
+.panel-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ========== Toggle switch (slightly smaller) ========== */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;   /* was 48px */
+  height: 24px;  /* was 26px */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: background-color 0.25s ease;
+  border-radius: 999px;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;   /* was 20px */
+  width: 18px;    /* was 20px */
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  transition: transform 0.25s ease;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+input:checked + .slider { background-color: var(--brand); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* ========== Buttons (slimmer in sidebar) ========== */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-height: var(--tap);
+  padding: 0.75rem 1rem;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+
+  background: var(--surface);
+  color: var(--text);
+
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+/* Slim buttons specifically in controls */
+#controls button {
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* Slim SVG icons in controls */
+#controls button svg {
+  width: 14px;
+  height: 14px;
+}
+
+button:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+.primary-btn {
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+}
+
+.primary-btn:hover { background: var(--brand-hover); }
+.primary-btn:active { background: var(--brand-active); }
+
+.tool-active {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.danger-btn {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ========== Editor panels ========== */
+#sizeEditor,
+#featureInfo {
+  display: none; /* toggled by JS */
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  align-items: flex-start;
+}
+
+.panel-title {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+/* ========== Canvas wrappers ========== */
+#floorplanWrapper,
+#wallsWrapper {
+  width: 100%;
+  overflow: auto;
+
+  border-radius: var(--radius);
+  border: 1px solid var(--border-2);
+  background: #ffffff;
+
+  box-shadow: var(--paper-shadow);
+  position: relative;
+}
+
+#floorplanWrapper::before,
+#wallsWrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+#floorplanWrapper {
+  max-height: 62vh;
+  margin-bottom: 1rem;
+}
+
+#wallsWrapper { height: 420px; }
+
+#floorplan,
+#wallsSvg {
+  max-width: none;
+  background: #ffffff;
+  touch-action: pan-x pan-y;
+  cursor: default;
+}
+
+/* Grid on floorplan only */
+#floorplan {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Walls panel controls */
+#wallsPanel { margin-top: 0.35rem; }
+
+#wallsControls {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ========== Laser-cut styles ========== */
+.wall-strip,
+.floor-strip {
+  fill: none !important;
+  stroke: rgb(255,0,0) !important;
+  stroke-width: 1 !important;
+}
+
+.wall-strip.disabled,
+.floor-strip.disabled {
+  opacity: 0.35 !important;
+  stroke-dasharray: 6 4;
+}
+
+.wall-label,
+.floor-label {
+  font-family: Arial, sans-serif;
+  fill: rgb(0,0,255);
+  pointer-events: none;
+  font-weight: 500;
+  font-size: 3px;
+}
+
+.wall-label tspan,
+.floor-label tspan { font-size: 4px; }
+
+.wall-label.disabled,
+.floor-label.disabled { opacity: 0.35; }
+
+/* ========== Scrollbars (desktop WebKit) ========== */
+#floorplanWrapper::-webkit-scrollbar,
+#wallsWrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+#floorplanWrapper::-webkit-scrollbar-track,
+#wallsWrapper::-webkit-scrollbar-track {
+  background: #f0f2f5;
+}
+
+#floorplanWrapper::-webkit-scrollbar-thumb,
+#wallsWrapper::-webkit-scrollbar-thumb {
+  background: #c9cfd8;
+  border-radius: 999px;
+  border: 2px solid #f0f2f5;
+}
+
+#floorplanWrapper::-webkit-scrollbar-thumb:hover,
+#wallsWrapper::-webkit-scrollbar-thumb:hover {
+  background: #b7bfca;
+}
+
+/* ========== Touch/drag behaviour ========== */
+#floorplan { touch-action: none; }          /* prevents scroll while dragging rooms */
+#floorplanWrapper { touch-action: pan-x pan-y; } /* allows scroll when touching empty space */
+
+#floorplan rect[data-room]:not([data-feature]) { fill: rgba(0,0,0,0); }
+#floorplan rect[data-feature] { fill: #80c0ff; }
+#floorplan rect[data-feature][data-feature="door"] { fill: #c08040; }
+
+/* ========== Print ========== */
+@media print {
+  body { background: #fff; }
+
+  #sidebar,
+  #controls,
+  #wallsControls,
+  #wallsHint {
+    display: none !important;
+  }
+
+  #floorplanWrapper,
+  #wallsWrapper {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+/* Room grab area (ONLY rooms) */
+#floorplan rect[data-room]:not([data-feature]):not(.wall-strip):not(.floor-strip) {
+  /*cursor: grab;*/
+  vector-effect: non-scaling-stroke;
+
+  /* invisible but clickable hit area */
+  
+  stroke-width: 4px;
+  fill: rgba(0,0,0,0);
+}
+
+#floorplan rect[data-room]:not([data-feature]):not(.wall-strip):not(.floor-strip):active {
+  cursor: grabbing;
+}
+
+#floorplan rect[data-room]:not([data-feature]):not(.wall-strip):not(.floor-strip):hover {
+  stroke: rgba(37, 99, 235, 0.5);
+  stroke-dasharray: 4 3;
+}

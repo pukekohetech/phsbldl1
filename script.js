@@ -1,4 +1,6 @@
 /* script.js – US 24355 app: FINAL + DEADLINE + HINTS ONLY UNDER QUESTIONS */
+/* Streamlined PDF header: shows ONLY "Submitted early/today/late" line (no Submitted/PDF Generated lines) */
+
 // ------------------------------------------------------------
 // Local storage – now dynamic & versioned
 // ------------------------------------------------------------
@@ -6,24 +8,30 @@ let STORAGE_KEY;               // will be set after questions load
 let data = { answers: {} };    // default
 let currentAssessmentId = null; // track which assessment is loaded
 
-function initStorage(appId, version = 'noversion') {
+function initStorage(appId, version = "noversion") {
   STORAGE_KEY = `${appId}_${version}_DATA`;
 
-  // ---- migrate old TECH_DATA (run once) ----
-  const OLD_KEY = "TECH_DATA";
-  if (localStorage.getItem(OLD_KEY) && !localStorage.getItem(STORAGE_KEY)) {
-    try {
-      const old = JSON.parse(localStorage.getItem(OLD_KEY));
-      if (old?.answers) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(old));
+  // Migrate from previous version key (if new key missing)
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    const prevKey = findMostRecentStorageKeyForApp(appId, STORAGE_KEY);
+
+    if (prevKey) {
+      try {
+        const prev = JSON.parse(localStorage.getItem(prevKey));
+        if (prev && typeof prev === "object") {
+          prev.migratedFrom = prevKey;
+          prev.migratedAt = new Date().toISOString();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(prev));
+        }
+      } catch (e) {
+        console.warn("Migration from previous version failed:", e);
       }
-      localStorage.removeItem(OLD_KEY);
-    } catch (e) {
-      console.warn("Migration from TECH_DATA failed:", e);
     }
   }
 
-  // load existing data if present
+  // Load data from current key
+  data = { answers: {} };
+
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -33,7 +41,12 @@ function initStorage(appId, version = 'noversion') {
   } catch (e) {
     console.warn("Failed to parse stored data:", e);
   }
+
+  // OPTIONAL cleanup (⚠️ see warning below)
+  // cleanupOldVersionsKeepLatest(appId, 3, STORAGE_KEY);
+  // cleanupOldVersionsDeleteAll(appId, STORAGE_KEY);
 }
+
 
 // ------------------------------------------------------------
 // XOR obfuscation helpers
@@ -76,12 +89,152 @@ const DEBUG = false; // ← Debug logging off in production
 // ------------------------------------------------------------
 // Requirements
 // ------------------------------------------------------------
-const MIN_PCT_FOR_SUBMIT = 100; 
+const MIN_PCT_FOR_SUBMIT = 100;
 // Change this to e.g. 80 if you want 80% or better
+
+function findMostRecentStorageKeyForApp(appId, currentKey) {
+  try {
+    const prefix = `${appId}_`;
+    let bestKey = null;
+    let bestLastSaved = 0;
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k) continue;
+
+      if (
+        k.startsWith(prefix) &&
+        k.endsWith("_DATA") &&
+        k !== currentKey
+      ) {
+        const raw = localStorage.getItem(k);
+        let lastSaved = 0;
+
+        try {
+          const parsed = JSON.parse(raw);
+          lastSaved = parsed?.lastSaved ? Date.parse(parsed.lastSaved) : 0;
+        } catch {}
+
+        // If no lastSaved, still consider it but it will sort low
+        if (!bestKey || lastSaved > bestLastSaved) {
+          bestKey = k;
+          bestLastSaved = lastSaved;
+        }
+      }
+    }
+
+    return bestKey;
+  } catch (e) {
+    console.warn("findMostRecentStorageKeyForApp failed:", e);
+    return null;
+  }
+}
+function cleanupOldVersionsDeleteAll(appId, currentKey) {
+  try {
+    const prefix = `${appId}_`;
+
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (!k) continue;
+
+      if (k.startsWith(prefix) && k.endsWith("_DATA") && k !== currentKey) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch (e) {
+    console.warn("cleanupOldVersionsDeleteAll failed:", e);
+  }
+}
+
 
 // ------------------------------------------------------------
 // Load questions.json (now also extracts APP_ID & VERSION & DEADLINE)
 // ------------------------------------------------------------
+async function loadScriptOnce(src) {
+  if (document.querySelector(`script[src="${src}"]`)) return;
+  await new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = res;
+    s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+async function fetchOptionalPdfBytes(url) {
+  try {
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    if (!buf || buf.byteLength < 100) return null;
+    return buf;
+  } catch {
+    return null;
+  }
+}
+
+async function fillPdfForm(pdfBytes, finalData) {
+  // Load pdf-lib if needed
+  if (!window.PDFLib) {
+    await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js");
+  }
+  if (!window.PDFLib) throw new Error("pdf-lib failed to load");
+
+  const { PDFDocument } = window.PDFLib;
+
+  const doc = await PDFDocument.load(pdfBytes);
+  const form = doc.getForm();
+
+  // ✅ Fill fields by name
+  const safeSet = (fieldName, value) => {
+    try {
+      form.getTextField(fieldName).setText(value || "");
+    } catch (e) {
+      console.warn(`Field not found: ${fieldName}`);
+    }
+  };
+
+  safeSet("StudentName", finalData.studentName);
+  safeSet("AssessorName", finalData.teacherName);
+  safeSet("Date", new Date().toLocaleDateString("en-NZ")); // dd/mm/yyyy
+
+  // Optional extras
+  // safeSet("Result", finalData.pct >= 100 ? "A" : "N");
+  // safeSet("AssessorSignature", ""); // leave blank
+
+  // ✅ Make it print-ready and stop further editing
+  form.flatten();
+
+  return await doc.save();
+}
+
+async function appendPdfBytesToBlob(mainPdfBlob, extraPdfBytes) {
+  if (!window.PDFLib) {
+    await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js");
+  }
+  if (!window.PDFLib) throw new Error("pdf-lib failed to load");
+
+  const { PDFDocument } = window.PDFLib;
+
+  const mainBytes = await mainPdfBlob.arrayBuffer();
+  const mainDoc = await PDFDocument.load(mainBytes);
+  const extraDoc = await PDFDocument.load(extraPdfBytes);
+
+  const merged = await PDFDocument.create();
+
+  // main pages first
+  const mainPages = await merged.copyPages(mainDoc, mainDoc.getPageIndices());
+  mainPages.forEach(p => merged.addPage(p));
+
+  // extra pages last
+  const extraPages = await merged.copyPages(extraDoc, extraDoc.getPageIndices());
+  extraPages.forEach(p => merged.addPage(p));
+
+  const mergedBytes = await merged.save();
+  return new Blob([mergedBytes], { type: "application/pdf" });
+}
+
+
 async function loadQuestions() {
   const loadingEl = document.getElementById("loading");
   if (loadingEl) loadingEl.textContent = "Loading questions…";
@@ -185,6 +338,7 @@ function saveAnswer(qid) {
     data.answers[currentAssessmentId] = {};
   }
   data.answers[currentAssessmentId][qid] = xorEncode(val);
+  data.lastSaved = new Date().toISOString();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
@@ -224,6 +378,7 @@ function saveStudentInfo() {
   data.name = document.getElementById("name").value.trim();
   data.id = document.getElementById("id").value.trim();
   data.teacher = document.getElementById("teacher").value;
+  data.lastSaved = new Date().toISOString();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
@@ -269,13 +424,8 @@ function loadAssessment() {
     // Clean display ID: "q5" -> "Q5", others -> uppercased
     let displayId;
     const simpleMatch = q.id.match(/^q(\d+)$/i);
-    if (simpleMatch) {
-      // IDs like "q1", "q2", "q15" become "Q1", "Q2", "Q15"
-      displayId = "Q" + simpleMatch[1];
-    } else {
-      // Anything else (e.g. "mat1_q1") just uppercase
-      displayId = q.id.toUpperCase();
-    }
+    if (simpleMatch) displayId = "Q" + simpleMatch[1];
+    else displayId = q.id.toUpperCase();
 
     markSpan.textContent = `${displayId} – ${q.maxPoints} mark${q.maxPoints !== 1 ? "s" : ""}`;
     header.appendChild(markSpan);
@@ -289,16 +439,29 @@ function loadAssessment() {
     wrap.appendChild(header);
 
     const p = document.createElement("p");
-    // If your question text includes HTML (like links/br), use innerHTML instead of textContent
     p.innerHTML = q.text;
     wrap.appendChild(p);
 
-    if (q.image) {
-      const img = document.createElement("img");
-      img.src = q.image;
-      img.alt = "Question image";
-      wrap.appendChild(img);
+if (q.image) {
+  const img = document.createElement("img");
+  img.alt = "Question image";
+  img.loading = "lazy"; // optional
+
+  img.onerror = function () {
+    // prevent infinite loop if blank.jpg is also missing
+    if (!this.dataset.fallbackTried) {
+      this.dataset.fallbackTried = "1";
+      this.src = "blank.jpg"; // or "images/blank.jpg" if it's in a folder
+    } else {
+      // last resort: hide the broken image icon
+      this.style.display = "none";
     }
+  };
+
+  img.src = q.image;
+  wrap.appendChild(img);
+}
+
 
     let field;
     const fieldId = "q" + q.id;
@@ -334,7 +497,6 @@ function loadAssessment() {
     if (prev) field.value = prev;
 
     wrap.appendChild(field);
-
     questionsDiv.appendChild(wrap);
   });
 
@@ -356,23 +518,16 @@ function gradeIt() {
     saveAnswer(q.id);
 
     let earned = 0;
-    // default to the question-level hint so wrong answers still get help
     let bestHint = q.hint || "";
 
     (q.rubric || []).forEach(rule => {
       if (rule.check.test(ans)) {
-        if (q.maxPoints === 1) {
-          // Single-mark question: any matching rule gives full credit (up to 1)
-          earned = Math.max(earned, Math.min(rule.points, q.maxPoints));
-        } else {
-          // Multi-mark question: each matched rule contributes its points
-          earned += rule.points;
-        }
-        if (rule.hint) bestHint = rule.hint; // rubric-specific hint overrides
+        if (q.maxPoints === 1) earned = Math.max(earned, Math.min(rule.points, q.maxPoints));
+        else earned += rule.points;
+        if (rule.hint) bestHint = rule.hint;
       }
     });
 
-    // Cap to the question's maximum
     if (earned > q.maxPoints) earned = q.maxPoints;
 
     total += earned;
@@ -396,15 +551,12 @@ function gradeIt() {
 // ------------------------------------------------------------
 function colourQuestions(results) {
   results.forEach(r => {
-    // r.id is from gradeIt(): q.id.toUpperCase(), e.g. "Q1" or "MAT1_Q1"
-    const qid = r.id.toLowerCase(); // back to "q1", "mat1_q1"
+    const qid = r.id.toLowerCase();
     const box = document.getElementById("q-" + qid);
     if (!box) return;
 
-    // Clear previous state
     box.classList.remove("correct", "partial", "wrong");
 
-    // Decide status from marks
     const status =
       r.earned === r.max ? "correct" :
       r.earned > 0       ? "partial" :
@@ -412,26 +564,22 @@ function colourQuestions(results) {
 
     box.classList.add(status);
 
-    // ----- HINT UNDER QUESTION (ON FORM ONLY) -----
     const hintClass = "hint-inline";
     let hintEl = box.querySelector("." + hintClass);
 
     if (r.earned < r.max && r.hint) {
-      // Needs a hint: create/update the inline hint element
       if (!hintEl) {
         hintEl = document.createElement("div");
         hintEl.className = hintClass;
         box.appendChild(hintEl);
       }
       hintEl.innerHTML = `<strong>Hint:</strong> ${r.hint}`;
-      hintEl.style.display = "block";   // ⇐ make it visible
+      hintEl.style.display = "block";
     } else if (hintEl) {
-      // Fully correct (or no hint): hide but keep the element
-      hintEl.style.display = "none";    // ⇐ hide it again
+      hintEl.style.display = "none";
     }
   });
 }
-
 
 // ------------------------------------------------------------
 // Deadline helpers
@@ -451,26 +599,11 @@ function getDeadlineStatus(now = new Date()) {
   const diffDays = Math.round(diffMs / 86400000);
 
   if (diffDays > 0) {
-    return {
-      status: "upcoming",
-      daysLeft: diffDays,
-      label,
-      dateStr: deadlineDate.toLocaleDateString()
-    };
+    return { status: "upcoming", daysLeft: diffDays, label, dateStr: deadlineDate.toLocaleDateString() };
   } else if (diffDays === 0) {
-    return {
-      status: "today",
-      daysLeft: 0,
-      label,
-      dateStr: deadlineDate.toLocaleDateString()
-    };
+    return { status: "today", daysLeft: 0, label, dateStr: deadlineDate.toLocaleDateString() };
   } else {
-    return {
-      status: "overdue",
-      overdueDays: Math.abs(diffDays),
-      label,
-      dateStr: deadlineDate.toLocaleDateString()
-    };
+    return { status: "overdue", overdueDays: Math.abs(diffDays), label, dateStr: deadlineDate.toLocaleDateString() };
   }
 }
 
@@ -517,9 +650,7 @@ function setupDeadlineBanner() {
     }
   })();
 
-  if (!stored.deadlineInfo) {
-    stored.deadlineInfo = {};
-  }
+  if (!stored.deadlineInfo) stored.deadlineInfo = {};
 
   if (!stored.deadlineInfo.firstSeen) {
     stored.deadlineInfo.firstSeen = new Date().toISOString();
@@ -566,8 +697,6 @@ function setupDeadlineBanner() {
   } else if (st === "overdue") {
     cls = "over";
     text = `${label}: ${dateStr} – Deadline has passed. You are ${overdueDays} day${overdueDays === 1 ? "" : "s"} late.`;
-
-    // 🔒 Lock everything once the deadline has passed
     lockAllFieldsForDeadline();
   }
 
@@ -576,12 +705,9 @@ function setupDeadlineBanner() {
   banner.classList.remove("hidden");
 }
 
-// Extra check on load: if deadline already passed, lock immediately
 function applyDeadlineLockIfNeeded() {
   const status = getDeadlineStatus(new Date());
-  if (status && status.status === "overdue") {
-    lockAllFieldsForDeadline();
-  }
+  if (status && status.status === "overdue") lockAllFieldsForDeadline();
 }
 
 // ------------------------------------------------------------
@@ -593,22 +719,10 @@ function submitWork() {
   const teacherSel = document.getElementById("teacher");
   const assSel = document.getElementById("assessmentSelector");
 
-  if (!document.getElementById("name").value.trim()) {
-    showToast("Please enter your name.", false);
-    return;
-  }
-  if (!document.getElementById("id").value.trim()) {
-    showToast("Please enter your Student ID.", false);
-    return;
-  }
-  if (!teacherSel.value) {
-    showToast("Please select your teacher.", false);
-    return;
-  }
-  if (!assSel.value) {
-    showToast("Please select an assessment.", false);
-    return;
-  }
+  if (!document.getElementById("name").value.trim()) return showToast("Please enter your name.", false);
+  if (!document.getElementById("id").value.trim()) return showToast("Please enter your Student ID.", false);
+  if (!teacherSel.value) return showToast("Please select your teacher.", false);
+  if (!assSel.value) return showToast("Please select an assessment.", false);
 
   const { total, results, totalPoints } = gradeIt();
   const pct = totalPoints > 0 ? Math.round((total / totalPoints) * 100) : 0;
@@ -625,40 +739,69 @@ function submitWork() {
   const answersDiv = document.getElementById("answers");
   answersDiv.innerHTML = "";
 
-  results.forEach(r => {
-    const fb = document.createElement("div");
-    const status =
-      r.earned === r.max ? "correct" :
-      r.earned > 0       ? "partial" :
-                           "wrong";
-    fb.className = `feedback ${status}`;
-    fb.innerHTML = `
-  <h3>${r.id}: ${r.text}</h3>
-  <p><strong>Your answer:</strong> ${r.answer || "<em>No answer provided</em>"}</p>
-  <p><strong>Result:</strong> ${
+ results.forEach(r => {
+  const fb = document.createElement("div");
+
+  const status =
+    r.earned === r.max ? "correct" :
+    r.earned > 0       ? "partial" :
+                         "wrong";
+
+  fb.className = `feedback ${status}`;
+
+  // --- Title (question text may contain HTML from your JSON, keep as-is if you want formatting)
+  const h3 = document.createElement("h3");
+  h3.innerHTML = `${r.id}: ${r.text}`;  // r.text comes from your JSON, not the student
+  fb.appendChild(h3);
+
+  // --- Student answer (MUST be textContent to prevent XSS)
+  const pAns = document.createElement("p");
+  const strongAns = document.createElement("strong");
+  strongAns.textContent = "Your answer: ";
+  pAns.appendChild(strongAns);
+
+  const ansSpan = document.createElement("span");
+  ansSpan.textContent = r.answer ? r.answer : "No answer provided";
+  pAns.appendChild(ansSpan);
+
+  fb.appendChild(pAns);
+
+  // --- Result line
+  const pRes = document.createElement("p");
+  const strongRes = document.createElement("strong");
+  strongRes.textContent = "Result: ";
+  pRes.appendChild(strongRes);
+
+  const statusText =
     status === "correct" ? "Correct" :
     status === "partial" ? "Partially correct" :
-                           "Incorrect"
-  } (${r.earned}/${r.max} marks)</p>
-`;
+                           "Incorrect";
 
-    answersDiv.appendChild(fb);
-  });
+  const resSpan = document.createElement("span");
+  resSpan.textContent = `${statusText} (${r.earned}/${r.max} marks)`;
+  pRes.appendChild(resSpan);
+
+  fb.appendChild(pRes);
+
+  answersDiv.appendChild(fb);
+});
+
 
   const deadlineNow = getDeadlineStatus(new Date());
 
-  finalData = {
-    studentName,
-    studentId: document.getElementById("id").value.trim(),
-    teacherName,
-    assessmentTitle: ASSESSMENTS[assSel.value].title,
-    assessmentSubtitle: ASSESSMENTS[assSel.value].subtitle || "",
-    points: total,
-    totalPoints,
-    pct,
-    timestamp: new Date().toISOString(),
-    deadlineInfo: deadlineNow
-  };
+ finalData = {
+  studentName,
+  studentId: document.getElementById("id").value.trim(),
+  teacherName,
+  assessmentTitle: ASSESSMENTS[assSel.value].title,
+  assessmentSubtitle: ASSESSMENTS[assSel.value].subtitle || "",
+  attachSignoff: !!ASSESSMENTS[assSel.value].attachSignoff,
+  points: total,
+  totalPoints,
+  pct,
+  deadlineInfo: deadlineNow
+};
+
 
   const emailBtn = document.getElementById("emailBtn");
   if (pct >= MIN_PCT_FOR_SUBMIT && (!deadlineNow || deadlineNow.status !== "overdue")) {
@@ -683,38 +826,39 @@ function back() {
 }
 
 // ------------------------------------------------------------
-// Email / PDF – per-block capture (no mid-question cuts) +
-// repeating header on every page (no overlap with maroon bar)
-// with consistent width + more than one question per page
-// and device-native sharing when available
+// Email / PDF – streamlined header: ONLY deadline-relative submission line
+// + filename StudentNo_StudentName_AssessmentTitle.pdf
 // ------------------------------------------------------------
+
+
+
+
+
+
 async function emailWork() {
   if (!finalData) return alert("Submit first!");
 
-  // Enforce minimum percentage before emailing
   if (finalData.pct < MIN_PCT_FOR_SUBMIT) {
     return alert(`You must reach at least ${MIN_PCT_FOR_SUBMIT}% before emailing your work.`);
   }
 
-  // Enforce deadline: no emailing after the deadline for this year
   const deadlineNow = getDeadlineStatus(new Date());
   if (deadlineNow && deadlineNow.status === "overdue") {
     return alert("The submission deadline has passed – emailing is now disabled until next year.");
   }
 
-  // Dynamically load jsPDF + html2canvas if needed
-  const load = src => new Promise((res, rej) => {
-    const s = document.createElement("script");
-    s.src = src;
-    s.onload = res;
-    s.onerror = rej;
-    document.head.appendChild(s);
-  });
+  const safePart = s =>
+    (s || "")
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_\-]/g, "");
 
-  if (!(window.jspdf && window.html2canvas)) {
-    await load("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
-    await load("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
-  }
+
+ if (!(window.jspdf && window.html2canvas)) {
+  await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+  await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+}
+
 
   if (!window.jspdf || !window.html2canvas) {
     alert("PDF libraries failed to load. Please check your internet connection.");
@@ -723,12 +867,11 @@ async function emailWork() {
 
   const { jsPDF } = window.jspdf;
 
-  // ---------- CREATE PDF + GLOBAL PAGE DIMENSIONS ----------
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
 
-  // ---------- PREP SCHOOL CREST ONCE ----------
+  // Crest once
   const crestImg = document.querySelector("header img.crest");
   let crestDataUrl = null;
 
@@ -752,101 +895,78 @@ async function emailWork() {
     }
   }
 
-  // ---------- HEADER DRAW FUNCTION (EVERY PAGE) ----------
   const drawHeader = (isFirstPage = false) => {
     // Maroon bar
     pdf.setFillColor(110, 24, 24);
     pdf.rect(0, 0, pageWidth, 30, "F");
 
-    // Crest on left, if available
-    if (crestDataUrl) {
-      pdf.addImage(crestDataUrl, "PNG", 10, 5, 20, 20);
-    }
+    if (crestDataUrl) pdf.addImage(crestDataUrl, "PNG", 10, 5, 20, 20);
 
-    // App title + subtitle in white
     pdf.setTextColor(255, 255, 255);
     pdf.setFontSize(16);
     pdf.text(APP_TITLE || "Pukekohe High School", 35, 15);
     pdf.setFontSize(12);
     pdf.text(APP_SUBTITLE || "Technology Assessment", 35, 22);
 
-    // Meta text (in black) under header – never overlaps maroon bar
     pdf.setTextColor(0, 0, 0);
     pdf.setFontSize(12);
 
-    const studentLineY = 40;
+    const y = 40;
 
     if (isFirstPage) {
-      // Full details first page
-      pdf.text(`Student: ${finalData.studentName}`, 10, studentLineY);
-      pdf.text(`ID: ${finalData.studentId}`, 10, studentLineY + 7);
-      pdf.text(`Teacher: ${finalData.teacherName}`, 110, studentLineY);
-      pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, studentLineY + 15);
-      if (finalData.assessmentSubtitle) {
-        pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, studentLineY + 22);
-      }
-      pdf.text(
-        `Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`,
-        10,
-        studentLineY + 29
-      );
+      pdf.text(`Student: ${finalData.studentName}`, 10, y);
+      pdf.text(`ID: ${finalData.studentId}`, 10, y + 7);
+      pdf.text(`Teacher: ${finalData.teacherName}`, 110, y);
+      pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, y + 15);
+      if (finalData.assessmentSubtitle) pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, y + 22);
+      pdf.text(`Score: ${finalData.points}/${finalData.totalPoints} (${finalData.pct}%)`, 10, y + 29);
 
-      // Deadline info from submitWork()
-      let infoY = studentLineY + 36;
-      if (finalData.deadlineInfo) {
-        const info = finalData.deadlineInfo;
+      // ✅ Only the one submission line you want:
+      // "Submitted early: 2 days before deadline (12/24/2025)."
+      const infoY = y + 38;
+      const info = finalData.deadlineInfo;
+
+      if (info) {
         pdf.setFontSize(11);
+        pdf.setTextColor(0, 0, 0);
 
-        if (info.status === "overdue" && info.overdueDays > 0) {
-          pdf.setTextColor(231, 76, 60);
-          pdf.text(
-            `Late submission: ${info.overdueDays} day${info.overdueDays === 1 ? "" : "s"} after deadline (${info.dateStr}).`,
-            10,
-            infoY
-          );
-        } else if (info.status === "today") {
-          pdf.setTextColor(243, 156, 18);
-          pdf.text(`Submitted on the deadline date (${info.dateStr}).`, 10, infoY);
-        } else if (info.status === "upcoming") {
-          pdf.setTextColor(39, 174, 96);
+        if (info.status === "upcoming") {
           pdf.text(
             `Submitted early: ${info.daysLeft} day${info.daysLeft === 1 ? "" : "s"} before deadline (${info.dateStr}).`,
             10,
             infoY
           );
+        } else if (info.status === "today") {
+          pdf.text(`Submitted on the deadline date (${info.dateStr}).`, 10, infoY);
+        } else if (info.status === "overdue") {
+          pdf.text(
+            `Late submission: ${info.overdueDays} day${info.overdueDays === 1 ? "" : "s"} after deadline (${info.dateStr}).`,
+            10,
+            infoY
+          );
         }
-        infoY += 7;
-        pdf.setTextColor(0, 0, 0);
-        pdf.setFontSize(10);
-        pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, infoY);
-      } else {
-        // No deadline info – still show generated line
-        pdf.setFontSize(10);
-        pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, studentLineY + 36);
       }
     } else {
-      // Compact but still clear header on later pages
-      pdf.text(`Student: ${finalData.studentName} (${finalData.studentId})`, 10, studentLineY);
-      pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, studentLineY + 7);
+      pdf.text(`Student: ${finalData.studentName} (${finalData.studentId})`, 10, y);
+      pdf.text(`Assessment: ${finalData.assessmentTitle}`, 10, y + 7);
       if (finalData.assessmentSubtitle) {
         pdf.setFontSize(11);
-        pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, studentLineY + 14);
+        pdf.text(`Part: ${finalData.assessmentSubtitle}`, 10, y + 14);
         pdf.setFontSize(12);
       }
     }
   };
 
-  // ---------- LAYOUT CONSTANTS ----------
+  // IMPORTANT: marginTop must be BELOW the header text,
+  // otherwise the html2canvas images cover the header lines.
   const marginLeft = 10;
   const marginRight = 10;
-  const marginTop = 70;     // space for header + meta
-  const marginBottom = 10;  // footer
+  const marginTop = 80;     // ✅ prevents overlap (was 70)
+  const marginBottom = 10;
   const usableHeight = pageHeight - marginTop - marginBottom;
 
-  // Use a fixed "virtual" width so PDFs look consistent across devices
-  const TARGET_WIDTH = 900; // px – pretend the content is this wide for html2canvas
+  const TARGET_WIDTH = 900;
 
-  // ---------- BUILD LIST OF BLOCKS TO CAPTURE ----------
   const resultSection = document.getElementById("result");
   const blocks = [];
 
@@ -855,19 +975,14 @@ async function emailWork() {
 
   resultSection.querySelectorAll(".feedback").forEach(el => blocks.push(el));
 
-  // Safety: if somehow no blocks found, fall back to whole section
-  if (blocks.length === 0) {
-    blocks.push(resultSection);
-  }
+  if (blocks.length === 0) blocks.push(resultSection);
 
-  // ---------- DRAW FIRST PAGE HEADER ----------
   drawHeader(true);
   let currentY = marginTop;
 
-  // ---------- CAPTURE EACH BLOCK SEPARATELY (NO MID-QUESTION CUTS) ----------
   for (const block of blocks) {
     const canvas = await window.html2canvas(block, {
-      scale: 2,
+      scale: 1.5,
       width: TARGET_WIDTH,
       windowWidth: TARGET_WIDTH,
       useCORS: true,
@@ -878,12 +993,10 @@ async function emailWork() {
     const imgData = canvas.toDataURL("image/png");
     const imgProps = pdf.getImageProperties(imgData);
 
-    // Start from a max width based on margins
     const maxContentWidth = pageWidth - marginLeft - marginRight;
     let imgWidth = maxContentWidth;
     let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-    // If this block is taller than ~90% of the usable space, scale it down a bit
     const maxBlockHeight = usableHeight * 0.9;
     if (imgHeight > maxBlockHeight) {
       const scale = maxBlockHeight / imgHeight;
@@ -891,10 +1004,8 @@ async function emailWork() {
       imgHeight = maxBlockHeight;
     }
 
-    // Center horizontally on the page
     const xPos = (pageWidth - imgWidth) / 2;
 
-    // If it won't fit on the current page, go to a new page
     if (currentY + imgHeight > pageHeight - marginBottom) {
       pdf.addPage();
       drawHeader(false);
@@ -902,34 +1013,46 @@ async function emailWork() {
     }
 
     pdf.addImage(imgData, "PNG", xPos, currentY, imgWidth, imgHeight);
-    currentY += imgHeight + 5; // 5mm gap between blocks
+    currentY += imgHeight + 5;
   }
 
-  // ---------- PAGE NUMBERS IN FOOTER ----------
+  // Page numbers
   const pageCount = pdf.getNumberOfPages();
   pdf.setFontSize(9);
   pdf.setTextColor(120, 130, 140);
-
   for (let i = 1; i <= pageCount; i++) {
     pdf.setPage(i);
-    pdf.text(
-      `Page ${i} of ${pageCount}`,
-      pageWidth / 2,
-      pageHeight - 6,
-      { align: "center" }
-    );
+    pdf.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 6, { align: "center" });
   }
 
-  // ---------- EXPORT & SHARE / DOWNLOAD ----------
-  const pdfBlob = pdf.output("blob");
-  const fileName = `${finalData.studentId || "student"}_${finalData.assessmentTitle.replace(/\s+/g, "_")}.pdf`;
+let pdfBlob = pdf.output("blob");
+
+// ✅ Fill + append sign-off sheet as last page(s)
+// ✅ Fill + append sign-off sheet ONLY if assessment title contains the word "final"
+if (finalData.attachSignoff) {
+  try {
+    const signoffBytes = await fetchOptionalPdfBytes("assessment.pdf");
+
+    if (signoffBytes) {
+      const filledBytes = await fillPdfForm(signoffBytes, finalData);
+      pdfBlob = await appendPdfBytesToBlob(pdfBlob, filledBytes);
+    }
+  } catch (e) {
+    console.warn("Sign-off sheet fill/append failed, continuing without it:", e);
+  }
+}
+
+  
+  const fileName =
+    `${safePart(finalData.studentId || "student")}_` +
+    `${safePart(finalData.studentName || "name")}_` +
+    `${safePart(finalData.assessmentTitle || "assessment")}.pdf`;
 
   let pdfFile = null;
   if (window.File && typeof File === "function") {
     pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
   }
 
-  // 1) Try device-native share sheet (phones/tablets, some desktops)
   if (pdfFile && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
     try {
       await navigator.share({
@@ -938,13 +1061,12 @@ async function emailWork() {
         files: [pdfFile]
       });
       showToast("Shared via device share sheet.");
-      return; // we’re done
+      return;
     } catch (e) {
       console.warn("Share cancelled or failed, falling back to download:", e);
     }
   }
 
-  // 2) Fallback: download the file
   const url = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = url;
@@ -968,7 +1090,6 @@ function clearClipboard() {
 function attachProtection() {
   document.querySelectorAll(".answer-field").forEach(f => {
     f.addEventListener("input", () => saveAnswer(f.id.slice(1)));
-    // Block paste to discourage copy-paste answers, but allow copy/cut for accessibility
     f.addEventListener("paste", e => { e.preventDefault(); showToast(PASTE_BLOCKED_MESSAGE, false); clearClipboard(); });
   });
 }
